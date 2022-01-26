@@ -12,27 +12,36 @@ public class Process {
     // TODO when the user tries to login, check if the password matches the password stored in the file
 
     private String userName;
-    private String password;
+    private String pin;
 
     public String getUserName() {
         return userName;
     }
-    public String getPassword() {
+    public String getPin() {
         return userName;
     }
     public void setUserName() {
 
     }
-    public void setPassword() {
+    public void setPin() {
 
     }
-    public static void write(String writer, File file , boolean t) throws IOException {
+    public void write(String writer, File file) throws IOException {
 
-        FileWriter fw = new FileWriter(file, t);
+        FileWriter fw = new FileWriter(file);
         PrintWriter pw = new PrintWriter(fw);
 
         pw.println(writer);
         pw.close();
 
+    }
+    public boolean isNumber(String numberString) {
+        try {
+            Byte.parseByte(numberString);
+            return true;
+        }
+        catch (NumberFormatException ignored) {
+        }
+        return false;
     }
 }
