@@ -4,10 +4,8 @@ import framework.Process;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
-import static pinGenerator.PinGenerator.generatePin;
+import java.util.Scanner;
 public class Main {
 
     static String userName;
@@ -15,24 +13,34 @@ public class Main {
     public static String temporaryString;
 
     // when logging in as admin or user
-    static boolean isAdmin = false;
-    static boolean isUser = false;
-    static boolean isExit = false;
-    static boolean loginCondition = true;
+    public static boolean isAdmin = false;
+    public static boolean isUser = false;
+    public static boolean isExit = false;
+    public static boolean loginCondition = true;
 
     // when user is selected
-    static boolean userLoggedIn = true;
+    public static boolean userLoggedIn = true;
 
     // when creating account
-    static boolean createAccountCondition = true;
+    public static boolean createAccountCondition = true;
 
-    static Scanner scanner = new Scanner(System.in);
+    public static Scanner scanner = new Scanner(System.in);
     static Process process = new Process();
     public static void main(String[] args) throws InterruptedException, IOException {
 
         while (!isExit) {
             while (loginCondition) {
-                System.out.println("WELCOME TO SIMPLE LOGIN PROGRAM");
+                System.out.println("""
+                              ╔═╗╦╔╦╗╔═╗╦  ╔═╗  \s
+                              ╚═╗║║║║╠═╝║  ║╣   \s
+                              ╚═╝╩╩ ╩╩  ╩═╝╚═╝  \s
+                            ╦  ╔═╗╔═╗╦╔╗╔       \s
+                            ║  ║ ║║ ╦║║║║       \s
+                            ╩═╝╚═╝╚═╝╩╝╚╝       \s
+                          ╔═╗╦═╗╔═╗╔═╗╦═╗╔═╗╔╦╗ \s
+                          ╠═╝╠╦╝║ ║║ ╦╠╦╝╠═╣║║║ \s
+                          ╩  ╩╚═╚═╝╚═╝╩╚═╩ ╩╩ ╩ \s
+                        """);
                 System.out.println(": 1 : Administrator");
                 System.out.println(": 2 : User");
                 System.out.println(": 3 : Exit");
@@ -54,22 +62,50 @@ public class Main {
                         loginCondition = false;
                         isAdmin = false;
                         isUser = false;
-                        System.out.println("THANK YOU FOR USING MY PROGRAM");
+                        System.out.println("""
+                                    ███        ▄█    █▄       ▄████████ ███▄▄▄▄      ▄█   ▄█▄      ▄██   ▄    ▄██████▄  ███    █▄          ▄████████  ▄██████▄     ▄████████                                       \s
+                                ▀█████████▄   ███    ███     ███    ███ ███▀▀▀██▄   ███ ▄███▀      ███   ██▄ ███    ███ ███    ███        ███    ███ ███    ███   ███    ███                                       \s
+                                   ▀███▀▀██   ███    ███     ███    ███ ███   ███   ███▐██▀        ███▄▄▄███ ███    ███ ███    ███        ███    █▀  ███    ███   ███    ███                                       \s
+                                    ███   ▀  ▄███▄▄▄▄███▄▄   ███    ███ ███   ███  ▄█████▀         ▀▀▀▀▀▀███ ███    ███ ███    ███       ▄███▄▄▄     ███    ███  ▄███▄▄▄▄██▀                                       \s
+                                    ███     ▀▀███▀▀▀▀███▀  ▀███████████ ███   ███ ▀▀█████▄         ▄██   ███ ███    ███ ███    ███      ▀▀███▀▀▀     ███    ███ ▀▀███▀▀▀▀▀                                         \s
+                                    ███       ███    ███     ███    ███ ███   ███   ███▐██▄        ███   ███ ███    ███ ███    ███        ███        ███    ███ ▀███████████                                       \s
+                                    ███       ███    ███     ███    ███ ███   ███   ███ ▀███▄      ███   ███ ███    ███ ███    ███        ███        ███    ███   ███    ███                                       \s
+                                   ▄████▀     ███    █▀      ███    █▀   ▀█   █▀    ███   ▀█▀       ▀█████▀   ▀██████▀  ████████▀         ███         ▀██████▀    ███    ███                                       \s
+                                                                                    ▀                                                                             ███    ███                                       \s
+                                ███    █▄     ▄████████  ▄█  ███▄▄▄▄      ▄██████▄         ▄▄▄▄███▄▄▄▄   ▄██   ▄           ▄███████▄    ▄████████  ▄██████▄     ▄██████▄     ▄████████    ▄████████   ▄▄▄▄███▄▄▄▄  \s
+                                ███    ███   ███    ███ ███  ███▀▀▀██▄   ███    ███      ▄██▀▀▀███▀▀▀██▄ ███   ██▄        ███    ███   ███    ███ ███    ███   ███    ███   ███    ███   ███    ███ ▄██▀▀▀███▀▀▀██▄\s
+                                ███    ███   ███    █▀  ███▌ ███   ███   ███    █▀       ███   ███   ███ ███▄▄▄███        ███    ███   ███    ███ ███    ███   ███    █▀    ███    ███   ███    ███ ███   ███   ███\s
+                                ███    ███   ███        ███▌ ███   ███  ▄███             ███   ███   ███ ▀▀▀▀▀▀███        ███    ███  ▄███▄▄▄▄██▀ ███    ███  ▄███         ▄███▄▄▄▄██▀   ███    ███ ███   ███   ███\s
+                                ███    ███ ▀███████████ ███▌ ███   ███ ▀▀███ ████▄       ███   ███   ███ ▄██   ███      ▀█████████▀  ▀▀███▀▀▀▀▀   ███    ███ ▀▀███ ████▄  ▀▀███▀▀▀▀▀   ▀███████████ ███   ███   ███\s
+                                ███    ███          ███ ███  ███   ███   ███    ███      ███   ███   ███ ███   ███        ███        ▀███████████ ███    ███   ███    ███ ▀███████████   ███    ███ ███   ███   ███\s
+                                ███    ███    ▄█    ███ ███  ███   ███   ███    ███      ███   ███   ███ ███   ███        ███          ███    ███ ███    ███   ███    ███   ███    ███   ███    ███ ███   ███   ███\s
+                                ████████▀   ▄████████▀  █▀    ▀█   █▀    ████████▀        ▀█   ███   █▀   ▀█████▀        ▄████▀        ███    ███  ▀██████▀    ████████▀    ███    ███   ███    █▀   ▀█   ███   █▀ \s
+                                                                                                                                       ███    ███                           ███    ███                             \s
+                                """);
                     }
                     default -> {
                         System.out.println("INVALID CHOICE");
                         System.out.print("RETURNING TO LOGIN MENU");
-                        loading();
+                        process.loading("short");
                     }
                 }
             }
             if (isAdmin) {
                 // TODO admin can delete users and can see users usernames and passwords
-                System.out.println("ADMIN HERE");
+                System.out.println("""
+                        ┌─┐┌┬┐┌┬┐ ┬ ┌┐┌  ┌┬┐┌─┐┌┐┌ ┬ ┬
+                        ├─┤ │││││ │ │││  │││├┤ │││ │ │
+                        ┴ ┴ ┴┘┴ ┴ ┴ ┘└┘  ┴ ┴└─┘┘└┘ └─┘
+                        """);
                 loginCondition = true;
             }
             else if (isUser) {
-                System.out.println("USER MENU");
+                System.out.println("""
+
+                        ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌┐┌ ┬ ┬
+                        │ │└─┐├┤ ├┬┘  │││├┤ │││ │ │
+                        └─┘└─┘└─┘┴└─  ┴ ┴└─┘┘└┘ └─┘
+                        """);
                 System.out.println(": 1 : Sign in");
                 System.out.println(": 2 : create account");
                 System.out.println(": 3 : return to login menu");
@@ -93,13 +129,16 @@ public class Main {
                                         int count = updater.nextInt();
                                         updater.close();
                                         if (count == 0) {
+                                            userCondition = false;
+                                            pinCondition = false;
+                                            userLoggedIn = false;
                                             System.out.println("""
                                                     WARNING!!! This account has reached the maximum login attempt.\s
                                                     The system thinks that this account does not belong to you. If this account belongs to you,
                                                     you can talk to the admin, bring your ID and request a new pin code.
                                                     """);
                                             System.out.print("Proceeding to Student's Menu");
-                                            loading();
+                                            process.loading("short");
                                         }
                                         if (count != 0) {
                                             System.out.println("Login Attempts [ " + count +" ]");
@@ -110,7 +149,7 @@ public class Main {
                                             Scanner validatePin = new Scanner(checkPin);
                                             String pinCheck =  validatePin.nextLine();
                                             System.out.print("LOGGING IN");
-                                            loading();
+                                            process.loading("long");
                                             if (pin.equals(pinCheck)) {
                                                 System.out.println("LOGGED IN!");
                                                 userCondition = false;
@@ -118,80 +157,268 @@ public class Main {
                                                 userLoggedIn = true;
                                             }
                                             else {
-                                                System.out.println("| INVALID PASSWORD |");
-                                                System.out.println(": 1 : Retry");
-                                                System.out.println(": 2 : Return to USER MENU");
-                                                System.out.println(": 3 : Return to LOGIN MENU");
-                                                System.out.print(">>>: ");
-                                                temporaryString = scanner.nextLine().trim();
-                                                if (process.isNumber(temporaryString)) {
-                                                    switch (temporaryString) {
-                                                        case "1" -> {
-                                                            count -= 1;
-                                                            process.write(String.valueOf(count), loginAttempt);
-                                                            System.out.print("RETRYING");
-                                                            loading();
+                                                do {
+                                                    System.out.println("""
+                                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬┌┐┌
+                                                            │ │││ └┐┌┘├─┤│  │ ││  ├─┘││││
+                                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  ┴  ┴┘└┘
+                                                            """);
+                                                    System.out.println(": 1 : Retry");
+                                                    System.out.println(": 2 : Return to USER MENU");
+                                                    System.out.println(": 3 : Return to LOGIN MENU");
+                                                    System.out.println(": 4 : Forgot pin");
+                                                    System.out.print(">>>: ");
+                                                    temporaryString = scanner.nextLine().trim();
+                                                    if (process.isNumber(temporaryString)) {
+                                                        switch (temporaryString) {
+                                                            case "1" -> {
+                                                                count -= 1;
+                                                                process.write(String.valueOf(count), loginAttempt);
+                                                                System.out.print("RETRYING");
+                                                                process.loading("short");
+                                                            }
+                                                            case "2" -> {
+                                                                userCondition = false;
+                                                                pinCondition = false;
+                                                            }
+                                                            case "3" -> {
+                                                                userCondition = false;
+                                                                pinCondition = false;
+                                                                userLoggedIn = false;
+                                                                isUser = false;
+                                                                loginCondition = true;
+                                                            }
+                                                            case "4" -> {
+                                                                do {
+                                                                    System.out.println("""
+                                                                            ┌─┐┬ ┬┌─┐┌─┐┬┌─  ┬┌─┐  ┬ ┬┌─┐┬ ┬                   \s
+                                                                            │  ├─┤├┤ │  ├┴┐  │├┤   └┬┘│ ││ │                   \s
+                                                                            └─┘┴ ┴└─┘└─┘┴ ┴  ┴└     ┴ └─┘└─┘                   \s
+                                                                            ┌─┐┌─┐┌┐┌  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
+                                                                            │  ├─┤│││  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││
+                                                                            └─┘┴ ┴┘└┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘
+                                                                            """);
+                                                                    System.out.println(": 1 : Check if resetting pin is available");
+                                                                    System.out.println(": 2 : Return to USER MENU");
+                                                                    System.out.println(": 3 : Return to LOGIN MENU");
+                                                                    System.out.print(">>>: ");
+                                                                    temporaryString = scanner.nextLine().trim();
+                                                                    if (process.isNumber(temporaryString)) {
+                                                                        switch (temporaryString) {
+                                                                            case "1" -> {
+                                                                                System.out.print("CHECKING");
+                                                                                process.loading("long");
+                                                                                if (process.checkEligibility(userName)) {
+                                                                                    do {
+                                                                                        System.out.println("""
+                                                                                                ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌─┐┬  ┬┌─┐┬┌┐ ┬  ┌─┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
+                                                                                                └┬┘│ ││ │  ├─┤├┬┘├┤   ├┤ │  ││ ┬│├┴┐│  ├┤    │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││
+                                                                                                 ┴ └─┘└─┘  ┴ ┴┴└─└─┘  └─┘┴─┘┴└─┘┴└─┘┴─┘└─┘   ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘
+                                                                                                """);
+                                                                                        System.out.println("""
+                                                                                                ┌┬┐┌─┐  ┬ ┬┌─┐┬ ┬  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬┌┬┐  ┌┐┌┌─┐┬ ┬┌─┐
+                                                                                                 │││ │  └┬┘│ ││ │  │││├─┤│││ │    │ │ │  │  ├─┤├─┤││││ ┬├┤   │ │   ││││ ││││ ┌┘
+                                                                                                ─┴┘└─┘   ┴ └─┘└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘  ┴ ┴   ┘└┘└─┘└┴┘ o\s
+                                                                                                """);
+                                                                                        System.out.println(": 1 : Reset Pin Now");
+                                                                                        System.out.println(": 2 : Return to USER MENU");
+                                                                                        System.out.println(": 3 : Return to LOGIN MENU");
+                                                                                        System.out.print(">>>: ");
+                                                                                        temporaryString = scanner.nextLine().trim();
+                                                                                        if (process.isNumber(temporaryString)) {
+                                                                                            switch (temporaryString) {
+                                                                                                case "1" -> {
+                                                                                                    //resetPin(isEligibleToChangePin);
+                                                                                                    pinCondition = false;
+                                                                                                    userCondition = false;
+                                                                                                    userLoggedIn = false;
+                                                                                                    loginCondition = false;
+                                                                                                    isAdmin = false;
+                                                                                                    isUser = true;
+                                                                                                }
+                                                                                                case "2" -> {
+                                                                                                    userCondition = false;
+                                                                                                    pinCondition = false;
+                                                                                                    userLoggedIn = false;
+                                                                                                    loginCondition = false;
+                                                                                                }
+                                                                                                case "3" -> {
+                                                                                                    userCondition = false;
+                                                                                                    pinCondition = false;
+                                                                                                    userLoggedIn = false;
+                                                                                                    loginCondition = true;
+                                                                                                }
+                                                                                                default -> System.out.println("| INVALID CHOICE (!) |");
+                                                                                            }
+                                                                                        }
+
+                                                                                    } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
+                                                                                }
+                                                                                else {
+                                                                                    System.out.println("""
+                                                                                            ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┬ ┬┌─┐┌┬┐  ┌─┐┌─┐┬─┐┌┬┐┬┌┬┐┌┬┐┌─┐┌┬┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
+                                                                                            └┬┘│ ││ │  ├─┤├┬┘├┤   ││││ │ │   └┬┘├┤  │   ├─┘├┤ ├┬┘││││ │  │ ├┤  ││   │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││
+                                                                                             ┴ └─┘└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘ ┴    ┴ └─┘ ┴   ┴  └─┘┴└─┴ ┴┴ ┴  ┴ └─┘─┴┘   ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘
+                                                                                            """);
+                                                                                    do {
+                                                                                        System.out.println("""
+                                                                                                ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌─┐┬  ┬┌─┐┬┌┐ ┬  ┌─┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
+                                                                                                └┬┘│ ││ │  ├─┤├┬┘├┤   ├┤ │  ││ ┬│├┴┐│  ├┤    │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││
+                                                                                                 ┴ └─┘└─┘  ┴ ┴┴└─└─┘  └─┘┴─┘┴└─┘┴└─┘┴─┘└─┘   ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘
+                                                                                                """);
+                                                                                        System.out.println("""
+                                                                                                ┌┬┐┌─┐  ┬ ┬┌─┐┬ ┬  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬┌┬┐  ┌┐┌┌─┐┬ ┬┌─┐
+                                                                                                 │││ │  └┬┘│ ││ │  │││├─┤│││ │    │ │ │  │  ├─┤├─┤││││ ┬├┤   │ │   ││││ ││││ ┌┘
+                                                                                                ─┴┘└─┘   ┴ └─┘└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘  ┴ ┴   ┘└┘└─┘└┴┘ o\s
+                                                                                                """);
+                                                                                        System.out.println(": 1 : Submit pin reset ticket");
+                                                                                        System.out.println(": 2 : Return to USER MENU");
+                                                                                        System.out.println(": 3 : Return to LOGIN MENU");
+                                                                                        System.out.print(">>>: ");
+                                                                                        temporaryString = scanner.nextLine().trim();
+                                                                                        if (process.isNumber(temporaryString)) {
+                                                                                            switch (temporaryString) {
+                                                                                                case "1" -> {
+                                                                                                    process.submitResetTicket(userName);
+                                                                                                    pinCondition = false;
+                                                                                                    userCondition = false;
+                                                                                                    userLoggedIn = false;
+                                                                                                    loginCondition = false;
+                                                                                                    isAdmin = false;
+                                                                                                    isUser = true;
+                                                                                                    System.out.print("SUBMITTING");
+                                                                                                    process.loading("long");
+                                                                                                    System.out.println("SUCCESSFULLY SUBMITTED RESET TICKET");
+                                                                                                    System.out.print("RETURNING TO USER MENU");
+                                                                                                    process.loading("short");
+                                                                                                }
+                                                                                                case "2" -> {
+                                                                                                    userCondition = false;
+                                                                                                    pinCondition = false;
+                                                                                                    userLoggedIn = false;
+                                                                                                    loginCondition = false;
+                                                                                                    System.out.print("RETURNING TO USER MENU");
+                                                                                                    process.loading("short");
+                                                                                                }
+                                                                                                case "3" -> {
+                                                                                                    userCondition = false;
+                                                                                                    pinCondition = false;
+                                                                                                    userLoggedIn = false;
+                                                                                                    loginCondition = true;
+                                                                                                    System.out.print("RETURNING TO LOGIN MENU");
+                                                                                                    process.loading("short");
+                                                                                                }
+                                                                                                default -> System.out.println("""
+                                                                                                     ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                                                     │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                                                     ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                                                                """);
+                                                                                            }
+                                                                                        }
+                                                                                    } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
+                                                                                }
+                                                                            }
+                                                                            case "2" -> {
+                                                                                userCondition = false;
+                                                                                pinCondition = false;
+                                                                                userLoggedIn = false;
+                                                                                loginCondition = false;
+                                                                                System.out.print("RETURNING TO USER MENU");
+                                                                                process.loading("short");
+                                                                            }
+                                                                            case "3" -> {
+                                                                                userCondition = false;
+                                                                                pinCondition = false;
+                                                                                userLoggedIn = false;
+                                                                                loginCondition = true;
+                                                                                System.out.print("RETURNING TO LOGIN MENU");
+                                                                                process.loading("short");
+                                                                            }
+                                                                            default -> System.out.println("""
+                                                                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                                            """);
+                                                                        }
+                                                                    }
+                                                                } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
+                                                            }
+                                                            default -> System.out.println("""
+                                                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                            """);
                                                         }
-                                                        case "2" -> {
-                                                            userCondition = false;
-                                                            pinCondition = false;
-                                                        }
-                                                        case "3" -> {
-                                                            userCondition = false;
-                                                            pinCondition = false;
-                                                            userLoggedIn = false;
-                                                            isUser = false;
-                                                            loginCondition = true;
-                                                        }
-                                                        default -> System.out.println("INVALID CHOICE (!)");
                                                     }
-                                                }
-                                                else {
-                                                    System.out.println("INVALID CHOICE (!)");
-                                                }
+                                                    else {
+                                                        System.out.println("""
+                                                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                        """);
+                                                    }
+                                                } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3") && !temporaryString.equals("4"));
                                             }
                                         }
                                     }
                                 }
                                 else {
-                                    System.out.println("| USER DOES NOT EXIST |");
-                                    System.out.println(": 1 : Retry");
-                                    System.out.println(": 2 : Return to USER MENU");
-                                    System.out.println(": 3 : Return to LOGIN MENU");
-                                    System.out.print(">>>: ");
-                                    temporaryString = scanner.nextLine().trim();
-                                    if (process.isNumber(temporaryString)) {
-                                        switch (temporaryString) {
-                                            case "1" -> {
-                                                System.out.print("RETRYING");
-                                                loading();
+                                    do {
+                                        System.out.println("""
+                                                ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐  ┬
+                                                │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │   │
+                                                └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴   o
+                                                """);
+                                        System.out.println(": 1 : Retry");
+                                        System.out.println(": 2 : Return to USER MENU");
+                                        System.out.println(": 3 : Return to LOGIN MENU");
+                                        System.out.print(">>>: ");
+                                        temporaryString = scanner.nextLine().trim();
+                                        if (process.isNumber(temporaryString)) {
+                                            switch (temporaryString) {
+                                                case "1" -> {
+                                                    System.out.print("RETRYING");
+                                                    process.loading("long");
+                                                }
+                                                case "2" -> {
+                                                    userCondition = false;
+                                                    pinCondition = false;
+                                                }
+                                                case "3" -> {
+                                                    userCondition = false;
+                                                    pinCondition = false;
+                                                    userLoggedIn = false;
+                                                    isUser = false;
+                                                    loginCondition = true;
+                                                }
+                                                default -> System.out.println("""
+                                                   ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                   │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                   ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                """);
                                             }
-                                            case "2" -> {
-                                                userCondition = false;
-                                                pinCondition = false;
-                                            }
-                                            case "3" -> {
-                                                userCondition = false;
-                                                pinCondition = false;
-                                                userLoggedIn = false;
-                                                isUser = false;
-                                                loginCondition = true;
-                                            }
-                                            default -> System.out.println("INVALID CHOICE (!)");
                                         }
-                                    }
-                                    else {
-                                        System.out.println("INVALID CHOICE (!)");
-                                    }
+                                        else {
+                                            System.out.println("""
+                                               ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                               │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                               ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                            """);
+                                        }
+                                    } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
                                 }
                             }
                             else {
-                                System.out.println("PLEASE ENTER YOUR USERNAME PROPERLY");
+                                System.out.println("""
+                                    ┌─┐┬  ┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┐┌┌┬┐┌─┐┬─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐  ┌─┐┬─┐┌─┐┌─┐┌─┐┬─┐┬  ┬ ┬
+                                    ├─┘│  ├┤ ├─┤└─┐├┤   ├┤ │││ │ ├┤ ├┬┘  └┬┘│ ││ │├┬┘  │ │└─┐├┤ ├┬┘│││├─┤│││├┤   ├─┘├┬┘│ │├─┘├┤ ├┬┘│  └┬┘
+                                    ┴  ┴─┘└─┘┴ ┴└─┘└─┘  └─┘┘└┘ ┴ └─┘┴└─   ┴ └─┘└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  ┴  ┴└─└─┘┴  └─┘┴└─┴─┘ ┴\s
+                                """);
                             }
                         }
                     }
                     case "2" -> {
-                        createUserAccount();
+                        process.createUserAccount();
                         createAccountCondition = true;
                     }
                     case "3" -> {
@@ -206,73 +433,31 @@ public class Main {
                     System.out.print(">>>: ");
                     temporaryString = scanner.nextLine().trim();
                     switch (temporaryString) {
-                        case "1" -> showUserDetails();
+                        case "1" -> process.showUserDetails();
                         case "2" -> {
                             System.out.print("RETURNING TO USER MENU");
-                            loading();
+                            process.loading("short");
                             userLoggedIn = false;
                             loginCondition = false;
                             isUser = true;
                         }
                         case "3" -> {
                             System.out.print("RETURNING TO LOGIN MENU");
-                            loading();
-                            resetReturningToLoginMenu();
+                            process.loading("short");
+                            process.resetReturningToLoginMenu();
                         }
                         default -> {
-                            System.out.println("INVALID CHOICE");
+                            System.out.println("""
+                                               ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                               │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                               ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                               """);
                             System.out.print("RETURNING TO USER MENU");
-                            loading();
+                            process.loading("short");
                         }
                     }
                 }
             }
         }
-    }
-    protected static void showUserDetails() {
-        // TODO add show details descriptions
-        System.out.println("NAME HERE");
-    }
-    protected static void createUserAccount() throws IOException {
-        while (createAccountCondition) {
-            System.out.print("Enter username: ");
-            temporaryString = scanner.nextLine().trim();
-            if (temporaryString.matches("[a-zA-Z]+") || temporaryString.matches("[a-zA-z0-9]+")) {
-                userName = temporaryString;
-                File userAccountFolder = new File ("src\\" + "accounts\\" + "user\\" + userName);
-                boolean success = userAccountFolder.mkdirs();
-                if (success) {
-                    char[] oneTimePin = generatePin();
-                    pin = String.valueOf(oneTimePin);
-                    File userPin = new File ("src\\" + "accounts\\" + "user\\" + userName + "\\pin.txt");
-                    File userLoginAttempt = new File ("src\\" + "accounts\\" + "user\\" + userName + "\\loginAttempt.txt");
-                    process.write(pin, userPin);
-                    if (pin.length() == 6) {
-                        process.write("2", userLoginAttempt); // 2 login attempts, if the user did not follow instructions carefully
-                    }
-                    else {
-                        process.write("4", userLoginAttempt); // 4 login attempts
-                    }
-                    createAccountCondition = false;
-                    userLoggedIn = false;
-                    loginCondition = true;
-                }
-                else {
-                    System.out.println("USERNAME ALREADY EXISTED\nPLEASE TRY OTHER USERNAMES");
-                }
-            }
-        }
-    }
-    public static void loading() throws InterruptedException {
-        for (int i = 1; i <= 3; i++) {
-            TimeUnit.MILLISECONDS.sleep(400);
-            System.out.print('.');
-        }
-        System.out.println("\n");
-    }
-    protected static void resetReturningToLoginMenu() {
-        userLoggedIn = false;
-        loginCondition = true;
-        isAdmin = false;
     }
 }
