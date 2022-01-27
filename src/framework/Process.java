@@ -12,8 +12,6 @@ public class Process {
 
     private String userName;
     private String pin;
-
-    static boolean changePin = false;
     static Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
     static Hashtable<String, Boolean> resetPinTickets = new Hashtable<>();
     public Process() {
@@ -121,6 +119,7 @@ public class Process {
         }
     }
     public void createUserAccount() throws IOException {
+        Ticketing ticketing = new Ticketing();
         System.out.print("ENTER USERNAME: ");
         Main.temporaryString = Main.scanner.nextLine().trim();
         if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
@@ -134,6 +133,7 @@ public class Process {
                 File userLoginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
                 write(getPin(), userPin);
                 resetPinTickets.put(getUserName(), false);
+                ticketing.submitResetTicket();
                 if (getPin().length() == 6) {
                     write("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
                 }
