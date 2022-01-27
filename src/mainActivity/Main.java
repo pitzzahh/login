@@ -100,7 +100,6 @@ public class Main {
                                 File checkAdminUserName = new File ("src\\" + "files\\" + "accounts\\" + "admin\\" + "\\username.txt");
                                 Scanner validateAdminUserName = new Scanner(checkAdminUserName);
                                 String adminUserName = validateAdminUserName.nextLine();
-                                System.out.println("ADMIN USERNAME: " + adminUserName);
                                 if (process.getUserName().equals(adminUserName)) {
                                     while (adminPasswordCondition) {
                                         System.out.print("ENTER PASSWORD: ");
@@ -187,12 +186,17 @@ public class Main {
                                                 case "2" -> {
                                                     System.out.print("RETURNING TO ADMIN MENU");
                                                     process.loading("short");
-                                                    isAdmin = true;
+                                                    adminUserNameCondition = false;
+                                                    adminPasswordCondition = false;
+                                                    adminLoggedIn = false;
                                                     loginCondition = false;
+                                                    isAdmin = true;
                                                 }
                                                 case "3" -> {
                                                     System.out.print("RETURNING TO LOGIN MENU");
                                                     process.loading("short");
+                                                    adminUserNameCondition = false;
+                                                    adminPasswordCondition = false;
                                                     process.resetReturningToLoginMenu();
                                                 }
                                                 default -> System.out.println("""
