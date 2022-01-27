@@ -318,12 +318,13 @@ public class Main {
                                             userCondition = false;
                                             pinCondition = false;
                                             userLoggedIn = false;
+                                            loginCondition = true;
                                             System.out.println("""
                                                     WARNING!!! This account has reached the maximum login attempt.\s
                                                     The system thinks that this account does not belong to you. If this account belongs to you,
-                                                    you can talk to the admin, bring your ID and request a new pin code.
+                                                    you can talk to the admin, bring your userName and request a new pin code.
                                             """);
-                                            System.out.print("PROCEEDING TO USER MENU");
+                                            System.out.print("PROCEEDING TO LOGIN MENU");
                                             process.loading("short");
                                         }
                                         if (count != 0) {
@@ -370,6 +371,8 @@ public class Main {
                                                             case "2" -> {
                                                                 userCondition = false;
                                                                 pinCondition = false;
+                                                                System.out.print("RETURNING TO USER MENU");
+                                                                process.loading("short");
                                                             }
                                                             case "3" -> {
                                                                 userCondition = false;
@@ -377,6 +380,8 @@ public class Main {
                                                                 userLoggedIn = false;
                                                                 isUser = false;
                                                                 loginCondition = true;
+                                                                System.out.print("RETURNING TO LOGIN MENU");
+                                                                process.loading("short");
                                                             }
                                                             case "4" -> {
                                                                 do {
@@ -431,18 +436,26 @@ public class Main {
                                                                                                     pinCondition = false;
                                                                                                     userLoggedIn = false;
                                                                                                     loginCondition = false;
+                                                                                                    System.out.print("RETURNING TO USER MENU");
+                                                                                                    process.loading("short");
                                                                                                 }
                                                                                                 case "3" -> {
                                                                                                     userCondition = false;
                                                                                                     pinCondition = false;
                                                                                                     userLoggedIn = false;
                                                                                                     loginCondition = true;
+                                                                                                    System.out.print("RETURNING TO LOGIN MENU");
+                                                                                                    process.loading("short");
                                                                                                 }
-                                                                                                default -> System.out.println("""
-                                                                                                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                                                                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                                                                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                                                                """);
+                                                                                                default -> {
+                                                                                                    System.out.println("""
+                                                                                                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                                                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                                                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                                                                    """);
+                                                                                                    System.out.print("RETURNING TO USER MENU");
+                                                                                                    process.loading("short");
+                                                                                                }
                                                                                             }
                                                                                         }
 
@@ -670,14 +683,15 @@ public class Main {
                             process.showUserDetails();
                         }
                         case "2" -> {
+                            userLoggedIn = false;
+                            loginCondition = false;
+                            isUser = true;
                             System.out.print("LOGGING OUT");
                             process.loading("long");
                             System.out.println("SUCCESSFULLY LOGGED OUT");
                             System.out.print("RETURNING TO USER MENU");
                             process.loading("short");
-                            userLoggedIn = false;
-                            loginCondition = false;
-                            isUser = true;
+
                         }
                         case "3" -> {
                             System.out.print("LOGGING OUT");
