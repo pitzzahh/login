@@ -232,7 +232,6 @@ public class Process {
                 while (insertCredentials) {
                     File checkUserName;
                     File checkPassword;
-                    File loginAttempt = null;
                     String username = "";
                     String password = "";
                     boolean invalidUser = false;
@@ -249,20 +248,20 @@ public class Process {
                     else {
                         checkUserName = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() + "\\username.txt");
                         checkPassword = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\pin.txt");
-                        loginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
                     }
                     try {
                         Scanner validateUserName = new Scanner(checkUserName);
                         username = validateUserName.nextLine();
                         Scanner validatePassword = new Scanner(checkPassword);
                         password =  validatePassword.nextLine();
-                        System.out.print("LOGGING IN");
-                        loading("long");
                     }
                     catch (FileNotFoundException fNfE) {
                         invalidUser = true;
                     }
+                    System.out.print("LOGGING IN");
+                    loading("long");
                     if (getUserName().equals(username) && getPin().equals(password) && !invalidUser) {
+                        File updateAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
                         System.out.println("""
                                  ┬  ┌─┐┌─┐┌─┐┌─┐┌┬┐  ┬ ┌┐┌  ┬
                                  │  │ ││ ┬│ ┬├┤  ││  │ │││  │
@@ -275,6 +274,7 @@ public class Process {
                             Main.userLoggedIn = true;
                         }
                         insertCredentials = false;
+                        write("6", updateAttempt); // 6 login attempts
                     }
                     else {
                         do {
@@ -309,12 +309,17 @@ public class Process {
                                         loading("short");
                                         if (!isAdmin) {
                                             try {
+                                                File loginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
                                                 Scanner loginCountUpdater = new Scanner(loginAttempt);
                                                 int count = loginCountUpdater.nextInt();
                                                 loginCountUpdater.close();
+                                                count -= 1;
+                                                write(String.valueOf(count), loginAttempt); // 6 login attempts
+                                                System.out.printf("REMAINING LOGIN TRIES [ >> %d << ]\n", count);
                                                 if (count == 0) {
                                                     Main.userLoggedIn = false;
                                                     Main.loginCondition = true;
+                                                    resetReturningToLoginMenu();
                                                     System.out.println("""
                                                             WARNING!!! This account has reached the maximum login attempt.\s
                                                             The system thinks that this account does not belong to you. If this account belongs to you,
@@ -323,6 +328,7 @@ public class Process {
                                                     System.out.print("PROCEEDING TO LOGIN MENU");
                                                     loading("short");
                                                 }
+
                                             }
                                             catch (FileNotFoundException ignored) {
                                             }
@@ -353,15 +359,13 @@ public class Process {
                                                             if (checkEligibility()) {
                                                                 do {
                                                                     System.out.println("""
-                                                                            ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌─┐┬  ┬┌─┐┬┌┐ ┬  ┌─┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
-                                                                            └┬┘│ ││ │  ├─┤├┬┘├┤   ├┤ │  ││ ┬│├┴┐│  ├┤    │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││
-                                                                             ┴ └─┘└─┘  ┴ ┴┴└─└─┘  └─┘┴─┘┴└─┘┴└─┘┴─┘└─┘   ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘
-                                                                        """);
-                                                                    System.out.println("""
-                                                                            ┬┐┌─┐  ┬ ┬┌─┐┬ ┬  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬┌┬┐  ┌┐┌┌─┐┬ ┬ ┌─┐
-                                                                            │││ │  └┬┘│ ││ │  │││├─┤│││ │    │ │ │  │  ├─┤├─┤││││ ┬├┤   │ │   ││││ ││││  ┌┘
-                                                                           ─┴┘└─┘   ┴ └─┘└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘  ┴ ┴   ┘└┘└─┘└┴┘  o\s
-                                                                        """);
+                                                                          ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌─┐┬  ┬┌─┐┬┌┐ ┬  ┌─┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
+                                                                          └┬┘│ ││ │  ├─┤├┬┘├┤   ├┤ │  ││ ┬│├┴┐│  ├┤    │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││
+                                                                           ┴ └─┘└─┘  ┴ ┴┴└─└─┘  └─┘┴─┘┴└─┘┴└─┘┴─┘└─┘   ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘
+                                                                           ┬┐┌─┐  ┬ ┬┌─┐┬ ┬  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬┌┬┐  ┌┐┌┌─┐┬ ┬ ┌─┐
+                                                                           │││ │  └┬┘│ ││ │  │││├─┤│││ │    │ │ │  │  ├─┤├─┤││││ ┬├┤   │ │   ││││ ││││  ┌┘
+                                                                          ─┴┘└─┘   ┴ └─┘└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘  ┴ ┴   ┘└┘└─┘└┴┘  o\s
+                                                                    """);
                                                                     System.out.println(": 1 : Reset Pin Now");
                                                                     System.out.println(": 2 : Return to USER MENU");
                                                                     System.out.println(": 3 : Return to LOGIN MENU");
@@ -375,7 +379,6 @@ public class Process {
                                                                                 Main.userLoggedIn = false;
                                                                                 Main.loginCondition = false;
                                                                                 Main.isAdmin = false;
-                                                                                resetPinTickets.remove(getUserName(), true);
                                                                             }
                                                                             case "2" -> {
                                                                                 insertCredentials = false;
@@ -452,9 +455,9 @@ public class Process {
                                                                                 }
                                                                                 default -> {
                                                                                     System.out.println("""
-                                                                                        ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                                                        │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                                                        ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                                                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                                                                                     """);
                                                                                     System.out.print("LOADING");
                                                                                     loading("short");
@@ -492,9 +495,9 @@ public class Process {
                                                         }
                                                         default -> {
                                                             System.out.println("""
-                                                                    ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                                    │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                                    ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                                                                 """);
                                                             System.out.print("LOADING");
                                                             loading("short");
@@ -512,11 +515,15 @@ public class Process {
                                     case "3" -> {
                                         if (!isAdmin) {
                                             insertCredentials = false;
+                                            Main.userLoggedIn = false;
+                                            Main.loginCondition = false;
                                             System.out.print("RETURNING TO USER MENU");
                                             loading("short");
                                         }
                                         else {
                                             insertCredentials = false;
+                                            Main.userLoggedIn = false;
+                                            Main.loginCondition = true;
                                             System.out.print("RETURNING TO LOGIN MENU");
                                             loading("short");
                                             resetReturningToLoginMenu();
@@ -533,9 +540,9 @@ public class Process {
                                         }
                                         else {
                                             System.out.println("""
-                                                 ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                 │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                 ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                 ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                 │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                 ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                                             """);
                                             System.out.print("LOADING");
                                             loading("short");
@@ -543,9 +550,9 @@ public class Process {
                                     }
                                     default -> {
                                         System.out.println("""
-                                            ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                            │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                            ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                                         """);
                                         System.out.print("LOADING");
                                         loading("short");
@@ -554,14 +561,14 @@ public class Process {
                             }
                             else {
                                 System.out.println("""
-                                     ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                     │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                     ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                     ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                     │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                     ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                                 """);
                                 System.out.print("LOADING");
                                 loading("short");
                             }
-                        } while (!Main.temporaryString.equals("1") && !Main.temporaryString.equals("2") && !Main.temporaryString.equals("3"));
+                        } while (!Main.temporaryString.equals("1") && !Main.temporaryString.equals("2") && !Main.temporaryString.equals("3") && !Main.temporaryString.equals("4"));
                     }
                 }
             }
@@ -588,9 +595,9 @@ public class Process {
                 }
                 else {
                     System.out.println("""
-                        ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                        │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                        ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                     """);
                     System.out.print("LOADING");
                     loading("short");
@@ -598,9 +605,9 @@ public class Process {
             }
             default -> {
                 System.out.println("""
-                    ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                    │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                    ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                 """);
                 System.out.print("LOADING");
                 loading("short");

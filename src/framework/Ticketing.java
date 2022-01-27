@@ -17,8 +17,9 @@ public class Ticketing extends Process {
         writer.close();
     }
     public void editEligibility(boolean isAdmin) throws InterruptedException {
+        boolean givePermission = true;
         if (isAdmin) {
-            while (true) {
+            while (givePermission) {
                 viewTickets();
                 System.out.println("ENTER THE USER YOU WANT TO GIVE PERMISSION TO CHANGE PIN");
                 System.out.print(">>>: ");
@@ -29,7 +30,9 @@ public class Ticketing extends Process {
                         isEligibleToChangePin.put(getUserName(),true);
                         System.out.print("GIVING PERMISSION");
                         loading("long");
-                        break;
+                        boolean isRemoved = resetPinTickets.remove(getUserName());
+                        System.out.println("REMOVED?: " + isRemoved);
+                        givePermission = false;
                     }
                     else {
                         do {
@@ -39,7 +42,7 @@ public class Ticketing extends Process {
                                 └┴┘┴└─└─┘┘└┘└─┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  o
                             """);
                             System.out.println(": 1 : Retry");
-                            System.out.println(": 2 : Return to ADMIN MENU");
+                            System.out.println(": 2 : Return to ADMIN SELECTION");
                             System.out.println(": 3 : Return to LOGIN MENU");
                             System.out.print(">>>: ");
                             Main.temporaryString = Main.scanner.nextLine().trim();
@@ -52,21 +55,20 @@ public class Ticketing extends Process {
                                     case "2" -> {
                                         System.out.print("RETURNING TO ADMIN MENU");
                                         loading("short");
-                                        Main.adminLoggedIn = false;
-                                        Main.loginCondition = false;
-                                        Main.isAdmin = true;
+                                        givePermission = false;
                                     }
                                     case "3" -> {
                                         System.out.print("RETURNING TO LOGIN MENU");
                                         loading("short");
                                         resetReturningToLoginMenu();
+                                        givePermission = false;
                                     }
                                     default -> {
                                         System.out.println("""
-                                                        ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                        │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                        ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                    """);
+                                             ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                             │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                             ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                        """);
                                         System.out.print("LOADING");
                                         loading("short");
                                     }
@@ -74,10 +76,10 @@ public class Ticketing extends Process {
                             }
                             else {
                                 System.out.println("""
-                                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                            """);
+                                      ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                      │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                      ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                """);
                                 System.out.print("LOADING");
                                 loading("short");
                             }
