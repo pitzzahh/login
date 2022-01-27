@@ -59,7 +59,7 @@ public class Process {
     public void submitTicket() throws IOException {
         resetPinTickets.put(getUserName(), true);
         Ticketing ticketing = new Ticketing();
-        ticketing.submitResetTicket(getUserName());
+        ticketing.submitResetTicket();
     }
 
     public void showUserDetails() {
@@ -70,7 +70,7 @@ public class Process {
             └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
         """);
     }
-    public void showAdminDetails() throws IOException {
+    public void showAdminDetails() throws IOException, InterruptedException {
         System.out.println("""
             ┌─┐┌┬┐┌┬┐┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
             ├─┤ ││││││ │││  └─┐├┤ │  ├┤ │   │ ││ ││││
@@ -85,19 +85,31 @@ public class Process {
         switch (Main.temporaryString) {
             case "1" -> {
                 // TODO view users
+                System.out.println();
+                showAdminDetails();
             }
             case "2" -> {
                 Ticketing ticketing = new Ticketing();
                 ticketing.editEligibility(Main.isAdmin);
+                showAdminDetails();
             }
             case "3" -> {
-                // TODO return to admin menu
+                System.out.print("RETURNING TO ADMIN MENU");
+                loading("short");
             }
             case "4" -> {
-                // TODO return to login menu
+                System.out.print("RETURNING TO LOGIN MENU");
+                loading("short");
             }
             default -> {
-
+                System.out.println("""
+                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                """);
+                System.out.print("LOADING");
+                loading("short");
+                showAdminDetails();
             }
         }
     }

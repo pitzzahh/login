@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.Map;
 
 public class Ticketing extends Process {
-    public void submitResetTicket(String userName) throws IOException {
+    public void submitResetTicket() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
         for (Map.Entry<String, Boolean> entry : resetPinTickets.entrySet()) {
             writer.write("[ IS TRYING TO RESET PIN: " + entry.getValue() + " ]" + " USER: " + entry.getKey()) ;
@@ -16,21 +16,29 @@ public class Ticketing extends Process {
     }
     public void editEligibility(boolean isAdmin) throws IOException {
         if (isAdmin) {
-            BufferedReader reader =  new BufferedReader(new FileReader("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
-            String line;
-            System.out.println("""
+            try {
+                BufferedReader reader =  new BufferedReader(new FileReader("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
+                String line;
+                System.out.println("""
                     ┬ ┬┌─┐┌─┐┬─┐┌─┐  ┬ ┬┬ ┬┌─┐  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┬─┐┌─┐┌─┐┌─┐┌┬┐  ┌─┐┬┌┐┌
                     │ │└─┐├┤ ├┬┘└─┐  │││├─┤│ │  │││├─┤│││ │    │ │ │  ├┬┘├┤ └─┐├┤  │   ├─┘││││
                     └─┘└─┘└─┘┴└─└─┘  └┴┘┴ ┴└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  ┴└─└─┘└─┘└─┘ ┴   ┴  ┴┘└┘
                     """);
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+                reader.close();
+                System.out.println("=========================");
+                System.out.println("|PRESS ENTER TO CONTINUE|");
+                System.out.println("=========================");
+                Main.scanner.nextLine();
+            } catch (FileNotFoundException fNfE) {
+                System.out.println("""
+                    ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
+                    ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
+                    ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
+                """);
             }
-            reader.close();
-            System.out.println("=========================");
-            System.out.println("PRESS ENTER TO CONTINUE");
-            System.out.println("=========================");
-            Main.scanner.nextLine();
         }
     }
 }

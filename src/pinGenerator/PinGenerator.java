@@ -93,7 +93,7 @@ public class PinGenerator {
             System.out.print(c);
         }
         System.out.println("\n=========================");
-        System.out.println("PRESS ENTER TO CONTINUE");
+        System.out.println("|PRESS ENTER TO CONTINUE|");
         System.out.println("=========================");
         scanner.nextLine();
         return oneTimePin;

@@ -141,17 +141,25 @@ public class Main {
                                                         case "2" -> {
                                                             adminUserNameCondition = false;
                                                             adminPasswordCondition = false;
+                                                            System.out.print("RETURNING TO ADMIN MENU");
+                                                            process.loading("short");
                                                         }
                                                         case "3" -> {
                                                             adminUserNameCondition = false;
                                                             adminPasswordCondition = false;
+                                                            System.out.print("RETURNING TO LOGIN MENU");
+                                                            process.loading("short");
                                                             process.resetReturningToLoginMenu();
                                                         }
-                                                        default -> System.out.println("""
-                                                            ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                            │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                            ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                        """);
+                                                        default -> {
+                                                            System.out.println("""
+                                                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                            """);
+                                                            System.out.print("LOADING");
+                                                            process.loading("short");
+                                                        }
                                                     }
                                                 }
                                                 else {
@@ -160,6 +168,8 @@ public class Main {
                                                         │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                                         ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                                                     """);
+                                                    System.out.print("LOADING");
+                                                    process.loading("short");
                                                 }
                                             } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3") && !temporaryString.equals("4"));
                                         }
@@ -199,11 +209,15 @@ public class Main {
                                                     adminPasswordCondition = false;
                                                     process.resetReturningToLoginMenu();
                                                 }
-                                                default -> System.out.println("""
-                                                    ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                    │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                    ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                """);
+                                                default -> {
+                                                    System.out.println("""
+                                                        ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                        │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                        ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                    """);
+                                                    System.out.print("LOADING");
+                                                    process.loading("short");
+                                                }
                                             }
                                         }
                                         else {
