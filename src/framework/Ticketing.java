@@ -1,25 +1,31 @@
 package framework;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Map;
+import java.util.Objects;
 
 public class Ticketing extends Process {
-    public void submitResetTicket() throws IOException {
-        resetPinTickets.put(getUserName(), false);
-        File userAccountFolder = new File("src\\" + "files\\" + "resetPinTickets\\" + getUserName());
-        boolean success = userAccountFolder.mkdirs();
-        if (success) {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("src\\" + "files\\" + "resetPinTickets\\" + getUserName() + "\\tickets.txt"));
-            for (Map.Entry<String, Boolean> entry : resetPinTickets.entrySet()) {
-                // put key and value separated by a colon
-                writer.write("USER: " + entry.getKey() + " : IS ELIGIBLE: " + entry.getValue());
-                // new line
-                writer.newLine();
+    public void submitResetTicket(String userName) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
+        for (Map.Entry<String, Boolean> entry : resetPinTickets.entrySet()) {
+            writer.write("[ IS TRYING TO RESET PIN: " + entry.getValue() + " ]" + " USER: " + entry.getKey()) ;
+            writer.newLine();
+        }
+        writer.close();
+    }
+    public void editEligibility(boolean isAdmin) throws IOException {
+        if (isAdmin) {
+            BufferedReader reader =  new BufferedReader(new FileReader("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
+            String line;
+            System.out.println("""
+                    ┬ ┬┌─┐┌─┐┬─┐┌─┐  ┬ ┬┬ ┬┌─┐  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┬─┐┌─┐┌─┐┌─┐┌┬┐  ┌─┐┬┌┐┌
+                    │ │└─┐├┤ ├┬┘└─┐  │││├─┤│ │  │││├─┤│││ │    │ │ │  ├┬┘├┤ └─┐├┤  │   ├─┘││││
+                    └─┘└─┘└─┘┴└─└─┘  └┴┘┴ ┴└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  ┴└─└─┘└─┘└─┘ ┴   ┴  ┴┘└┘
+                    """);
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
             }
-            writer.flush();
+            reader.close();
         }
     }
 }

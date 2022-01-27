@@ -4,15 +4,11 @@ import mainActivity.Main;
 
 import java.io.*;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import static pinGenerator.PinGenerator.generatePin;
 
 public class Process {
-    // TODO create a simple login program
-    // TODO allow anyone to create a username and password
-    // TODO store the password in a file
-    // TODO when the user tries to login, check if the password matches the password stored in the file
+    // TODO make the admin view user accounts and view tickets
 
     private String userName;
     private String pin;
@@ -23,7 +19,6 @@ public class Process {
     public Process() {
         super();
     }
-
     public String getUserName() {
         return userName;
     }
@@ -37,11 +32,9 @@ public class Process {
         this.pin = pin;
     }
     public void write(String whatToWrite, File file) throws IOException {
-        FileWriter fileWriter = new FileWriter(file);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-
-        printWriter.print(whatToWrite);
-        printWriter.close();
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        writer.write(whatToWrite);
+        writer.close();
 
     }
     public boolean isNumber(String numberString) {
@@ -64,16 +57,49 @@ public class Process {
         return false;
     }
     public void submitTicket() throws IOException {
+        resetPinTickets.put(getUserName(), true);
         Ticketing ticketing = new Ticketing();
-        ticketing.submitResetTicket();
+        ticketing.submitResetTicket(getUserName());
     }
 
     public void showUserDetails() {
         // TODO add show details descriptions
-        System.out.println("USER HERE");
+        System.out.println("""
+           ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
+           └─┐├┤ │  ├┤ │   │ ││ ││││
+           └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
+        """);
     }
-    public void showAdminDetails() {
-        System.out.println("ADMIN HERE");
+    public void showAdminDetails() throws IOException {
+        System.out.println("""
+           ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
+           └─┐├┤ │  ├┤ │   │ ││ ││││
+           └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
+        """);
+        System.out.println(": 1 : View Users");
+        System.out.println(": 2 : View tickets");
+        System.out.println(": 3 : return to ADMIN menu");
+        System.out.println(": 4 : return to LOGIN menu");
+        System.out.print(">>>: ");
+        Main.temporaryString = Main.scanner.nextLine().trim();
+        switch (Main.temporaryString) {
+            case "1" -> {
+                // TODO view users
+            }
+            case "2" -> {
+                Ticketing ticketing = new Ticketing();
+                ticketing.editEligibility(Main.isAdmin);
+            }
+            case "3" -> {
+                // TODO return to admin menu
+            }
+            case "4" -> {
+                // TODO return to login menu
+            }
+            default -> {
+
+            }
+        }
     }
     public void createUserAccount() throws IOException {
         while (Main.createAccountCondition) {
