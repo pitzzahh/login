@@ -17,8 +17,6 @@ public class Main {
     public static boolean userLoggedIn = false;
     // when admin is logged in
     public static boolean adminLoggedIn = false;
-    // when creating account
-    public static boolean createAccountCondition = true;
 
     public static Scanner scanner = new Scanner(System.in);
     static Process process = new Process();
@@ -290,9 +288,9 @@ public class Main {
                         }
                         default -> {
                             System.out.println("""
-                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬ ┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                │ │││ └┐┌┘├─┤│  │  ││  │  ├─┤│ │││  ├┤   │
+                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴ ─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                             """);
                             System.out.print("LOADING");
                             process.loading("short");
@@ -661,7 +659,6 @@ public class Main {
                     }
                     case "2" -> {
                         process.createUserAccount();
-                        createAccountCondition = true;
                         System.out.print("CREATING YOUR ACCOUNT");
                         process.loading("long");
                         System.out.println("SUCCESSFULLY CREATED (!)");

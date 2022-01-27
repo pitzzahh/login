@@ -13,8 +13,8 @@ public class Process {
     private String userName;
     private String pin;
 
-    private static boolean changePin = false;
-    private static Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
+    static boolean changePin = false;
+    static Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
     static Hashtable<String, Boolean> resetPinTickets = new Hashtable<>();
     public Process() {
         super();
@@ -94,10 +94,17 @@ public class Process {
                 showAdminDetails();
             }
             case "3" -> {
+                Main.adminLoggedIn = false;
+                Main.loginCondition = false;
+                Main.isAdmin = true;
+                System.out.print("LOGGING OUT");
+                loading("long");
+                System.out.println("SUCCESSFULLY LOGGED OUT");
                 System.out.print("RETURNING TO ADMIN MENU");
                 loading("short");
             }
             case "4" -> {
+                resetReturningToLoginMenu();
                 System.out.print("RETURNING TO LOGIN MENU");
                 loading("short");
             }
@@ -114,39 +121,37 @@ public class Process {
         }
     }
     public void createUserAccount() throws IOException {
-        while (Main.createAccountCondition) {
-            System.out.print("ENTER USERNAME: ");
-            Main.temporaryString = Main.scanner.nextLine().trim();
-            if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
-                setUserName(Main.temporaryString);
-                File userAccountFolder = new File ("src\\" + "files\\" +  "accounts\\" + "user\\" + getUserName());
-                boolean success = userAccountFolder.mkdirs();
-                if (success) {
-                    char[] oneTimePin = generatePin();
-                    setPin(String.valueOf(oneTimePin));
-                    File userPin = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() + "\\pin.txt");
-                    File userLoginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
-                    write(getPin(), userPin);
-                    if (getPin().length() == 6) {
-                        write("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
-                    }
-                    else {
-                        write("6", userLoginAttempt); // 6 login attempts
-                    }
-                    Main.createAccountCondition = false;
-                    Main.userLoggedIn = false;
-                    Main.loginCondition = true;
+        System.out.print("ENTER USERNAME: ");
+        Main.temporaryString = Main.scanner.nextLine().trim();
+        if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
+            setUserName(Main.temporaryString);
+            File userAccountFolder = new File ("src\\" + "files\\" +  "accounts\\" + "user\\" + getUserName());
+            boolean success = userAccountFolder.mkdirs();
+            if (success) {
+                char[] oneTimePin = generatePin();
+                setPin(String.valueOf(oneTimePin));
+                File userPin = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() + "\\pin.txt");
+                File userLoginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
+                write(getPin(), userPin);
+                resetPinTickets.put(getUserName(), false);
+                if (getPin().length() == 6) {
+                    write("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
                 }
                 else {
-                    System.out.println("""
-                            ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐  ┌─┐┬  ┬─┐┌─┐┌─┐┌┬┐┬ ┬  ┌─┐─┐ ┬┬┌─┐┌┬┐┌─┐┌┬┐        \s
-                            │ │└─┐├┤ ├┬┘│││├─┤│││├┤   ├─┤│  ├┬┘├┤ ├─┤ ││└┬┘  ├┤ ┌┴┬┘│└─┐ │ ├┤  ││        \s
-                            └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  ┴ ┴┴─┘┴└─└─┘┴ ┴─┴┘ ┴   └─┘┴ └─┴└─┘ ┴ └─┘─┴┘        \s
-                            ┌─┐┬  ┌─┐┌─┐┌─┐┌─┐  ┌┬┐┬─┐┬ ┬  ┌─┐┌┐┌┌─┐┌┬┐┬ ┬┌─┐┬─┐  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
-                            ├─┘│  ├┤ ├─┤└─┐├┤    │ ├┬┘└┬┘  ├─┤││││ │ │ ├─┤├┤ ├┬┘  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
-                            ┴  ┴─┘└─┘┴ ┴└─┘└─┘   ┴ ┴└─ ┴   ┴ ┴┘└┘└─┘ ┴ ┴ ┴└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
-                    """);
+                    write("6", userLoginAttempt); // 6 login attempts
                 }
+                Main.userLoggedIn = false;
+                Main.loginCondition = true;
+            }
+            else {
+                System.out.println("""
+                    ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐  ┌─┐┬  ┬─┐┌─┐┌─┐┌┬┐┬ ┬  ┌─┐─┐ ┬┬┌─┐┌┬┐┌─┐┌┬┐        \s
+                    │ │└─┐├┤ ├┬┘│││├─┤│││├┤   ├─┤│  ├┬┘├┤ ├─┤ ││└┬┘  ├┤ ┌┴┬┘│└─┐ │ ├┤  ││        \s
+                    └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  ┴ ┴┴─┘┴└─└─┘┴ ┴─┴┘ ┴   └─┘┴ └─┴└─┘ ┴ └─┘─┴┘        \s
+                    ┌─┐┬  ┌─┐┌─┐┌─┐┌─┐  ┌┬┐┬─┐┬ ┬  ┌─┐┌┐┌┌─┐┌┬┐┬ ┬┌─┐┬─┐  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
+                    ├─┘│  ├┤ ├─┤└─┐├┤    │ ├┬┘└┬┘  ├─┤││││ │ │ ├─┤├┤ ├┬┘  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
+                    ┴  ┴─┘└─┘┴ ┴└─┘└─┘   ┴ ┴└─ ┴   ┴ ┴┘└┘└─┘ ┴ ┴ ┴└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
+                """);
             }
         }
     }
@@ -167,7 +172,6 @@ public class Process {
             else {
                 write("6", updateAttempt); // 6 login attempts
             }
-            Main.createAccountCondition = false;
             Main.userLoggedIn = false;
             Main.loginCondition = true;
         }
@@ -199,6 +203,5 @@ public class Process {
         Main.loginCondition = true;
         Main.isAdmin = false;
         Main.isUser = false;
-
     }
 }
