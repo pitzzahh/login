@@ -2,29 +2,33 @@ package mainActivity;
 
 import framework.Process;
 import java.io.IOException;
-
 import java.util.Scanner;
+
 public class Main {
+    // stores every input as a temporary string
     public static String temporaryString;
     // when logging in as admin or user
     public static boolean isAdmin = false;
-    public static boolean isExit = false;
+    // whole condition
+    protected static boolean isExit = false;
+
     public static boolean loginCondition = true;
     // when user is logged in
     public static boolean userLoggedIn = false;
     // when admin is logged in
     public static boolean adminLoggedIn = false;
-
-    public static Scanner scanner = new Scanner(System.in);
-    static Process process = new Process();
+    // Scanner object, used in other class
+    public static final Scanner scanner = new Scanner(System.in);
+    // Process object, used in order to access methods from the Process class
+    protected static final Process process = new Process();
     public static void main(String[] args) throws InterruptedException, IOException {
 
         while (!isExit) {
             while (loginCondition) {
                 System.out.println("""
-                    ╔═╗╦╔╦╗╔═╗╦  ╔═╗  \s
-                    ╚═╗║║║║╠═╝║  ║╣   \s
-                    ╚═╝╩╩ ╩╩  ╩═╝╚═╝  \s
+                    ╔═╗ ╦ ╔╦╗ ╔═╗╦  ╔═╗  \s
+                    ╚═╗ ║ ║║║ ╠═╝║  ║╣   \s
+                    ╚═╝ ╩ ╩ ╩ ╩  ╩═╝╚═╝  \s
                     ╦  ╔═╗╔═╗ ╦ ╔╗╔       \s
                     ║  ║ ║║ ╦ ║ ║║║       \s
                     ╩═╝╚═╝╚═╝ ╩ ╝╚╝       \s

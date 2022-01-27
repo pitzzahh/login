@@ -11,8 +11,8 @@ public class Process {
     // TODO make the admin view user accounts and view tickets
     private String userName;
     private String pin;
-    static Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
-    static Hashtable<String, Boolean> resetPinTickets = new Hashtable<>();
+    static final Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
+    static final Hashtable<String, Boolean> resetPinTickets = new Hashtable<>();
     public Process() {
         super();
     }

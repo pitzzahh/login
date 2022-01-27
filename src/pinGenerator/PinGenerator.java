@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class PinGenerator {
     // kung ilang haba yung pin
     static byte lengthOfPin;
-    static Process process = new Process();
+    static final Process process = new Process();
     public static char[] generatePin() throws InterruptedException {
         // dito pipili ng random numbers
         String numbers = "1234567890";
