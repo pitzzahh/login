@@ -25,8 +25,10 @@ public class Ticketing extends Process {
                 Main.temporaryString = Main.scanner.nextLine().trim();
                 if (!isNumber(Main.temporaryString)) {
                     setUserName(Main.temporaryString);
-                    if (Files.isDirectory(Path.of("src\\" + "files\\" + "accounts\\" + getUserName()))) {
+                    if (Files.exists(Path.of("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\username.txt"))) {
                         isEligibleToChangePin.put(getUserName(),true);
+                        System.out.print("GIVING PERMISSION");
+                        loading("long");
                         break;
                     }
                     else {
