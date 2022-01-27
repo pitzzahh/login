@@ -3,6 +3,8 @@ package framework;
 import mainActivity.Main;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 public class Ticketing extends Process {
@@ -14,26 +16,16 @@ public class Ticketing extends Process {
         }
         writer.close();
     }
-    public void editEligibility(boolean isAdmin) throws IOException, InterruptedException {
+    public void editEligibility(boolean isAdmin) throws InterruptedException {
         if (isAdmin) {
-            try {
-                BufferedReader reader =  new BufferedReader(new FileReader("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
-                String line;
-                System.out.println("""
-                    ┬ ┬┌─┐┌─┐┬─┐┌─┐  ┬ ┬┬ ┬┌─┐  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┬─┐┌─┐┌─┐┌─┐┌┬┐  ┌─┐┬┌┐┌
-                    │ │└─┐├┤ ├┬┘└─┐  │││├─┤│ │  │││├─┤│││ │    │ │ │  ├┬┘├┤ └─┐├┤  │   ├─┘││││
-                    └─┘└─┘└─┘┴└─└─┘  └┴┘┴ ┴└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  ┴└─└─┘└─┘└─┘ ┴   ┴  ┴┘└┘
-                    """);
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-                reader.close();
-                while (true) {
-                    System.out.println("ENTER THE USER YOU WANT TO GIVE PERMISSION TO CHANGE PIN");
-                    System.out.print(">>>: ");
-                    Main.temporaryString = Main.scanner.nextLine().trim();
-                    if (!isNumber(Main.temporaryString)) {
-                        setUserName(Main.temporaryString);
+            while (true) {
+                viewTickets();
+                System.out.println("ENTER THE USER YOU WANT TO GIVE PERMISSION TO CHANGE PIN");
+                System.out.print(">>>: ");
+                Main.temporaryString = Main.scanner.nextLine().trim();
+                if (!isNumber(Main.temporaryString)) {
+                    setUserName(Main.temporaryString);
+                    if (Files.isDirectory(Path.of("src\\" + "files\\" + "accounts\\" + getUserName()))) {
                         isEligibleToChangePin.put(getUserName(),true);
                         break;
                     }
@@ -90,18 +82,43 @@ public class Ticketing extends Process {
                         } while (!Main.temporaryString.equals("1") && !Main.temporaryString.equals("2") && !Main.temporaryString.equals("3"));
                     }
                 }
-
-            } catch (FileNotFoundException fNfE) {
-                System.out.println("""
-                    ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
-                    ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
-                    ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
-                """);
+                else {
+                    System.out.println("""
+                            ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                            │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                            ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                        """);
+                    System.out.print("LOADING");
+                    loading("short");
+                }
             }
             System.out.println("=========================");
             System.out.println("|PRESS ENTER TO CONTINUE|");
             System.out.println("=========================");
             Main.scanner.nextLine();
+        }
+    }
+    protected void viewTickets() {
+        try {
+            String line;
+            BufferedReader reader =  new BufferedReader(new FileReader("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
+            System.out.println("""
+                    ┬ ┬┌─┐┌─┐┬─┐┌─┐  ┬ ┬┬ ┬┌─┐  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┬─┐┌─┐┌─┐┌─┐┌┬┐  ┌─┐┬┌┐┌
+                    │ │└─┐├┤ ├┬┘└─┐  │││├─┤│ │  │││├─┤│││ │    │ │ │  ├┬┘├┤ └─┐├┤  │   ├─┘││││
+                    └─┘└─┘└─┘┴└─└─┘  └┴┘┴ ┴└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  ┴└─└─┘└─┘└─┘ ┴   ┴  ┴┘└┘
+                    """);
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            reader.close();
+        } catch (FileNotFoundException fNFe) {
+            System.out.println("""
+               ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
+               ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
+               ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
+            """);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
