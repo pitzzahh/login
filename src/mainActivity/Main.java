@@ -212,6 +212,8 @@ public class Main {
                                                 │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                                 ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                                             """);
+                                            System.out.print("LOADING");
+                                            process.loading("short");
                                         }
                                     } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
                                 }
@@ -222,6 +224,8 @@ public class Main {
                                     ├─┘│  ├┤ ├─┤└─┐├┤   ├┤ │││ │ ├┤ ├┬┘  └┬┘│ ││ │├┬┘  │ │└─┐├┤ ├┬┘│││├─┤│││├┤   ├─┘├┬┘│ │├─┘├┤ ├┬┘│  └┬┘
                                     ┴  ┴─┘└─┘┴ ┴└─┘└─┘  └─┘┘└┘ ┴ └─┘┴└─   ┴ └─┘└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  ┴  ┴└─└─┘┴  └─┘┴└─┴─┘ ┴\s
                                 """);
+                                System.out.print("LOADING");
+                                process.loading("short");
                             }
                         }
                     }
@@ -229,6 +233,15 @@ public class Main {
                         System.out.print("RETURNING TO LOGIN MENU");
                         process.loading("short");
                         process.resetReturningToLoginMenu();
+                    }
+                    default -> {
+                        System.out.println("""
+                            ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                            │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                            ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                        """);
+                        System.out.print("LOADING");
+                        process.loading("short");
                     }
                 }
                 while (adminLoggedIn) { // if signed is a user
@@ -483,11 +496,15 @@ public class Main {
                                                                                                     System.out.print("RETURNING TO LOGIN MENU");
                                                                                                     process.loading("short");
                                                                                                 }
-                                                                                                default -> System.out.println("""
-                                                                                                    ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                                                                    │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                                                                    ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                                                                """);
+                                                                                                default -> {
+                                                                                                    System.out.println("""
+                                                                                                        ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                                                        │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                                                        ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                                                                    """);
+                                                                                                    System.out.print("LOADING");
+                                                                                                    process.loading("short");
+                                                                                                }
                                                                                             }
                                                                                         }
                                                                                     } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
@@ -509,20 +526,28 @@ public class Main {
                                                                                 System.out.print("RETURNING TO LOGIN MENU");
                                                                                 process.loading("short");
                                                                             }
-                                                                            default -> System.out.println("""
-                                                                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                                            """);
+                                                                            default -> {
+                                                                                System.out.println("""
+                                                                                    ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                                    │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                                    ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                                                """);
+                                                                                System.out.print("LOADING");
+                                                                                process.loading("short");
+                                                                            }
                                                                         }
                                                                     }
                                                                 } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
                                                             }
-                                                            default -> System.out.println("""
-                                                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                            """);
+                                                            default -> {
+                                                                System.out.println("""
+                                                                    ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                    │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                    ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                                """);
+                                                                System.out.print("LOADING");
+                                                                process.loading("short");
+                                                            }
                                                         }
                                                     }
                                                     else {
@@ -531,6 +556,8 @@ public class Main {
                                                             │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                                             ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                                                         """);
+                                                        System.out.print("LOADING");
+                                                        process.loading("short");
                                                     }
                                                 } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3") && !temporaryString.equals("4"));
                                             }
@@ -571,11 +598,15 @@ public class Main {
                                                     System.out.print("RETURNING TO LOGIN MENU");
                                                     process.loading("short");
                                                 }
-                                                default -> System.out.println("""
-                                                    ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                    │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                    ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                """);
+                                                default -> {
+                                                    System.out.println("""
+                                                        ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                        │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                        ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                    """);
+                                                    System.out.print("LOADING");
+                                                    process.loading("short");
+                                                }
                                             }
                                         }
                                         else {
@@ -584,6 +615,8 @@ public class Main {
                                                 │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                                 ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                                             """);
+                                            System.out.print("LOADING");
+                                            process.loading("short");
                                         }
                                     } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
                                 }
@@ -594,6 +627,8 @@ public class Main {
                                     ├─┘│  ├┤ ├─┤└─┐├┤   ├┤ │││ │ ├┤ ├┬┘  └┬┘│ ││ │├┬┘  │ │└─┐├┤ ├┬┘│││├─┤│││├┤   ├─┘├┬┘│ │├─┘├┤ ├┬┘│  └┬┘
                                     ┴  ┴─┘└─┘┴ ┴└─┘└─┘  └─┘┘└┘ ┴ └─┘┴└─   ┴ └─┘└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  ┴  ┴└─└─┘┴  └─┘┴└─┴─┘ ┴\s
                                 """);
+                                System.out.print("LOADING");
+                                process.loading("short");
                             }
                         }
                     }
@@ -610,6 +645,15 @@ public class Main {
                         userLoggedIn = false;
                         loginCondition = true;
                         System.out.print("RETURNING TO LOGIN MENU");
+                        process.loading("short");
+                    }
+                    default -> {
+                        System.out.println("""
+                            ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                            │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                            ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                        """);
+                        System.out.print("LOADING");
                         process.loading("short");
                     }
                 }
