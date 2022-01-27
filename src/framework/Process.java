@@ -65,16 +65,16 @@ public class Process {
     public void showUserDetails() {
         // TODO add show details descriptions
         System.out.println("""
-           ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
-           └─┐├┤ │  ├┤ │   │ ││ ││││
-           └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
+            ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
+            │ │└─┐├┤ ├┬┘  └─┐├┤ │  ├┤ │   │ ││ ││││
+            └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
         """);
     }
     public void showAdminDetails() throws IOException {
         System.out.println("""
-           ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
-           └─┐├┤ │  ├┤ │   │ ││ ││││
-           └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
+            ┌─┐┌┬┐┌┬┐┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
+            ├─┤ ││││││ │││  └─┐├┤ │  ├┤ │   │ ││ ││││
+            ┴ ┴ ┴┘┴ ┴┴ ┘└┘  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
         """);
         System.out.println(": 1 : View Users");
         System.out.println(": 2 : View tickets");
