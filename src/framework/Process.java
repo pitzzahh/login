@@ -2,11 +2,9 @@ package framework;
 
 import mainActivity.Main;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import static pinGenerator.PinGenerator.generatePin;
 
@@ -22,6 +20,9 @@ public class Process {
     private static boolean changePin = false;
     private static Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
     private static Hashtable<String, Boolean> resetPinTickets = new Hashtable<>();
+    public Process() {
+        super();
+    }
 
     public String getUserName() {
         return userName;
@@ -35,11 +36,13 @@ public class Process {
     public void setPin(String pin) {
         this.pin = pin;
     }
-    public void write(String writer, File file) throws IOException {
+    public void write(String whatToWrite, File file) throws IOException {
         FileWriter fileWriter = new FileWriter(file);
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.println(writer);
+
+        printWriter.print(whatToWrite);
         printWriter.close();
+
     }
     public boolean isNumber(String numberString) {
         try {
@@ -50,9 +53,9 @@ public class Process {
         }
         return false;
     }
-    public boolean checkEligibility(String userName) {
+    public boolean checkEligibility() {
         try {
-            boolean check = isEligibleToChangePin.get(userName);
+            boolean check = isEligibleToChangePin.get(getUserName());
             if (check) {
                 return true;
             }
@@ -60,8 +63,20 @@ public class Process {
         catch (NullPointerException ignored) {}
         return false;
     }
-    public void submitResetTicket(String userName) {
-        resetPinTickets.put(userName, true);
+    public void submitResetTicket() throws IOException {
+        resetPinTickets.put(getUserName(), false);
+        File userAccountFolder = new File ("src\\" + "files\\" +"resetPinTickets\\" +  getUserName());
+        boolean success = userAccountFolder.mkdirs();
+        if (success) {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("src\\" + "files\\" +"resetPinTickets\\" +  getUserName() + "\\tickets.txt"));
+            for (Map.Entry<String, Boolean> entry : resetPinTickets.entrySet()) {
+                // put key and value separated by a colon
+                writer.write("USER: " + entry.getKey() + " : IS ELIGIBLE: " + entry.getValue());
+                // new line
+                writer.newLine();
+            }
+            writer.flush();
+        }
     }
     public void showUserDetails() {
         // TODO add show details descriptions
@@ -69,19 +84,19 @@ public class Process {
     }
     public void createUserAccount() throws IOException {
         while (Main.createAccountCondition) {
-            System.out.print("Enter username: ");
+            System.out.print("ENTER USERNAME: ");
             Main.temporaryString = Main.scanner.nextLine().trim();
             if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
-                userName = Main.temporaryString;
-                File userAccountFolder = new File ("src\\" + "accounts\\" + "user\\" + userName);
+                setUserName(Main.temporaryString);
+                File userAccountFolder = new File ("src\\" + "files\\" +  "accounts\\" + "user\\" + getUserName());
                 boolean success = userAccountFolder.mkdirs();
                 if (success) {
                     char[] oneTimePin = generatePin();
-                    pin = String.valueOf(oneTimePin);
-                    File userPin = new File ("src\\" + "accounts\\" + "user\\" + userName + "\\pin.txt");
-                    File userLoginAttempt = new File ("src\\" + "accounts\\" + "user\\" + userName + "\\loginAttempt.txt");
-                    write(pin, userPin);
-                    if (pin.length() == 6) {
+                    setPin(String.valueOf(oneTimePin));
+                    File userPin = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() + "\\pin.txt");
+                    File userLoginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
+                    write(getPin(), userPin);
+                    if (getPin().length() == 6) {
                         write("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
                     }
                     else {
@@ -107,15 +122,23 @@ public class Process {
     /*
      * Method that resets the pins of the user, if the user is eligible
      */
-    public void resetPin(boolean isPermitted) throws IOException {
-        if (checkEligibility(userName)) {
-            File changePinCode = new File ("src\\" + "accounts\\" + "user\\" + userName + "\\pin.txt");
-            File updateAttempt = new File ("src\\" + "accounts\\" + "user\\" + userName + "\\loginAttempt.txt");
+    public void resetPin() throws IOException {
+        if (checkEligibility()) {
+            File changePinCode = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\pin.txt");
+            File updateAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
             char[] oneTimePin = generatePin();
-            pin = String.valueOf(oneTimePin);
-            System.out.println("[" + pin + "] is your new pin code " + userName);
-            write(pin, changePinCode);
-            write("4", updateAttempt);
+            setPin(String.valueOf(oneTimePin));
+            System.out.println("[" + getPin() + "] is your new pin code " + getUserName());
+            write(getPin(), changePinCode);
+            if (getPin().length() == 6) {
+                write("4", updateAttempt); // 4 login attempts, if the user did not follow instructions carefully
+            }
+            else {
+                write("6", updateAttempt); // 6 login attempts
+            }
+            Main.createAccountCondition = false;
+            Main.userLoggedIn = false;
+            Main.loginCondition = true;
         }
     }
     /*
@@ -124,7 +147,7 @@ public class Process {
     public void loading(String delay) throws InterruptedException {
         if (delay.equals("long")){
             for (int i = 1; i <= 3; i++) {
-                TimeUnit.MILLISECONDS.sleep(700);
+                TimeUnit.MILLISECONDS.sleep(900);
                 System.out.print('.');
             }
         }
@@ -134,7 +157,7 @@ public class Process {
                 System.out.print('.');
             }
         }
-        System.out.println("\n");
+        System.out.println();
     }
     /*
      *

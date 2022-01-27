@@ -7,11 +7,7 @@ import java.io.IOException;
 
 import java.util.Scanner;
 public class Main {
-
-    static String userName;
-    public static String pin;
     public static String temporaryString;
-
     // when logging in as admin or user
     public static boolean isAdmin = false;
     public static boolean isUser = false;
@@ -40,7 +36,7 @@ public class Main {
                           ╔═╗╦═╗╔═╗╔═╗╦═╗╔═╗╔╦╗ \s
                           ╠═╝╠╦╝║ ║║ ╦╠╦╝╠═╣║║║ \s
                           ╩  ╩╚═╚═╝╚═╝╩╚═╩ ╩╩ ╩ \s
-                        """);
+                """);
                 System.out.println(": 1 : Administrator");
                 System.out.println(": 2 : User");
                 System.out.println(": 3 : Exit");
@@ -62,29 +58,20 @@ public class Main {
                         loginCondition = false;
                         isAdmin = false;
                         isUser = false;
+                        System.out.print("EXITING THE PROGRAM");
+                        process.loading("short");
                         System.out.println("""
-                                    ███        ▄█    █▄       ▄████████ ███▄▄▄▄      ▄█   ▄█▄      ▄██   ▄    ▄██████▄  ███    █▄          ▄████████  ▄██████▄     ▄████████                                       \s
-                                ▀█████████▄   ███    ███     ███    ███ ███▀▀▀██▄   ███ ▄███▀      ███   ██▄ ███    ███ ███    ███        ███    ███ ███    ███   ███    ███                                       \s
-                                   ▀███▀▀██   ███    ███     ███    ███ ███   ███   ███▐██▀        ███▄▄▄███ ███    ███ ███    ███        ███    █▀  ███    ███   ███    ███                                       \s
-                                    ███   ▀  ▄███▄▄▄▄███▄▄   ███    ███ ███   ███  ▄█████▀         ▀▀▀▀▀▀███ ███    ███ ███    ███       ▄███▄▄▄     ███    ███  ▄███▄▄▄▄██▀                                       \s
-                                    ███     ▀▀███▀▀▀▀███▀  ▀███████████ ███   ███ ▀▀█████▄         ▄██   ███ ███    ███ ███    ███      ▀▀███▀▀▀     ███    ███ ▀▀███▀▀▀▀▀                                         \s
-                                    ███       ███    ███     ███    ███ ███   ███   ███▐██▄        ███   ███ ███    ███ ███    ███        ███        ███    ███ ▀███████████                                       \s
-                                    ███       ███    ███     ███    ███ ███   ███   ███ ▀███▄      ███   ███ ███    ███ ███    ███        ███        ███    ███   ███    ███                                       \s
-                                   ▄████▀     ███    █▀      ███    █▀   ▀█   █▀    ███   ▀█▀       ▀█████▀   ▀██████▀  ████████▀         ███         ▀██████▀    ███    ███                                       \s
-                                                                                    ▀                                                                             ███    ███                                       \s
-                                ███    █▄     ▄████████  ▄█  ███▄▄▄▄      ▄██████▄         ▄▄▄▄███▄▄▄▄   ▄██   ▄           ▄███████▄    ▄████████  ▄██████▄     ▄██████▄     ▄████████    ▄████████   ▄▄▄▄███▄▄▄▄  \s
-                                ███    ███   ███    ███ ███  ███▀▀▀██▄   ███    ███      ▄██▀▀▀███▀▀▀██▄ ███   ██▄        ███    ███   ███    ███ ███    ███   ███    ███   ███    ███   ███    ███ ▄██▀▀▀███▀▀▀██▄\s
-                                ███    ███   ███    █▀  ███▌ ███   ███   ███    █▀       ███   ███   ███ ███▄▄▄███        ███    ███   ███    ███ ███    ███   ███    █▀    ███    ███   ███    ███ ███   ███   ███\s
-                                ███    ███   ███        ███▌ ███   ███  ▄███             ███   ███   ███ ▀▀▀▀▀▀███        ███    ███  ▄███▄▄▄▄██▀ ███    ███  ▄███         ▄███▄▄▄▄██▀   ███    ███ ███   ███   ███\s
-                                ███    ███ ▀███████████ ███▌ ███   ███ ▀▀███ ████▄       ███   ███   ███ ▄██   ███      ▀█████████▀  ▀▀███▀▀▀▀▀   ███    ███ ▀▀███ ████▄  ▀▀███▀▀▀▀▀   ▀███████████ ███   ███   ███\s
-                                ███    ███          ███ ███  ███   ███   ███    ███      ███   ███   ███ ███   ███        ███        ▀███████████ ███    ███   ███    ███ ▀███████████   ███    ███ ███   ███   ███\s
-                                ███    ███    ▄█    ███ ███  ███   ███   ███    ███      ███   ███   ███ ███   ███        ███          ███    ███ ███    ███   ███    ███   ███    ███   ███    ███ ███   ███   ███\s
-                                ████████▀   ▄████████▀  █▀    ▀█   █▀    ████████▀        ▀█   ███   █▀   ▀█████▀        ▄████▀        ███    ███  ▀██████▀    ████████▀    ███    ███   ███    █▀   ▀█   ███   █▀ \s
-                                                                                                                                       ███    ███                           ███    ███                             \s
+                                ┌┬┐┬ ┬┌─┐┌┐┌┬┌─  ┬ ┬┌─┐┬ ┬  ┌─┐┌─┐┬─┐  ┬ ┬┌─┐┬┌┐┌┌─┐  ┌┬┐┬ ┬  ┌─┐┬─┐┌─┐┌─┐┬─┐┌─┐┌┬┐
+                                 │ ├─┤├─┤│││├┴┐  └┬┘│ ││ │  ├┤ │ │├┬┘  │ │└─┐│││││ ┬  │││└┬┘  ├─┘├┬┘│ ││ ┬├┬┘├─┤│││
+                                 ┴ ┴ ┴┴ ┴┘└┘┴ ┴   ┴ └─┘└─┘  └  └─┘┴└─  └─┘└─┘┴┘└┘└─┘  ┴ ┴ ┴   ┴  ┴└─└─┘└─┘┴└─┴ ┴┴ ┴
                                 """);
                     }
                     default -> {
-                        System.out.println("INVALID CHOICE");
+                        System.out.println("""
+                             ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                             │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                             ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                        """);
                         System.out.print("RETURNING TO LOGIN MENU");
                         process.loading("short");
                     }
@@ -101,11 +88,10 @@ public class Main {
             }
             else if (isUser) {
                 System.out.println("""
-
                         ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌┐┌ ┬ ┬
                         │ │└─┐├┤ ├┬┘  │││├┤ │││ │ │
                         └─┘└─┘└─┘┴└─  ┴ ┴└─┘┘└┘ └─┘
-                        """);
+                """);
                 System.out.println(": 1 : Sign in");
                 System.out.println(": 2 : create account");
                 System.out.println(": 3 : return to login menu");
@@ -120,11 +106,11 @@ public class Main {
                             System.out.print("ENTER USERNAME: ");
                             temporaryString = scanner.nextLine().trim();
                             if (!process.isNumber(temporaryString)) {
-                                userName = temporaryString;
-                                File user = new File ("src\\" + "accounts\\" + "user\\" + userName);
+                                process.setUserName(temporaryString);
+                                File user = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + process.getUserName());
                                 if (user.exists()) {
                                     while (pinCondition) {
-                                        File loginAttempt = new File ("src\\" + "accounts\\" + "user\\" + userName + "\\loginAttempt.txt");
+                                        File loginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + process.getUserName() + "\\loginAttempt.txt");
                                         Scanner updater = new Scanner(loginAttempt);
                                         int count = updater.nextInt();
                                         updater.close();
@@ -136,7 +122,7 @@ public class Main {
                                                     WARNING!!! This account has reached the maximum login attempt.\s
                                                     The system thinks that this account does not belong to you. If this account belongs to you,
                                                     you can talk to the admin, bring your ID and request a new pin code.
-                                                    """);
+                                            """);
                                             System.out.print("Proceeding to Student's Menu");
                                             process.loading("short");
                                         }
@@ -144,13 +130,13 @@ public class Main {
                                             System.out.println("Login Attempts [ " + count +" ]");
                                             System.out.print("ENTER PIN: ");
                                             temporaryString = scanner.nextLine().trim();
-                                            pin = temporaryString;
-                                            File checkPin = new File ("src\\" + "accounts\\" + "user\\" + userName + "\\pin.txt");
+                                            process.setPin(temporaryString);
+                                            File checkPin = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + process.getUserName() + "\\pin.txt");
                                             Scanner validatePin = new Scanner(checkPin);
                                             String pinCheck =  validatePin.nextLine();
                                             System.out.print("LOGGING IN");
                                             process.loading("long");
-                                            if (pin.equals(pinCheck)) {
+                                            if (process.getPin().equals(pinCheck)) {
                                                 System.out.println("LOGGED IN!");
                                                 userCondition = false;
                                                 pinCondition = false;
@@ -208,7 +194,7 @@ public class Main {
                                                                             case "1" -> {
                                                                                 System.out.print("CHECKING");
                                                                                 process.loading("long");
-                                                                                if (process.checkEligibility(userName)) {
+                                                                                if (process.checkEligibility()) {
                                                                                     do {
                                                                                         System.out.println("""
                                                                                                 ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌─┐┬  ┬┌─┐┬┌┐ ┬  ┌─┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
@@ -228,7 +214,7 @@ public class Main {
                                                                                         if (process.isNumber(temporaryString)) {
                                                                                             switch (temporaryString) {
                                                                                                 case "1" -> {
-                                                                                                    //resetPin(isEligibleToChangePin);
+                                                                                                    process.resetPin();
                                                                                                     pinCondition = false;
                                                                                                     userCondition = false;
                                                                                                     userLoggedIn = false;
@@ -248,28 +234,26 @@ public class Main {
                                                                                                     userLoggedIn = false;
                                                                                                     loginCondition = true;
                                                                                                 }
-                                                                                                default -> System.out.println("| INVALID CHOICE (!) |");
+                                                                                                default -> System.out.println("""
+                                                                                                     ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                                                                     │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                                                                     ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                                                                """);
                                                                                             }
                                                                                         }
 
                                                                                     } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
                                                                                 }
                                                                                 else {
-                                                                                    System.out.println("""
-                                                                                            ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┬ ┬┌─┐┌┬┐  ┌─┐┌─┐┬─┐┌┬┐┬┌┬┐┌┬┐┌─┐┌┬┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
-                                                                                            └┬┘│ ││ │  ├─┤├┬┘├┤   ││││ │ │   └┬┘├┤  │   ├─┘├┤ ├┬┘││││ │  │ ├┤  ││   │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││
-                                                                                             ┴ └─┘└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘ ┴    ┴ └─┘ ┴   ┴  └─┘┴└─┴ ┴┴ ┴  ┴ └─┘─┴┘   ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘
-                                                                                            """);
+
                                                                                     do {
                                                                                         System.out.println("""
-                                                                                                ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌─┐┬  ┬┌─┐┬┌┐ ┬  ┌─┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
-                                                                                                └┬┘│ ││ │  ├─┤├┬┘├┤   ├┤ │  ││ ┬│├┴┐│  ├┤    │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││
-                                                                                                 ┴ └─┘└─┘  ┴ ┴┴└─└─┘  └─┘┴─┘┴└─┘┴└─┘┴─┘└─┘   ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘
-                                                                                                """);
-                                                                                        System.out.println("""
-                                                                                                ┌┬┐┌─┐  ┬ ┬┌─┐┬ ┬  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬┌┬┐  ┌┐┌┌─┐┬ ┬┌─┐
-                                                                                                 │││ │  └┬┘│ ││ │  │││├─┤│││ │    │ │ │  │  ├─┤├─┤││││ ┬├┤   │ │   ││││ ││││ ┌┘
-                                                                                                ─┴┘└─┘   ┴ └─┘└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘  ┴ ┴   ┘└┘└─┘└┴┘ o\s
+                                                                                                ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┬ ┬┌─┐┌┬┐  ┌─┐┌─┐┬─┐┌┬┐┬┌┬┐┌┬┐┌─┐┌┬┐ \s
+                                                                                                └┬┘│ ││ │  ├─┤├┬┘├┤   ││││ │ │   └┬┘├┤  │   ├─┘├┤ ├┬┘││││ │  │ ├┤  ││ \s
+                                                                                                 ┴ └─┘└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘ ┴    ┴ └─┘ ┴   ┴  └─┘┴└─┴ ┴┴ ┴  ┴ └─┘─┴┘ \s
+                                                                                                ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌                     \s
+                                                                                                 │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││                     \s
+                                                                                                 ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘                     \s
                                                                                                 """);
                                                                                         System.out.println(": 1 : Submit pin reset ticket");
                                                                                         System.out.println(": 2 : Return to USER MENU");
@@ -279,7 +263,7 @@ public class Main {
                                                                                         if (process.isNumber(temporaryString)) {
                                                                                             switch (temporaryString) {
                                                                                                 case "1" -> {
-                                                                                                    process.submitResetTicket(userName);
+                                                                                                    process.submitResetTicket();
                                                                                                     pinCondition = false;
                                                                                                     userCondition = false;
                                                                                                     userLoggedIn = false;
@@ -383,6 +367,7 @@ public class Main {
                                                 case "2" -> {
                                                     userCondition = false;
                                                     pinCondition = false;
+                                                    userLoggedIn = false;
                                                 }
                                                 case "3" -> {
                                                     userCondition = false;
@@ -419,6 +404,11 @@ public class Main {
                     }
                     case "2" -> {
                         process.createUserAccount();
+                        System.out.print("CREATING YOUR ACCOUNT");
+                        process.loading("long");
+                        System.out.println("SUCCESSFULLY CREATED (!)");
+                        System.out.print("RETURNING TO LOGIN MENU");
+                        process.loading("short");
                         createAccountCondition = true;
                     }
                     case "3" -> {
@@ -451,7 +441,7 @@ public class Main {
                                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                               """);
+                            """);
                             System.out.print("RETURNING TO USER MENU");
                             process.loading("short");
                         }
