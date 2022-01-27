@@ -117,7 +117,7 @@ public class Process {
             }
         }
     }
-    public void createUserAccount() throws IOException {
+    public void createUserAccount() throws IOException, InterruptedException {
         Ticketing ticketing = new Ticketing();
         System.out.print("ENTER USERNAME: ");
         Main.temporaryString = Main.scanner.nextLine().trim();
@@ -159,7 +159,7 @@ public class Process {
     /*
      * Method that resets the pins of the user, if the user is eligible
      */
-    public void resetPin() throws IOException {
+    public void resetPin() throws IOException, InterruptedException {
         if (checkEligibility()) {
             File changePinCode = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\pin.txt");
             File updateAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");

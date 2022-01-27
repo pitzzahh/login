@@ -3,12 +3,13 @@ package pinGenerator;
 import framework.Process;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class PinGenerator {
     // kung ilang haba yung pin
     static byte lengthOfPin;
     static Process process = new Process();
-    public static char[] generatePin() {
+    public static char[] generatePin() throws InterruptedException {
         // dito pipili ng random numbers
         String numbers = "1234567890";
         String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -95,6 +96,7 @@ public class PinGenerator {
             System.out.print("ENTER YOUR OWN PIN: ");
             String pin = scanner.nextLine();
             oneTimePin = pin.toCharArray();
+            TimeUnit.MILLISECONDS.sleep(400);
         }
         else {
             lengthOfPin = 6;
@@ -102,10 +104,12 @@ public class PinGenerator {
             System.out.println("THE TYPE OF PIN WILL BE A MIXED OF LETTERS AND NUMBERS");
             System.out.printf("YOUR PIN LENGTH WILL BE %d characters long\n", lengthOfPin);
         }
-        System.out.println("\n=========================");
-        System.out.println("|PRESS ENTER TO CONTINUE|");
-        System.out.println("=========================");
-        scanner.nextLine();
+        if (!response.equals("3")) {
+            System.out.println("\n=========================");
+            System.out.println("|PRESS ENTER TO CONTINUE|");
+            System.out.println("=========================");
+            scanner.nextLine();
+        }
         return oneTimePin;
     }
 }
