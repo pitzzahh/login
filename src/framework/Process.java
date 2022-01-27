@@ -70,7 +70,10 @@ public class Process {
 
     public void showUserDetails() {
         // TODO add show details descriptions
-        System.out.println("NAME HERE");
+        System.out.println("USER HERE");
+    }
+    public void showAdminDetails() {
+        System.out.println("ADMIN HERE");
     }
     public void createUserAccount() throws IOException {
         while (Main.createAccountCondition) {
@@ -154,7 +157,10 @@ public class Process {
      */
     public void resetReturningToLoginMenu() {
         Main.userLoggedIn = false;
+        Main.adminLoggedIn = false;
         Main.loginCondition = true;
         Main.isAdmin = false;
+        Main.isUser = false;
+
     }
 }

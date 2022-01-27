@@ -13,10 +13,10 @@ public class Main {
     public static boolean isUser = false;
     public static boolean isExit = false;
     public static boolean loginCondition = true;
-
-    // when user is selected
-    public static boolean userLoggedIn = true;
-
+    // when user is logged in
+    public static boolean userLoggedIn = false;
+    // when admin is logged in
+    public static boolean adminLoggedIn = false;
     // when creating account
     public static boolean createAccountCondition = true;
 
@@ -84,7 +84,190 @@ public class Main {
                     ├─┤ │││││ │ │││  │││├┤ │││ │ │
                     ┴ ┴ ┴┘┴ ┴ ┴ ┘└┘  ┴ ┴└─┘┘└┘ └─┘
                 """);
-                loginCondition = true;
+                System.out.println(": 1 : Sign in");
+                System.out.println(": 2 : return to login menu");
+                System.out.print(">>>: ");
+                temporaryString = scanner.nextLine().trim();
+                switch (temporaryString) {
+                    case "1" -> {
+                        boolean adminUserNameCondition = true;
+                        boolean adminPasswordCondition = true;
+                        while (adminUserNameCondition) {
+                            System.out.print("ENTER USERNAME: ");
+                            temporaryString = scanner.nextLine().trim();
+                            if (!process.isNumber(temporaryString)) {
+                                process.setUserName(temporaryString);
+                                File checkAdminUserName = new File ("src\\" + "files\\" + "accounts\\" + "admin\\" + "\\username.txt");
+                                Scanner validateAdminUserName = new Scanner(checkAdminUserName);
+                                String adminUserName = validateAdminUserName.nextLine();
+                                System.out.println("ADMIN USERNAME: " + adminUserName);
+                                if (process.getUserName().equals(adminUserName)) {
+                                    while (adminPasswordCondition) {
+                                        System.out.print("ENTER PASSWORD: ");
+                                        temporaryString = scanner.nextLine().trim();
+                                        process.setPin(temporaryString);
+                                        File checkPassword = new File ("src\\" + "files\\" + "accounts\\" + "admin\\" + "\\password.txt");
+                                        Scanner validatePassword = new Scanner(checkPassword);
+                                        String password =  validatePassword.nextLine();
+                                        System.out.print("LOGGING IN");
+                                        process.loading("long");
+                                        if (process.getPin().equals(password)) {
+                                            System.out.println("""
+                                                    ┬  ┌─┐┌─┐┌─┐┌─┐┌┬┐  ┬ ┌┐┌  ┬
+                                                    │  │ ││ ┬│ ┬├┤  ││  │ │││  │
+                                                    ┴─┘└─┘└─┘└─┘└─┘─┴┘  ┴ ┘└┘  o
+                                                """);
+                                            adminUserNameCondition = false;
+                                            adminPasswordCondition = false;
+                                            adminLoggedIn = true;
+                                        }
+                                        else {
+                                            do {
+                                                System.out.println("""
+                                                   ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌─┐┬─┐ ┌┬┐  ┬
+                                                   │ │││ └┐┌┘├─┤│  │ ││  ├─┘├─┤└─┐└─┐││││ │├┬┘  ││  │
+                                                   ┴ ┘└┘  └┘ ┴ ┴┴─┘┴ ┴┘  ┴  ┴ ┴└─┘└─┘└┴┘└─┘┴└  ─┴┘  o
+                                                """);
+                                                System.out.println(": 1 : Retry");
+                                                System.out.println(": 2 : Return to ADMIN MENU");
+                                                System.out.println(": 3 : Return to LOGIN MENU");
+                                                System.out.print(">>>: ");
+                                                temporaryString = scanner.nextLine().trim();
+                                                if (process.isNumber(temporaryString)) {
+                                                    switch (temporaryString) {
+                                                        case "1" -> {
+                                                            System.out.print("RETRYING");
+                                                            process.loading("short");
+                                                        }
+                                                        case "2" -> {
+                                                            adminUserNameCondition = false;
+                                                            adminPasswordCondition = false;
+                                                        }
+                                                        case "3" -> {
+                                                            adminUserNameCondition = false;
+                                                            adminPasswordCondition = false;
+                                                            process.resetReturningToLoginMenu();
+                                                        }
+                                                        default -> System.out.println("""
+                                                            ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                            │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                            ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                        """);
+                                                    }
+                                                }
+                                                else {
+                                                    System.out.println("""
+                                                        ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                        │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                        ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                    """);
+                                                }
+                                            } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3") && !temporaryString.equals("4"));
+                                        }
+                                    }
+                                }
+                                else {
+                                    do {
+                                        System.out.println("""
+                                            ┬ ┬┬─┐┌─┐┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐  ┬
+                                            │││├┬┘│ │││││ ┬  │ │└─┐├┤ ├┬┘│││├─┤│││├┤   │
+                                            └┴┘┴└─└─┘┘└┘└─┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  o
+                                        """);
+                                        System.out.println(": 1 : Retry");
+                                        System.out.println(": 2 : Return to ADMIN MENU");
+                                        System.out.println(": 3 : Return to LOGIN MENU");
+                                        System.out.print(">>>: ");
+                                        temporaryString = scanner.nextLine().trim();
+                                        if (process.isNumber(temporaryString)) {
+                                            switch (temporaryString) {
+                                                case "1" -> {
+                                                    System.out.print("RETRYING");
+                                                    process.loading("short");
+                                                }
+                                                case "2" -> {
+                                                    System.out.print("RETURNING TO ADMIN MENU");
+                                                    process.loading("short");
+                                                    isAdmin = true;
+                                                    loginCondition = false;
+                                                }
+                                                case "3" -> {
+                                                    System.out.print("RETURNING TO LOGIN MENU");
+                                                    process.loading("short");
+                                                    process.resetReturningToLoginMenu();
+                                                }
+                                                default -> System.out.println("""
+                                                    ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                    │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                    ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                                """);
+                                            }
+                                        }
+                                        else {
+                                            System.out.println("""
+                                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                            """);
+                                        }
+                                    } while (!temporaryString.equals("1") && !temporaryString.equals("2") && !temporaryString.equals("3"));
+                                }
+                            }
+                            else {
+                                System.out.println("""
+                                    ┌─┐┬  ┌─┐┌─┐┌─┐┌─┐  ┌─┐┌┐┌┌┬┐┌─┐┬─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐  ┌─┐┬─┐┌─┐┌─┐┌─┐┬─┐┬  ┬ ┬
+                                    ├─┘│  ├┤ ├─┤└─┐├┤   ├┤ │││ │ ├┤ ├┬┘  └┬┘│ ││ │├┬┘  │ │└─┐├┤ ├┬┘│││├─┤│││├┤   ├─┘├┬┘│ │├─┘├┤ ├┬┘│  └┬┘
+                                    ┴  ┴─┘└─┘┴ ┴└─┘└─┘  └─┘┘└┘ ┴ └─┘┴└─   ┴ └─┘└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  ┴  ┴└─└─┘┴  └─┘┴└─┴─┘ ┴\s
+                                """);
+                            }
+                        }
+                    }
+                    case "2" -> {
+                        System.out.print("RETURNING TO LOGIN MENU");
+                        process.loading("short");
+                        process.resetReturningToLoginMenu();
+                    }
+                }
+                while (adminLoggedIn) { // if signed is a user
+                    System.out.println(": 1 : Show details");
+                    System.out.println(": 2 : return to ADMIN menu");
+                    System.out.println(": 3 : return to LOGIN menu");
+                    System.out.print(">>>: ");
+                    temporaryString = scanner.nextLine().trim();
+                    switch (temporaryString) {
+                        case "1" -> {
+                            System.out.print("LOADING");
+                            process.loading("short");
+                            process.showAdminDetails();
+                        }
+                        case "2" -> {
+                            System.out.print("LOGGING OUT");
+                            process.loading("long");
+                            System.out.println("SUCCESSFULLY LOGGED OUT");
+                            System.out.print("RETURNING TO ADMIN MENU");
+                            process.loading("short");
+                            adminLoggedIn = false;
+                            loginCondition = false;
+                            isAdmin = true;
+                        }
+                        case "3" -> {
+                            System.out.print("LOGGING OUT");
+                            process.loading("long");
+                            System.out.println("SUCCESSFULLY LOGGED OUT");
+                            System.out.print("RETURNING TO LOGIN MENU");
+                            process.loading("short");
+                            process.resetReturningToLoginMenu();
+                        }
+                        default -> {
+                            System.out.println("""
+                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                            """);
+                            System.out.print("LOADING");
+                            process.loading("short");
+                        }
+                    }
+                }
             }
             else if (isUser) {
                 System.out.println("""
@@ -123,7 +306,7 @@ public class Main {
                                                     The system thinks that this account does not belong to you. If this account belongs to you,
                                                     you can talk to the admin, bring your ID and request a new pin code.
                                             """);
-                                            System.out.print("Proceeding to Student's Menu");
+                                            System.out.print("PROCEEDING TO USER MENU");
                                             process.loading("short");
                                         }
                                         if (count != 0) {
@@ -366,12 +549,14 @@ public class Main {
                                             switch (temporaryString) {
                                                 case "1" -> {
                                                     System.out.print("RETRYING");
-                                                    process.loading("long");
+                                                    process.loading("short");
                                                 }
                                                 case "2" -> {
                                                     userCondition = false;
                                                     pinCondition = false;
                                                     userLoggedIn = false;
+                                                    System.out.print("RETURNING TO USER MENU");
+                                                    process.loading("short");
                                                 }
                                                 case "3" -> {
                                                     userCondition = false;
@@ -379,6 +564,8 @@ public class Main {
                                                     userLoggedIn = false;
                                                     isUser = false;
                                                     loginCondition = true;
+                                                    System.out.print("RETURNING TO LOGIN MENU");
+                                                    process.loading("short");
                                                 }
                                                 default -> System.out.println("""
                                                     ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
@@ -408,16 +595,18 @@ public class Main {
                     }
                     case "2" -> {
                         process.createUserAccount();
+                        createAccountCondition = true;
                         System.out.print("CREATING YOUR ACCOUNT");
                         process.loading("long");
                         System.out.println("SUCCESSFULLY CREATED (!)");
                         System.out.print("RETURNING TO LOGIN MENU");
                         process.loading("short");
-                        createAccountCondition = true;
                     }
                     case "3" -> {
                         userLoggedIn = false;
                         loginCondition = true;
+                        System.out.print("RETURNING TO LOGIN MENU");
+                        process.loading("short");
                     }
                 }
                 while (userLoggedIn) { // if signed is a user
@@ -427,8 +616,15 @@ public class Main {
                     System.out.print(">>>: ");
                     temporaryString = scanner.nextLine().trim();
                     switch (temporaryString) {
-                        case "1" -> process.showUserDetails();
+                        case "1" -> {
+                            System.out.print("LOADING");
+                            process.loading("short");
+                            process.showUserDetails();
+                        }
                         case "2" -> {
+                            System.out.print("LOGGING OUT");
+                            process.loading("long");
+                            System.out.println("SUCCESSFULLY LOGGED OUT");
                             System.out.print("RETURNING TO USER MENU");
                             process.loading("short");
                             userLoggedIn = false;
@@ -436,6 +632,9 @@ public class Main {
                             isUser = true;
                         }
                         case "3" -> {
+                            System.out.print("LOGGING OUT");
+                            process.loading("long");
+                            System.out.println("SUCCESSFULLY LOGGED OUT");
                             System.out.print("RETURNING TO LOGIN MENU");
                             process.loading("short");
                             process.resetReturningToLoginMenu();
@@ -446,7 +645,7 @@ public class Main {
                                 │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                 ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                             """);
-                            System.out.print("RETURNING TO USER MENU");
+                            System.out.print("LOADING");
                             process.loading("short");
                         }
                     }
