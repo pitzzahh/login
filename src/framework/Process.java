@@ -19,7 +19,7 @@ public class Process {
 
     private static boolean changePin = false;
     private static Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
-    private static Hashtable<String, Boolean> resetPinTickets = new Hashtable<>();
+    static Hashtable<String, Boolean> resetPinTickets = new Hashtable<>();
     public Process() {
         super();
     }
@@ -63,21 +63,11 @@ public class Process {
         catch (NullPointerException ignored) {}
         return false;
     }
-    public void submitResetTicket() throws IOException {
-        resetPinTickets.put(getUserName(), false);
-        File userAccountFolder = new File ("src\\" + "files\\" +"resetPinTickets\\" +  getUserName());
-        boolean success = userAccountFolder.mkdirs();
-        if (success) {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("src\\" + "files\\" +"resetPinTickets\\" +  getUserName() + "\\tickets.txt"));
-            for (Map.Entry<String, Boolean> entry : resetPinTickets.entrySet()) {
-                // put key and value separated by a colon
-                writer.write("USER: " + entry.getKey() + " : IS ELIGIBLE: " + entry.getValue());
-                // new line
-                writer.newLine();
-            }
-            writer.flush();
-        }
+    public void submitTicket() throws IOException {
+        Ticketing ticketing = new Ticketing();
+        ticketing.submitResetTicket();
     }
+
     public void showUserDetails() {
         // TODO add show details descriptions
         System.out.println("NAME HERE");
@@ -147,7 +137,7 @@ public class Process {
     public void loading(String delay) throws InterruptedException {
         if (delay.equals("long")){
             for (int i = 1; i <= 3; i++) {
-                TimeUnit.MILLISECONDS.sleep(900);
+                TimeUnit.MILLISECONDS.sleep(700);
                 System.out.print('.');
             }
         }
