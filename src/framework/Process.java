@@ -133,7 +133,6 @@ public class Process {
                 File userLoginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
                 write(getUserName(), userName);
                 write(getPin(), userPin);
-                resetPinTickets.put(getUserName(), false);
                 ticketing.submitResetTicket();
                 if (getPin().length() == 6) {
                     write("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
@@ -272,9 +271,9 @@ public class Process {
                         }
                         else {
                             Main.userLoggedIn = true;
+                            write("6", updateAttempt); // 6 login attempts
                         }
                         insertCredentials = false;
-                        write("6", updateAttempt); // 6 login attempts
                     }
                     else {
                         do {

@@ -30,9 +30,12 @@ public class Ticketing extends Process {
                         isEligibleToChangePin.put(getUserName(),true);
                         System.out.print("GIVING PERMISSION");
                         loading("long");
-                        boolean isRemoved = resetPinTickets.remove(getUserName());
-                        System.out.println("REMOVED?: " + isRemoved);
+                        resetPinTickets.remove(getUserName());
                         givePermission = false;
+                        System.out.println("=========================");
+                        System.out.println("|PRESS ENTER TO CONTINUE|");
+                        System.out.println("=========================");
+                        Main.scanner.nextLine();
                     }
                     else {
                         do {
@@ -96,10 +99,6 @@ public class Ticketing extends Process {
                     loading("short");
                 }
             }
-            System.out.println("=========================");
-            System.out.println("|PRESS ENTER TO CONTINUE|");
-            System.out.println("=========================");
-            Main.scanner.nextLine();
         }
     }
     protected void viewTickets() {
