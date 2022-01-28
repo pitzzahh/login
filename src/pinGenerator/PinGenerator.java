@@ -9,6 +9,8 @@ public class PinGenerator {
     // kung ilang haba yung pin
     static byte lengthOfPin;
     static final Process process = new Process();
+    static Random random = new Random();
+    static char[] oneTimePin;
     public static char[] generatePin() throws InterruptedException {
         // dito pipili ng random numbers,letters or mixed
         String numbers = "1234567890";
@@ -25,7 +27,7 @@ public class PinGenerator {
         System.out.print(">>>: ");
         response = scanner.nextLine().trim();
         // dito i check if yung laman ng inputs it nandun sa char array na oneTimePin
-        char[] oneTimePin = new char[0];
+
         if (response.equals("1") || response.equals("2")) {
             switch (response) {
                 case "1" -> otpType = "NUMBERS";
@@ -59,37 +61,37 @@ public class PinGenerator {
                     lengthOfPin = 6;
                     System.out.println("YOUR PIN LENGTH SHOULD BE A NUMBER");
                     System.out.printf("YOUR PIN LENGTH WILL BE %d characters long\n", lengthOfPin);
+                    oneTimePin = new char[lengthOfPin];
+                    for (int index = 0; index < lengthOfPin; index++) {
+                        // dito i store niya lang sa listahan yung 10 numbers na generated
+                        oneTimePin[index] = mixed.charAt(random.nextInt(mixed.length()));
+                    }
                     break;
                 }
             }
-            Random random = new Random();
+
             // dito ilalagay yung mga generated numbers (di siya numbers actually mga characters lang)
             oneTimePin = new char[lengthOfPin];
             // dito maga loop lang na 4 na beses, it means apat na beses maga generate ng numbers
             switch (otpType) {
                 case "NUMBERS" -> {
-                    for (int i = 0; i < lengthOfPin; i++) {
+                    for (int index = 0; index < lengthOfPin; index++) {
                         // dito i store niya lang sa listahan yung 4 numbers na generated
-                        oneTimePin[i] = numbers.charAt(random.nextInt(numbers.length()));
+                        oneTimePin[index] = numbers.charAt(random.nextInt(numbers.length()));
                     }
                 }
                 case "LETTERS" -> {
-                    for (int j = 0; j < lengthOfPin; j++) {
+                    for (int index = 0; index < lengthOfPin; index++) {
                         // dito i store niya lang sa listahan yung 6 numbers na generated
-                        oneTimePin[j] = letters.charAt(random.nextInt(letters.length()));
+                        oneTimePin[index] = letters.charAt(random.nextInt(letters.length()));
                     }
                 }
                 default -> {
-                    for (int k = 0; k < lengthOfPin; k++) {
+                    for (int index = 0; index < lengthOfPin; index++) {
                         // dito i store niya lang sa listahan yung 10 numbers na generated
-                        oneTimePin[k] = mixed.charAt(random.nextInt(mixed.length()));
+                        oneTimePin[index] = mixed.charAt(random.nextInt(mixed.length()));
                     }
                 }
-            }
-            System.out.println("=========================");
-            System.out.print("YOUR PIN: ");
-            for (char c : oneTimePin) {
-                System.out.print(c);
             }
         }
         else if (response.equals("3")) {
@@ -103,13 +105,21 @@ public class PinGenerator {
             System.out.println("INVALID CHOICE (!)");
             System.out.println("THE TYPE OF PIN WILL BE A MIXED OF LETTERS AND NUMBERS");
             System.out.printf("YOUR PIN LENGTH WILL BE %d characters long\n", lengthOfPin);
+            oneTimePin = new char[lengthOfPin];
+            for (int index = 0; index < lengthOfPin; index++) {
+                // dito i store niya lang sa listahan yung 10 numbers na generated
+                oneTimePin[index] = mixed.charAt(random.nextInt(mixed.length()));
+            }
         }
-        if (!response.equals("3")) {
-            System.out.println("\n=========================");
-            System.out.println("|PRESS ENTER TO CONTINUE|");
-            System.out.println("=========================");
-            scanner.nextLine();
+        System.out.println("=========================");
+        System.out.print("YOUR PIN: ");
+        for (char c : oneTimePin) {
+            System.out.print(c);
         }
+        System.out.println("\n=========================");
+        System.out.println("|PRESS ENTER TO CONTINUE|");
+        System.out.println("=========================");
+        scanner.nextLine();
         return oneTimePin;
     }
 }
