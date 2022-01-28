@@ -11,7 +11,7 @@ public class Main {
     public static boolean isAdmin = false;
     // whole condition
     protected static boolean isExit = false;
-
+    // condition of main login menu
     public static boolean loginCondition = true;
     // when user is logged in
     public static boolean userLoggedIn = false;
