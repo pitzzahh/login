@@ -1,8 +1,7 @@
 package framework;
-
+import org.apache.commons.io.FileUtils;
 import mainActivity.Main;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import static pinGenerator.PinGenerator.generatePin;
@@ -93,10 +92,10 @@ public class Process {
             ┴ ┴ ┴┘ ┴ ┴ ┴ ┘└┘  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
         """);
         System.out.println(": 1 : View accounts");
-        System.out.println(": 2 : Remove account");
-        System.out.println(": 3 : View tickets");
-        System.out.println(": 4 : return to ADMIN menu");
-        System.out.println(": 5 : return to LOGIN menu");
+        System.out.println(": 2 : Remove accounts");
+        System.out.println(": 2 : View tickets");
+        System.out.println(": 3 : return to ADMIN menu");
+        System.out.println(": 4 : return to LOGIN menu");
         System.out.print(">>>: ");
         Main.temporaryString = Main.scanner.nextLine().trim();
         switch (Main.temporaryString) {
@@ -109,41 +108,41 @@ public class Process {
                 showAdminDetails();
             }
             case "2" -> {
-                // TODO remove accounts
-                List<String> listOfUsers = viewUsers();
-                if (!listOfUsers.isEmpty()) {
-                    listOfUsersAndPasswords();
-                    System.out.print("ENTER USER ACCOUNT YOU WANT TO REMOVE: ");
-                    String username = Main.scanner.nextLine().trim();
-                    File user = new File("src\\files\\accounts\\user\\" + username);
-                    if (user.isDirectory()) {
-                        File[] userFiles = user.listFiles();
-                        assert userFiles != null;
-                        for (File file : userFiles) {
-                            System.out.println(file + " deleted.");
-                            file.delete();
+                System.out.print("ENTER USER ACCOUNT YOU WANT TO REMOVE: ");
+                String name = Main.scanner.nextLine().trim();
+                if (!name.isEmpty()) {
+                    File user = new File("src\\files\\accounts\\user\\" + name);
+                    if (user.exists()) {
+                        try {
+                            FileUtils.deleteDirectory(new File(String.valueOf(user))); //deletes the whole folder
+                            System.out.printf("REMOVING THE ACCOUNT: [%s]", name);
+                            loading("long");
+                            System.out.println("SUCCESSFULLY REMOVED (!)");
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-
                     }
                     else {
                         System.out.println("""
-                             ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐
-                             │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │\s
-                             └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴\s
+                            ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐
+                            │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │\s
+                            └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴\s
                         """);
                     }
-                    System.out.print("RETURNING TO ADMIN SELECTION");
-                    loading("short");
                 }
                 else {
                     System.out.println("""
-                          ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
-                           │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
-                           ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
-                    """);
-                    System.out.print("RETURNING TO ADMIN SELECTION");
-                    loading("shor");
+                        ┬ ┬┌┐┌┬┌─┌┐┌┌─┐┬ ┬┌┐┌  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
+                        │ ││││├┴┐││││ │││││││  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
+                        └─┘┘└┘┴ ┴┘└┘└─┘└┴┘┘└┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
+                     """);
                 }
+                System.out.print("RETURNING TO ADMIN SELECTION");
+                loading("short");
+                System.out.println("\n=========================");
+                System.out.println("|PRESS ENTER TO CONTINUE|");
+                System.out.println("=========================");
+                Main.scanner.nextLine();
                 showAdminDetails();
             }
             case "3" -> {
@@ -179,31 +178,44 @@ public class Process {
         }
     }
     private void listOfUsersAndPasswords() throws InterruptedException {
+        List<String> allUsers = viewUsers();
         try {
-            System.out.println("""
-            ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
-            │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
-            ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
-        """);
-            List<String> allUsers = viewUsers();
-            for (int i = 0; i < allUsers.size(); i++) {
-                File userName = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\username.txt");
-                File userPasswords = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\pin.txt");
-                Scanner userNameScanner = new Scanner(userName);
-                String username =  userNameScanner.nextLine();
-                Scanner passwordScanner = new Scanner(userPasswords);
-                String password =  passwordScanner.nextLine();
-                System.out.printf("USER     [%d]: %s\n", ( i + 1 ), username);
-                System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), password);
+            if (allUsers.size() != 0) {
+                for (int i = 0; i < allUsers.size(); i++) {
+                    System.out.println("""
+                        ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
+                        │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
+                        ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
+                    """);
+                    File userName = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\username.txt");
+                    File userPasswords = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\pin.txt");
+                    Scanner userNameScanner = new Scanner(userName);
+                    String username =  userNameScanner.nextLine();
+                    Scanner passwordScanner = new Scanner(userPasswords);
+                    String password =  passwordScanner.nextLine();
+                    System.out.printf("USER     [%d]: %s\n", ( i + 1 ), username);
+                    System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), password);
+                    userNameScanner.close();
+                    passwordScanner.close();
+                }
             }
-        }catch (FileNotFoundException fNfE) {
-            System.out.println("""
+            else {
+                System.out.println("""
                   ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
                    │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
                    ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
-             """);
+                """);
+                System.out.print("RETURNING TO ADMIN SELECTION");
+                loading("short");
+            }
+        } catch (FileNotFoundException fNfE) {
+            System.out.println("""
+                ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┬┬  ┌─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┬┐┬┌─┐┌─┐┬┌┐┌┌─┐
+                │ │└─┐├┤ ├┬┘  ├┤ ││  ├┤ └─┐  ├─┤├┬┘├┤   ││││└─┐└─┐│││││ ┬
+                └─┘└─┘└─┘┴└─  └  ┴┴─┘└─┘└─┘  ┴ ┴┴└─└─┘  ┴ ┴┴└─┘└─┘┴┘└┘└─┘
+            """);
             System.out.print("RETURNING TO ADMIN SELECTION");
-            loading("shor");
+            loading("short");
         }
     }
 
@@ -356,8 +368,10 @@ public class Process {
                         username = validateUserName.nextLine();
                         Scanner validatePassword = new Scanner(checkPassword);
                         password =  validatePassword.nextLine();
+                        validateUserName.close();
+                        validatePassword.close();
                     }
-                    catch (FileNotFoundException fNfE) {
+                    catch (FileNotFoundException | NoSuchElementException caughtException) {
                         invalidUser = true;
                     }
                     System.out.print("LOGGING IN");
@@ -376,6 +390,9 @@ public class Process {
                             Main.userLoggedIn = true;
                             write("6", updateAttempt); // 6 login attempts
                         }
+                        checkUserName.deleteOnExit();
+                        checkPassword.deleteOnExit();
+
                         insertCredentials = false;
                     }
                     else {
@@ -754,9 +771,7 @@ public class Process {
     }
     protected List<String> viewUsers() {
         File directory = new File("src\\files\\accounts\\user\\");
-
         FileFilter directoryFileFilter = File::isDirectory;
-
         File[] directoryListAsFile = directory.listFiles(directoryFileFilter);
         assert directoryListAsFile != null;
         List<String> foldersInDirectory = new ArrayList<>(directoryListAsFile.length);
