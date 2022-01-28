@@ -9,7 +9,7 @@ public class PinGenerator {
     // kung ilang haba yung pin
     static byte lengthOfPin;
     static final Process process = new Process();
-    static Random random = new Random();
+    static final Random random = new Random();
     static char[] oneTimePin;
     public static char[] generatePin() throws InterruptedException {
         // dito pipili ng random numbers,letters or mixed
