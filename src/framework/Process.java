@@ -187,8 +187,8 @@ public class Process {
                         │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
                         ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
                     """);
-                    File userName = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\username.txt");
-                    File userPasswords = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\pin.txt");
+                    File userName = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\username.txt");
+                    File userPasswords = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\pin.txt");
                     Scanner userNameScanner = new Scanner(userName);
                     String username =  userNameScanner.nextLine();
                     Scanner passwordScanner = new Scanner(userPasswords);
@@ -230,14 +230,14 @@ public class Process {
         Main.temporaryString = Main.scanner.nextLine().trim();
         if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
             setUserName(Main.temporaryString);
-            File userAccountFolder = new File ("src\\" + "files\\" +  "accounts\\" + "user\\" + getUserName());
+            File userAccountFolder = new File ("src\\files\\accounts\\user\\" + getUserName());
             boolean success = userAccountFolder.mkdirs();
             if (success) {
                 char[] oneTimePin = generatePin();
                 setPin(String.valueOf(oneTimePin));
-                File userName = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() + "" + "\\username.txt");
-                File userPin = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() +  "" + "\\pin.txt");
-                File userLoginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() +  "" + "\\loginAttempt.txt");
+                File userName = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\username.txt");
+                File userPin = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\pin.txt");
+                File userLoginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
                 write(getUserName(), userName);
                 write(getPin(), userPin);
                 if (getPin().length() == 6) {
@@ -275,8 +275,8 @@ public class Process {
      */
     public void resetPin() throws IOException, InterruptedException {
         if (checkEligibility()) {
-            File changePinCode = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\pin.txt");
-            File updateAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
+            File changePinCode = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\pin.txt");
+            File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
             char[] oneTimePin = generatePin();
             setPin(String.valueOf(oneTimePin));
             System.out.println("[" + getPin() + "] is your new pin code " + getUserName());
@@ -356,12 +356,12 @@ public class Process {
                     Main.temporaryString = Main.scanner.nextLine().trim();
                     setPin(Main.temporaryString);
                     if (isAdmin) {
-                        checkUserName = new File ("src\\" + "files\\" + "accounts\\" + "admin\\" + "\\username.txt");
-                        checkPassword = new File ("src\\" + "files\\" + "accounts\\" + "admin\\" + "\\password.txt");
+                        checkUserName = new File ("src\\files\\accounts\\admin\\username.txt");
+                        checkPassword = new File ("src\\files\\accounts\\admin\\password.txt");
                     }
                     else {
-                        checkUserName = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() + "\\username.txt");
-                        checkPassword = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\pin.txt");
+                        checkUserName = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\username.txt");
+                        checkPassword = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\pin.txt");
                     }
                     try {
                         Scanner validateUserName = new Scanner(checkUserName);
@@ -428,7 +428,7 @@ public class Process {
                                         loading("short");
                                         if (!isAdmin) {
                                             try {
-                                                File loginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
+                                                File loginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
                                                 Scanner loginCountUpdater = new Scanner(loginAttempt);
                                                 int count = loginCountUpdater.nextInt();
                                                 loginCountUpdater.close();
@@ -528,7 +528,7 @@ public class Process {
                                                                 } while (!Main.temporaryString.equals("1") && !Main.temporaryString.equals("2") && !Main.temporaryString.equals("3"));
                                                             }
                                                             else {
-                                                                File checkUser = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName());
+                                                                File checkUser = new File ("src\\files\\accounts\\user\\" + getUserName());
                                                                 if (checkUser.isDirectory()) {
                                                                     do {
                                                                         System.out.println("""
