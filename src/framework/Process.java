@@ -10,7 +10,7 @@ public class Process {
     private String userName;
     private String pin;
     static final Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
-    static final Hashtable<String, Boolean> resetPinTickets = new Hashtable<>();
+    static final Hashtable<String, Boolean> insertTicket = new Hashtable<>();
 
     public String getUserName() {
         return userName;
@@ -62,10 +62,10 @@ public class Process {
     /**
      *  Enables the user to send reset pin ticket and storing their ticket in a HashTable, only if the user forgot his/her password.
      *  @throws IOException if the {@link framework.Ticketing#submitResetTicket}
-     *  method's' input and output process was interrupted
+     *  method's input and output process was interrupted
      */
     public void submitTicket() throws IOException {
-        resetPinTickets.put(getUserName(), true);
+        insertTicket.put(getUserName(), true);
         Ticketing ticketing = new Ticketing();
         ticketing.submitResetTicket();
     }
@@ -500,7 +500,7 @@ public class Process {
                                                                                 Main.userLoggedIn = false;
                                                                                 Main.loginCondition = false;
                                                                                 Main.isAdmin = false;
-                                                                                resetPinTickets.put(getUserName(), false);
+                                                                                insertTicket.put(getUserName(), false);
                                                                                 Ticketing ticketing = new Ticketing();
                                                                                 ticketing.submitResetTicket();
                                                                             }

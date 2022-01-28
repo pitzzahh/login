@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Ticketing extends Process {
     public void submitResetTicket() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
-        for (Map.Entry<String, Boolean> entry : resetPinTickets.entrySet()) {
+        for (Map.Entry<String, Boolean> entry : insertTicket.entrySet()) {
             writer.write("[ IS TRYING TO RESET PIN: " + entry.getValue() + " ]" + " USER: " + entry.getKey()) ;
             writer.newLine();
         }
@@ -33,7 +33,7 @@ public class Ticketing extends Process {
                             isEligibleToChangePin.put(getUserName(),true);
                             System.out.print("GIVING PERMISSION");
                             loading("long");
-                            resetPinTickets.remove(getUserName());
+                            insertTicket.remove(getUserName());
                             submitTicket();
                             givePermission = false;
                             System.out.println("PERMISSION GRANTED (!)");
