@@ -75,9 +75,16 @@ public class Main {
             }
             if (!isExit) {
                 process.allAdminAndUserMenu(isAdmin);
-                while (adminLoggedIn) { // if signed is a user
-                    System.out.println(": 1 : Show ADMIN selections");
-                    System.out.println(": 2 : return to ADMIN menu");
+                while (adminLoggedIn || userLoggedIn) { // if signed is a user
+                    String account = "";
+                    if (adminLoggedIn) {
+                        account ="ADMIN";
+                    }
+                    if (userLoggedIn) {
+                        account = "USER";
+                    }
+                    System.out.println(": 1 : Show " + account + " selections");
+                    System.out.println(": 2 : return to " +  account + " menu");
                     System.out.println(": 3 : return to LOGIN menu");
                     System.out.print(">>>: ");
                     temporaryString = scanner.nextLine().trim();
@@ -85,23 +92,36 @@ public class Main {
                         case "1" -> {
                             System.out.print("LOADING");
                             process.loading("short");
-                            process.showAdminDetails();
+                            if (adminLoggedIn) {
+                                process.showAdminDetails();
+                            }
+                            if (userLoggedIn) {
+                                process.showUserDetails();
+                            }
                         }
                         case "2" -> {
                             System.out.print("LOGGING OUT");
                             process.loading("long");
                             System.out.println("SUCCESSFULLY LOGGED OUT");
-                            System.out.print("RETURNING TO ADMIN MENU");
+                            System.out.print("RETURNING TO " + account + " MENU");
                             process.loading("short");
-                            adminLoggedIn = false;
-                            loginCondition = false;
-                            isAdmin = true;
+
+                            if (adminLoggedIn) {
+                                adminLoggedIn = false;
+                                loginCondition = false;
+                                isAdmin = true;
+                            }
+                            if (userLoggedIn) {
+                                userLoggedIn = false;
+                                loginCondition = false;
+                                isAdmin = false;
+                            }
                         }
                         case "3" -> {
                             System.out.print("LOGGING OUT");
                             process.loading("long");
                             System.out.println("SUCCESSFULLY LOGGED OUT");
-                            System.out.print("RETURNING TO LOGIN MENU");
+                            System.out.print("RETURNING TO " + account + " MENU");
                             process.loading("short");
                             process.resetReturningToLoginMenu();
                         }
@@ -110,48 +130,6 @@ public class Main {
                                 ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬ ┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                 │ │││ └┐┌┘├─┤│  │  ││  │  ├─┤│ │││  ├┤   │
                                 ┴ ┘└┘  └┘ ┴ ┴┴─┘┴ ─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                            """);
-                            System.out.print("LOADING");
-                            process.loading("short");
-                        }
-                    }
-                }
-
-                while (userLoggedIn) { // if signed is a user
-                    System.out.println(": 1 : Show USER selections");
-                    System.out.println(": 2 : return to user menu");
-                    System.out.println(": 3 : return to login menu");
-                    System.out.print(">>>: ");
-                    temporaryString = scanner.nextLine().trim();
-                    switch (temporaryString) {
-                        case "1" -> {
-                            System.out.print("LOADING");
-                            process.loading("short");
-                            process.showUserDetails();
-                        }
-                        case "2" -> {
-                            userLoggedIn = false;
-                            loginCondition = false;
-                            System.out.print("LOGGING OUT");
-                            process.loading("long");
-                            System.out.println("SUCCESSFULLY LOGGED OUT");
-                            System.out.print("RETURNING TO USER MENU");
-                            process.loading("short");
-
-                        }
-                        case "3" -> {
-                            System.out.print("LOGGING OUT");
-                            process.loading("long");
-                            System.out.println("SUCCESSFULLY LOGGED OUT");
-                            System.out.print("RETURNING TO LOGIN MENU");
-                            process.loading("short");
-                            process.resetReturningToLoginMenu();
-                        }
-                        default -> {
-                            System.out.println("""
-                                ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                             """);
                             System.out.print("LOADING");
                             process.loading("short");

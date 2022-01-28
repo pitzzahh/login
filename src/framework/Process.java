@@ -51,7 +51,7 @@ public class Process {
      */
     public boolean checkEligibility() {
         try {
-            boolean check = isEligibleToChangePin.get(getUserName());
+            boolean check = isEligibleToChangePin.get(getUserName()); // gets the value of the key which is the username
             if (check) {
                 return true;
             }
@@ -183,12 +183,12 @@ public class Process {
         List<String> allUsers = viewUsers();
         try {
             if (allUsers.size() != 0) {
+                System.out.println("""
+                    ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
+                    │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
+                    ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
+                """);
                 for (int i = 0; i < allUsers.size(); i++) {
-                    System.out.println("""
-                        ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
-                        │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
-                        ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
-                    """);
                     File userName = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\username.txt");
                     File userPasswords = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\pin.txt");
                     Scanner userNameScanner = new Scanner(userName);
@@ -500,6 +500,9 @@ public class Process {
                                                                                 Main.userLoggedIn = false;
                                                                                 Main.loginCondition = false;
                                                                                 Main.isAdmin = false;
+                                                                                resetPinTickets.put(getUserName(), false);
+                                                                                Ticketing ticketing = new Ticketing();
+                                                                                ticketing.submitResetTicket();
                                                                             }
                                                                             case "2" -> {
                                                                                 insertCredentials = false;

@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Ticketing extends Process {
     public void submitResetTicket() throws IOException {
@@ -32,8 +33,8 @@ public class Ticketing extends Process {
                             isEligibleToChangePin.put(getUserName(),true);
                             System.out.print("GIVING PERMISSION");
                             loading("long");
-                            submitTicket();
                             resetPinTickets.remove(getUserName());
+                            submitTicket();
                             givePermission = false;
                             System.out.println("PERMISSION GRANTED (!)");
                             System.out.println("=========================");
@@ -113,14 +114,15 @@ public class Ticketing extends Process {
         try {
             BufferedReader reader =  new BufferedReader(new FileReader("src\\files\\resetPinTickets\\tickets.txt"));
             if (!reader.readLine().isEmpty()) {
-                String line;
+                File file = new File("src\\files\\resetPinTickets\\tickets.txt");
+                Scanner sc = new Scanner(file);
                 System.out.println("""
                     ┬ ┬┌─┐┌─┐┬─┐┌─┐  ┬ ┬┬ ┬┌─┐  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┬─┐┌─┐┌─┐┌─┐┌┬┐  ┌─┐┬┌┐┌
                     │ │└─┐├┤ ├┬┘└─┐  │││├─┤│ │  │││├─┤│││ │    │ │ │  ├┬┘├┤ └─┐├┤  │   ├─┘││││
                     └─┘└─┘└─┘┴└─└─┘  └┴┘┴ ┴└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  ┴└─└─┘└─┘└─┘ ┴   ┴  ┴┘└┘
                 """);
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
+                while (sc.hasNextLine()) {
+                    System.out.println(sc.nextLine());
                 }
                 reader.close();
                 return true;
