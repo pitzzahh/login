@@ -74,7 +74,7 @@ public class Main {
                 }
             }
             if (!isExit) {
-                process.signIn(isAdmin);
+                process.allAdminAndUserMenu(isAdmin);
                 while (adminLoggedIn) { // if signed is a user
                     System.out.println(": 1 : Show details");
                     System.out.println(": 2 : return to ADMIN menu");

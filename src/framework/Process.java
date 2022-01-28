@@ -201,7 +201,7 @@ public class Process {
         Main.adminLoggedIn = false;
         Main.loginCondition = true;
     }
-    public void signIn(boolean isAdmin) throws IOException, InterruptedException {
+    public void allAdminAndUserMenu(boolean isAdmin) throws IOException, InterruptedException {
         if (isAdmin) {
             System.out.println("""
                 ┌─┐┌┬┐ ┌┬┐ ┬ ┌┐┌  ┌┬┐┌─┐┌┐┌ ┬ ┬
