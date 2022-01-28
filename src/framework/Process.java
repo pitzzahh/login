@@ -29,8 +29,12 @@ public class Process {
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         writer.write(whatToWrite);
         writer.close();
-
     }
+    /**
+     *  Checks if a String that is passed in is a number or not.
+     *  @param numberString a String that contains an integer value.
+     *  @return true if the String that is passed in is a number or not.
+     */
     public boolean isNumber(String numberString) {
         try {
             Byte.parseByte(numberString);
@@ -40,6 +44,12 @@ public class Process {
         }
         return false;
     }
+    /**
+     *  Checks if the user is eligible to change his/her pin.
+     *  getting the userName and checks if the username exists as a key in a HashTable.
+     *  gets the value of that key and checks if true or not.
+     *  @return true if the key has the value true in a Hashtable.
+     */
     public boolean checkEligibility() {
         try {
             boolean check = isEligibleToChangePin.get(getUserName());
@@ -50,12 +60,19 @@ public class Process {
         catch (NullPointerException ignored) {}
         return false;
     }
+    /**
+     *  Enables the user to send reset pin ticket and storing their ticket in a HashTable, only if the user forgot his/her password.
+     *  @throws IOException if the {@link framework.Ticketing#submitResetTicket}
+     *  method does not found the file specified.
+     */
     public void submitTicket() throws IOException {
         resetPinTickets.put(getUserName(), true);
         Ticketing ticketing = new Ticketing();
         ticketing.submitResetTicket();
     }
-
+    /**
+     *  User functionalities if the user is logged in.
+     */
     public void showUserDetails() {
         // TODO add show details descriptions
         System.out.println("""
@@ -64,6 +81,13 @@ public class Process {
             └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
         """);
     }
+    /**
+     *  Admin functionalities if the admin is logged in.
+     *  Enables the admin to view user accounts, remove user accounts, and view tickets of user who want to reset their pin.
+     *  @throws InterruptedException if the thread is interrupted during execution.
+     *  @throws FileNotFoundException if the {@link framework.Ticketing#editEligibility(boolean)}
+     *  method does not found the file specified.
+     */
     public void showAdminDetails() throws InterruptedException, FileNotFoundException {
         System.out.println("""
             ┌─┐┌┬┐┌┬┐┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
@@ -133,6 +157,12 @@ public class Process {
             }
         }
     }
+    /**
+     *  Admin functionalities if the admin is logged in.
+     *  Method that allows the user to create accounts.
+     *  @throws IOException if file does not exist
+     *  @throws InterruptedException if the thread is interrupted during execution
+     */
     public void createUserAccount() throws IOException, InterruptedException {
         System.out.print("ENTER USERNAME: ");
         Main.temporaryString = Main.scanner.nextLine().trim();
@@ -176,8 +206,10 @@ public class Process {
             }
         }
     }
-    /*
-     * Method that resets the pins of the user, if the user is eligible
+    /**
+     *  Method that resets the pins of the user, if the user is eligible to change pin
+     * @throws IOException if file does not exist
+     * @throws InterruptedException if the thread is interrupted during execution
      */
     public void resetPin() throws IOException, InterruptedException {
         if (checkEligibility()) {
