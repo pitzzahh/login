@@ -34,6 +34,7 @@ public class Ticketing extends Process {
                             loading("long");
                             resetPinTickets.remove(getUserName());
                             givePermission = false;
+                            System.out.println("PERMISSION GRANTED (!)");
                             System.out.println("=========================");
                             System.out.println("|PRESS ENTER TO CONTINUE|");
                             System.out.println("=========================");
@@ -111,35 +112,23 @@ public class Ticketing extends Process {
         try {
             String line;
             BufferedReader reader =  new BufferedReader(new FileReader("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
-            line = reader.readLine();
-            if (line != null) {
-                isThereATicket = true;
-                System.out.println("""
+            isThereATicket = true;
+            System.out.println("""
                     ┬ ┬┌─┐┌─┐┬─┐┌─┐  ┬ ┬┬ ┬┌─┐  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┬─┐┌─┐┌─┐┌─┐┌┬┐  ┌─┐┬┌┐┌
                     │ │└─┐├┤ ├┬┘└─┐  │││├─┤│ │  │││├─┤│││ │    │ │ │  ├┬┘├┤ └─┐├┤  │   ├─┘││││
                     └─┘└─┘└─┘┴└─└─┘  └┴┘┴ ┴└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  ┴└─└─┘└─┘└─┘ ┴   ┴  ┴┘└┘
                     """);
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-                reader.close();
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
             }
-            else {
-                System.out.println("""
-                    ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
-                    ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
-                    ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
-                """);
-                System.out.print("RETURNING TO ADMIN SELECTION");
-                loading("short");
-            }
+            reader.close();
         } catch (FileNotFoundException | NullPointerException fNFe) {
             System.out.println("""
                ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
                ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
                ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
             """);
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

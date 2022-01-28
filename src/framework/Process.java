@@ -1,8 +1,8 @@
 package framework;
 
 import mainActivity.Main;
-
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import static pinGenerator.PinGenerator.generatePin;
@@ -63,7 +63,7 @@ public class Process {
     /**
      *  Enables the user to send reset pin ticket and storing their ticket in a HashTable, only if the user forgot his/her password.
      *  @throws IOException if the {@link framework.Ticketing#submitResetTicket}
-     *  method does not found the file specified.
+     *  method's' input and output process was interrupted
      */
     public void submitTicket() throws IOException {
         resetPinTickets.put(getUserName(), true);
@@ -74,7 +74,7 @@ public class Process {
      *  User functionalities if the user is logged in.
      */
     public void showUserDetails() {
-        // TODO add show details descriptions
+        // TODO add user selections
         System.out.println("""
             ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
             │ │└─┐├┤ ├┬┘  └─┐├┤ │  ├┤ │   │ ││ ││││
@@ -85,14 +85,12 @@ public class Process {
      *  Admin functionalities if the admin is logged in.
      *  Enables the admin to view user accounts, remove user accounts, and view tickets of user who want to reset their pin.
      *  @throws InterruptedException if the thread is interrupted during execution.
-     *  @throws FileNotFoundException if the {@link framework.Ticketing#editEligibility(boolean)}
-     *  method does not found the file specified.
      */
-    public void showAdminDetails() throws InterruptedException, FileNotFoundException {
+    public void showAdminDetails() throws InterruptedException {
         System.out.println("""
-            ┌─┐┌┬┐┌┬┐┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
-            ├─┤ ││││││ │││  └─┐├┤ │  ├┤ │   │ ││ ││││
-            ┴ ┴ ┴┘┴ ┴┴ ┘└┘  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
+            ┌─┐┌┬┐ ┌┬┐ ┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
+            ├─┤ ││ │││ │ │││  └─┐├┤ │  ├┤ │   │ ││ ││││
+            ┴ ┴ ┴┘ ┴ ┴ ┴ ┘└┘  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
         """);
         System.out.println(": 1 : View accounts");
         System.out.println(": 2 : Remove account");
@@ -103,19 +101,7 @@ public class Process {
         Main.temporaryString = Main.scanner.nextLine().trim();
         switch (Main.temporaryString) {
             case "1" -> {
-                System.out.println("""
-                    ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
-                    │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
-                    ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
-                """);
-                List<String> allUsers = viewUsers();
-                for (int i = 0; i < allUsers.size(); i++) {
-                    File userPasswords = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\pin.txt");
-                    Scanner passwordScanner = new Scanner(userPasswords);
-                    String password =  passwordScanner.nextLine();
-                    System.out.printf("USER     [%d]: %s\n", ( i + 1 ),allUsers.get(i));
-                    System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), password);
-                }
+                listOfUsersAndPasswords();
                 System.out.println("\n=========================");
                 System.out.println("|PRESS ENTER TO CONTINUE|");
                 System.out.println("=========================");
@@ -124,6 +110,41 @@ public class Process {
             }
             case "2" -> {
                 // TODO remove accounts
+                List<String> listOfUsers = viewUsers();
+                if (!listOfUsers.isEmpty()) {
+                    listOfUsersAndPasswords();
+                    System.out.print("ENTER USER ACCOUNT YOU WANT TO REMOVE: ");
+                    String username = Main.scanner.nextLine().trim();
+                    File user = new File("src\\files\\accounts\\user\\" + username);
+                    if (user.isDirectory()) {
+                        File[] userFiles = user.listFiles();
+                        assert userFiles != null;
+                        for (File file : userFiles) {
+                            System.out.println(file + " deleted.");
+                            file.delete();
+                        }
+
+                    }
+                    else {
+                        System.out.println("""
+                             ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐
+                             │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │\s
+                             └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴\s
+                        """);
+                    }
+                    System.out.print("RETURNING TO ADMIN SELECTION");
+                    loading("short");
+                }
+                else {
+                    System.out.println("""
+                          ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
+                           │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
+                           ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
+                    """);
+                    System.out.print("RETURNING TO ADMIN SELECTION");
+                    loading("shor");
+                }
+                showAdminDetails();
             }
             case "3" -> {
                 Ticketing ticketing = new Ticketing();
@@ -157,10 +178,39 @@ public class Process {
             }
         }
     }
+    private void listOfUsersAndPasswords() throws InterruptedException {
+        try {
+            System.out.println("""
+            ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
+            │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
+            ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
+        """);
+            List<String> allUsers = viewUsers();
+            for (int i = 0; i < allUsers.size(); i++) {
+                File userName = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\username.txt");
+                File userPasswords = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\pin.txt");
+                Scanner userNameScanner = new Scanner(userName);
+                String username =  userNameScanner.nextLine();
+                Scanner passwordScanner = new Scanner(userPasswords);
+                String password =  passwordScanner.nextLine();
+                System.out.printf("USER     [%d]: %s\n", ( i + 1 ), username);
+                System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), password);
+            }
+        }catch (FileNotFoundException fNfE) {
+            System.out.println("""
+                  ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
+                   │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
+                   ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
+             """);
+            System.out.print("RETURNING TO ADMIN SELECTION");
+            loading("shor");
+        }
+    }
+
     /**
      *  Admin functionalities if the admin is logged in.
      *  Method that allows the user to create accounts.
-     *  @throws IOException if file does not exist
+     *  @throws IOException if input output process was interrupted
      *  @throws InterruptedException if the thread is interrupted during execution
      */
     public void createUserAccount() throws IOException, InterruptedException {
@@ -208,7 +258,7 @@ public class Process {
     }
     /**
      *  Method that resets the pins of the user, if the user is eligible to change pin
-     * @throws IOException if file does not exist
+     * @throws IOException if input output process was interrupted
      * @throws InterruptedException if the thread is interrupted during execution
      */
     public void resetPin() throws IOException, InterruptedException {

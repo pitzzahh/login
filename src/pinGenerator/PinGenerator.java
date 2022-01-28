@@ -10,7 +10,7 @@ public class PinGenerator {
     static byte lengthOfPin;
     static final Process process = new Process();
     public static char[] generatePin() throws InterruptedException {
-        // dito pipili ng random numbers
+        // dito pipili ng random numbers,letters or mixed
         String numbers = "1234567890";
         String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String mixed = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVYXYZ";
