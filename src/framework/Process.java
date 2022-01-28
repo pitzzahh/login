@@ -8,14 +8,11 @@ import java.util.concurrent.TimeUnit;
 import static pinGenerator.PinGenerator.generatePin;
 
 public class Process {
-    // TODO make the admin view user accounts and view tickets
     private String userName;
     private String pin;
     static final Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
     static final Hashtable<String, Boolean> resetPinTickets = new Hashtable<>();
-    public Process() {
-        super();
-    }
+
     public String getUserName() {
         return userName;
     }
@@ -67,30 +64,49 @@ public class Process {
             └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
         """);
     }
-    public void showAdminDetails() throws InterruptedException {
+    public void showAdminDetails() throws InterruptedException, FileNotFoundException {
         System.out.println("""
             ┌─┐┌┬┐┌┬┐┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
             ├─┤ ││││││ │││  └─┐├┤ │  ├┤ │   │ ││ ││││
             ┴ ┴ ┴┘┴ ┴┴ ┘└┘  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
         """);
-        System.out.println(": 1 : View Users");
-        System.out.println(": 2 : View tickets");
-        System.out.println(": 3 : return to ADMIN menu");
-        System.out.println(": 4 : return to LOGIN menu");
+        System.out.println(": 1 : View accounts");
+        System.out.println(": 2 : Remove account");
+        System.out.println(": 3 : View tickets");
+        System.out.println(": 4 : return to ADMIN menu");
+        System.out.println(": 5 : return to LOGIN menu");
         System.out.print(">>>: ");
         Main.temporaryString = Main.scanner.nextLine().trim();
         switch (Main.temporaryString) {
             case "1" -> {
-                // TODO view users
-                System.out.println();
+                System.out.println("""
+                    ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
+                    │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
+                    ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
+                """);
+                List<String> allUsers = viewUsers();
+                for (int i = 0; i < allUsers.size(); i++) {
+                    File userPasswords = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + allUsers.get(i) + "\\pin.txt");
+                    Scanner passwordScanner = new Scanner(userPasswords);
+                    String password =  passwordScanner.nextLine();
+                    System.out.printf("USER     [%d]: %s\n", ( i + 1 ),allUsers.get(i));
+                    System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), password);
+                }
+                System.out.println("\n=========================");
+                System.out.println("|PRESS ENTER TO CONTINUE|");
+                System.out.println("=========================");
+                Main.scanner.nextLine();
                 showAdminDetails();
             }
             case "2" -> {
+                // TODO remove accounts
+            }
+            case "3" -> {
                 Ticketing ticketing = new Ticketing();
                 ticketing.editEligibility(Main.isAdmin);
                 showAdminDetails();
             }
-            case "3" -> {
+            case "4" -> {
                 Main.adminLoggedIn = false;
                 Main.loginCondition = false;
                 Main.isAdmin = true;
@@ -100,7 +116,7 @@ public class Process {
                 System.out.print("RETURNING TO ADMIN MENU");
                 loading("short");
             }
-            case "4" -> {
+            case "5" -> {
                 resetReturningToLoginMenu();
                 System.out.print("RETURNING TO LOGIN MENU");
                 loading("short");
@@ -140,6 +156,11 @@ public class Process {
                 }
                 Main.userLoggedIn = false;
                 Main.loginCondition = true;
+                System.out.print("CREATING YOUR ACCOUNT");
+                loading("long");
+                System.out.println("SUCCESSFULLY CREATED (!)");
+                System.out.print("RETURNING TO LOGIN MENU");
+                loading("short");
             }
             else {
                 System.out.println("""
@@ -150,6 +171,8 @@ public class Process {
                     ├─┘│  ├┤ ├─┤└─┐├┤    │ ├┬┘└┬┘  ├─┤││││ │ │ ├─┤├┤ ├┬┘  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
                     ┴  ┴─┘└─┘┴ ┴└─┘└─┘   ┴ ┴└─ ┴   ┴ ┴┘└┘└─┘ ┴ ┴ ┴└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
                 """);
+                System.out.print("RETURNING TO USER MENU");
+                loading("short");
             }
         }
     }
@@ -577,11 +600,6 @@ public class Process {
                 }
                 else {
                     createUserAccount();
-                    System.out.print("CREATING YOUR ACCOUNT");
-                    loading("long");
-                    System.out.println("SUCCESSFULLY CREATED (!)");
-                    System.out.print("RETURNING TO LOGIN MENU");
-                    loading("short");
                 }
             }
             case "3" -> {
@@ -651,5 +669,18 @@ public class Process {
                 }
             }
         }
+    }
+    protected List<String> viewUsers() {
+        File directory = new File("src\\files\\accounts\\user\\");
+
+        FileFilter directoryFileFilter = File::isDirectory;
+
+        File[] directoryListAsFile = directory.listFiles(directoryFileFilter);
+        assert directoryListAsFile != null;
+        List<String> foldersInDirectory = new ArrayList<>(directoryListAsFile.length);
+        for (File directoryAsFile : directoryListAsFile) {
+            foldersInDirectory.add(directoryAsFile.getName());
+        }
+        return foldersInDirectory;
     }
 }
