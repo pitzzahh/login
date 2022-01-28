@@ -118,7 +118,6 @@ public class Process {
         }
     }
     public void createUserAccount() throws IOException, InterruptedException {
-        Ticketing ticketing = new Ticketing();
         System.out.print("ENTER USERNAME: ");
         Main.temporaryString = Main.scanner.nextLine().trim();
         if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
@@ -128,12 +127,11 @@ public class Process {
             if (success) {
                 char[] oneTimePin = generatePin();
                 setPin(String.valueOf(oneTimePin));
-                File userName = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() + "\\username.txt");
-                File userPin = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() + "\\pin.txt");
-                File userLoginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
+                File userName = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() + "" + "\\username.txt");
+                File userPin = new File ("src\\" + "files\\" +"accounts\\" + "user\\" + getUserName() +  "" + "\\pin.txt");
+                File userLoginAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() +  "" + "\\loginAttempt.txt");
                 write(getUserName(), userName);
                 write(getPin(), userPin);
-                ticketing.submitResetTicket();
                 if (getPin().length() == 6) {
                     write("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
                 }

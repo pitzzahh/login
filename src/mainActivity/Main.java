@@ -73,87 +73,89 @@ public class Main {
                     }
                 }
             }
-            process.signIn(isAdmin);
-            while (adminLoggedIn) { // if signed is a user
-                System.out.println(": 1 : Show details");
-                System.out.println(": 2 : return to ADMIN menu");
-                System.out.println(": 3 : return to LOGIN menu");
-                System.out.print(">>>: ");
-                temporaryString = scanner.nextLine().trim();
-                switch (temporaryString) {
-                    case "1" -> {
-                        System.out.print("LOADING");
-                        process.loading("short");
-                        process.showAdminDetails();
-                    }
-                    case "2" -> {
-                        System.out.print("LOGGING OUT");
-                        process.loading("long");
-                        System.out.println("SUCCESSFULLY LOGGED OUT");
-                        System.out.print("RETURNING TO ADMIN MENU");
-                        process.loading("short");
-                        adminLoggedIn = false;
-                        loginCondition = false;
-                        isAdmin = true;
-                    }
-                    case "3" -> {
-                        System.out.print("LOGGING OUT");
-                        process.loading("long");
-                        System.out.println("SUCCESSFULLY LOGGED OUT");
-                        System.out.print("RETURNING TO LOGIN MENU");
-                        process.loading("short");
-                        process.resetReturningToLoginMenu();
-                    }
-                    default -> {
-                        System.out.println("""
+            if (!isExit) {
+                process.signIn(isAdmin);
+                while (adminLoggedIn) { // if signed is a user
+                    System.out.println(": 1 : Show details");
+                    System.out.println(": 2 : return to ADMIN menu");
+                    System.out.println(": 3 : return to LOGIN menu");
+                    System.out.print(">>>: ");
+                    temporaryString = scanner.nextLine().trim();
+                    switch (temporaryString) {
+                        case "1" -> {
+                            System.out.print("LOADING");
+                            process.loading("short");
+                            process.showAdminDetails();
+                        }
+                        case "2" -> {
+                            System.out.print("LOGGING OUT");
+                            process.loading("long");
+                            System.out.println("SUCCESSFULLY LOGGED OUT");
+                            System.out.print("RETURNING TO ADMIN MENU");
+                            process.loading("short");
+                            adminLoggedIn = false;
+                            loginCondition = false;
+                            isAdmin = true;
+                        }
+                        case "3" -> {
+                            System.out.print("LOGGING OUT");
+                            process.loading("long");
+                            System.out.println("SUCCESSFULLY LOGGED OUT");
+                            System.out.print("RETURNING TO LOGIN MENU");
+                            process.loading("short");
+                            process.resetReturningToLoginMenu();
+                        }
+                        default -> {
+                            System.out.println("""
                                 ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬ ┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                 │ │││ └┐┌┘├─┤│  │  ││  │  ├─┤│ │││  ├┤   │
                                 ┴ ┘└┘  └┘ ┴ ┴┴─┘┴ ─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                             """);
-                        System.out.print("LOADING");
-                        process.loading("short");
+                            System.out.print("LOADING");
+                            process.loading("short");
+                        }
                     }
                 }
-            }
 
-            while (userLoggedIn) { // if signed is a user
-                System.out.println(": 1 : Show details");
-                System.out.println(": 2 : return to user menu");
-                System.out.println(": 3 : return to login menu");
-                System.out.print(">>>: ");
-                temporaryString = scanner.nextLine().trim();
-                switch (temporaryString) {
-                    case "1" -> {
-                        System.out.print("LOADING");
-                        process.loading("short");
-                        process.showUserDetails();
-                    }
-                    case "2" -> {
-                        userLoggedIn = false;
-                        loginCondition = false;
-                        System.out.print("LOGGING OUT");
-                        process.loading("long");
-                        System.out.println("SUCCESSFULLY LOGGED OUT");
-                        System.out.print("RETURNING TO USER MENU");
-                        process.loading("short");
+                while (userLoggedIn) { // if signed is a user
+                    System.out.println(": 1 : Show details");
+                    System.out.println(": 2 : return to user menu");
+                    System.out.println(": 3 : return to login menu");
+                    System.out.print(">>>: ");
+                    temporaryString = scanner.nextLine().trim();
+                    switch (temporaryString) {
+                        case "1" -> {
+                            System.out.print("LOADING");
+                            process.loading("short");
+                            process.showUserDetails();
+                        }
+                        case "2" -> {
+                            userLoggedIn = false;
+                            loginCondition = false;
+                            System.out.print("LOGGING OUT");
+                            process.loading("long");
+                            System.out.println("SUCCESSFULLY LOGGED OUT");
+                            System.out.print("RETURNING TO USER MENU");
+                            process.loading("short");
 
-                    }
-                    case "3" -> {
-                        System.out.print("LOGGING OUT");
-                        process.loading("long");
-                        System.out.println("SUCCESSFULLY LOGGED OUT");
-                        System.out.print("RETURNING TO LOGIN MENU");
-                        process.loading("short");
-                        process.resetReturningToLoginMenu();
-                    }
-                    default -> {
-                        System.out.println("""
+                        }
+                        case "3" -> {
+                            System.out.print("LOGGING OUT");
+                            process.loading("long");
+                            System.out.println("SUCCESSFULLY LOGGED OUT");
+                            System.out.print("RETURNING TO LOGIN MENU");
+                            process.loading("short");
+                            process.resetReturningToLoginMenu();
+                        }
+                        default -> {
+                            System.out.println("""
                                 ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                 │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                 ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                             """);
-                        System.out.print("LOADING");
-                        process.loading("short");
+                            System.out.print("LOADING");
+                            process.loading("short");
+                        }
                     }
                 }
             }
