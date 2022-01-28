@@ -118,6 +118,10 @@ public class Process {
                             System.out.printf("REMOVING THE ACCOUNT: [%s]", name);
                             loading("long");
                             System.out.println("SUCCESSFULLY REMOVED (!)");
+                            System.out.println("\n=========================");
+                            System.out.println("|PRESS ENTER TO CONTINUE|");
+                            System.out.println("=========================");
+                            Main.scanner.nextLine();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -128,6 +132,8 @@ public class Process {
                             │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │\s
                             └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴\s
                         """);
+                        System.out.print("RETURNING TO ADMIN SELECTION");
+                        loading("short");
                     }
                 }
                 else {
@@ -136,13 +142,9 @@ public class Process {
                         │ ││││├┴┐││││ │││││││  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
                         └─┘┘└┘┴ ┴┘└┘└─┘└┴┘┘└┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
                      """);
+                    System.out.print("RETURNING TO ADMIN SELECTION");
+                    loading("short");
                 }
-                System.out.print("RETURNING TO ADMIN SELECTION");
-                loading("short");
-                System.out.println("\n=========================");
-                System.out.println("|PRESS ENTER TO CONTINUE|");
-                System.out.println("=========================");
-                Main.scanner.nextLine();
                 showAdminDetails();
             }
             case "3" -> {
@@ -248,11 +250,6 @@ public class Process {
                 }
                 Main.userLoggedIn = false;
                 Main.loginCondition = true;
-                System.out.print("CREATING YOUR ACCOUNT");
-                loading("long");
-                System.out.println("SUCCESSFULLY CREATED (!)");
-                System.out.print("RETURNING TO LOGIN MENU");
-                loading("short");
             }
             else {
                 System.out.println("""
