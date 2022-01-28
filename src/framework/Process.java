@@ -745,14 +745,9 @@ public class Process {
         return foldersInDirectory;
     }
     protected boolean checkUserTicket(File ticketFile, String userName) throws IOException {
-
         BufferedReader bufferedReader = new BufferedReader(new FileReader(ticketFile));
         String s;
-
-        int lineCount = 0;
-
         while ((s = bufferedReader.readLine())!=null) {
-            lineCount++;
             int userIndex = s.indexOf(userName);
             int ticketCheckIndex = s.indexOf("true");
             if (userIndex > -1) {
@@ -761,8 +756,6 @@ public class Process {
                         return true;
                     }
                 }
-                System.out.println("Word was found at position::" + userIndex + "::on line" + lineCount);
-
             }
         }
         bufferedReader.close();
