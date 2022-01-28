@@ -111,18 +111,17 @@ public class PinGenerator {
                 oneTimePin[index] = mixed.charAt(random.nextInt(mixed.length()));
             }
         }
-        System.out.println("=========================");
-        System.out.print("YOUR PIN: ");
-        for (char c : oneTimePin) {
-            System.out.print(c);
-        }
-        System.out.println("=========================");
         System.out.print("CREATING YOUR ACCOUNT");
         process.loading("long");
         System.out.println("SUCCESSFULLY CREATED (!)");
         System.out.print("RETURNING TO LOGIN MENU");
         process.loading("short");
         System.out.println("=========================");
+        System.out.print("YOUR PIN: ");
+        for (char c : oneTimePin) {
+            System.out.print(c);
+        }
+        System.out.println("\n=========================");
         System.out.println("|PRESS ENTER TO CONTINUE|");
         System.out.println("=========================");
         scanner.nextLine();

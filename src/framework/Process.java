@@ -85,7 +85,7 @@ public class Process {
      *  Enables the admin to view user accounts, remove user accounts, and view tickets of user who want to reset their pin.
      *  @throws InterruptedException if the thread is interrupted during execution.
      */
-    public void showAdminDetails() throws InterruptedException {
+    public void showAdminDetails() throws InterruptedException, IOException {
         System.out.println("""
             ┌─┐┌┬┐ ┌┬┐ ┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
             ├─┤ ││ │││ │ │││  └─┐├┤ │  ├┤ │   │ ││ ││││
@@ -93,9 +93,9 @@ public class Process {
         """);
         System.out.println(": 1 : View accounts");
         System.out.println(": 2 : Remove accounts");
-        System.out.println(": 2 : View tickets");
-        System.out.println(": 3 : return to ADMIN menu");
-        System.out.println(": 4 : return to LOGIN menu");
+        System.out.println(": 3 : View tickets");
+        System.out.println(": 4 : return to ADMIN menu");
+        System.out.println(": 5 : return to LOGIN menu");
         System.out.print(">>>: ");
         Main.temporaryString = Main.scanner.nextLine().trim();
         switch (Main.temporaryString) {
@@ -118,10 +118,6 @@ public class Process {
                             System.out.printf("REMOVING THE ACCOUNT: [%s]", name);
                             loading("long");
                             System.out.println("SUCCESSFULLY REMOVED (!)");
-                            System.out.println("\n=========================");
-                            System.out.println("|PRESS ENTER TO CONTINUE|");
-                            System.out.println("=========================");
-                            Main.scanner.nextLine();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -132,8 +128,6 @@ public class Process {
                             │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │\s
                             └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴\s
                         """);
-                        System.out.print("RETURNING TO ADMIN SELECTION");
-                        loading("short");
                     }
                 }
                 else {
@@ -142,9 +136,13 @@ public class Process {
                         │ ││││├┴┐││││ │││││││  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
                         └─┘┘└┘┴ ┴┘└┘└─┘└┴┘┘└┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
                      """);
-                    System.out.print("RETURNING TO ADMIN SELECTION");
-                    loading("short");
                 }
+                System.out.print("RETURNING TO ADMIN SELECTION");
+                loading("short");
+                System.out.println("\n=========================");
+                System.out.println("|PRESS ENTER TO CONTINUE|");
+                System.out.println("=========================");
+                Main.scanner.nextLine();
                 showAdminDetails();
             }
             case "3" -> {
@@ -164,6 +162,8 @@ public class Process {
             }
             case "5" -> {
                 resetReturningToLoginMenu();
+                System.out.print("LOGGING OUT");
+                loading("long");
                 System.out.print("RETURNING TO LOGIN MENU");
                 loading("short");
             }
@@ -271,7 +271,8 @@ public class Process {
      * @throws InterruptedException if the thread is interrupted during execution
      */
     public void resetPin() throws IOException, InterruptedException {
-        if (checkEligibility()) {
+        boolean isActiveTicket = checkUserTicket(new File("src\\files\\resetPinTickets\\tickets.txt"), getUserName());
+        if (checkEligibility() || isActiveTicket) {
             File changePinCode = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\pin.txt");
             File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
             char[] oneTimePin = generatePin();
@@ -374,7 +375,7 @@ public class Process {
                     System.out.print("LOGGING IN");
                     loading("long");
                     if (getUserName().equals(username) && getPin().equals(password) && !invalidUser) {
-                        File updateAttempt = new File ("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\loginAttempt.txt");
+                        File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
                         System.out.println("""
                                  ┬  ┌─┐┌─┐┌─┐┌─┐┌┬┐  ┬ ┌┐┌  ┬
                                  │  │ ││ ┬│ ┬├┤  ││  │ │││  │
@@ -385,11 +386,8 @@ public class Process {
                         }
                         else {
                             Main.userLoggedIn = true;
-                            write("6", updateAttempt); // 6 login attempts
+                            write("6", updateAttempt); // reset to 6 login attempts if the user finally logged in
                         }
-                        checkUserName.deleteOnExit();
-                        checkPassword.deleteOnExit();
-
                         insertCredentials = false;
                     }
                     else {
@@ -430,26 +428,32 @@ public class Process {
                                                 int count = loginCountUpdater.nextInt();
                                                 loginCountUpdater.close();
                                                 count -= 1;
-                                                write(String.valueOf(count), loginAttempt); // 6 login attempts
-                                                System.out.printf("REMAINING LOGIN TRIES [ >> %d << ]\n", count);
-                                                if (count == 0) {
+                                                write(String.valueOf(count), loginAttempt);
+                                                if (count <= 0) {
                                                     Main.userLoggedIn = false;
                                                     Main.loginCondition = true;
-                                                    resetReturningToLoginMenu();
+                                                    insertCredentials = false;
                                                     System.out.println("""
-                                                            WARNING!!! This account has reached the maximum login attempt.\s
-                                                            The system thinks that this account does not belong to you. If this account belongs to you,
-                                                            you can talk to the admin, bring your userName and request a new pin code.
-                                                        """);
+                                                         WARNING!!! This account has reached the maximum login attempt.\s
+                                                         The system thinks that this account does not belong to you. If this account belongs to you,
+                                                         you can talk to the admin, bring your userName and request a new pin code.
+                                                    """);
                                                     System.out.print("PROCEEDING TO LOGIN MENU");
                                                     loading("short");
+                                                    System.out.println("\n=========================");
+                                                    System.out.println("|PRESS ENTER TO CONTINUE|");
+                                                    System.out.println("=========================");
+                                                    Main.scanner.nextLine();
+                                                    resetReturningToLoginMenu();
                                                 }
-
+                                                else {
+                                                    System.out.printf("REMAINING LOGIN TRIES [ >> %d << ]\n", count);
+                                                    insertCredentials = true;
+                                                }
                                             }
                                             catch (FileNotFoundException ignored) {
                                             }
                                         }
-                                        insertCredentials = true;
                                     }
                                     case "2" -> {
                                         if (!isAdmin) {
@@ -472,7 +476,8 @@ public class Process {
                                                         case "1" -> {
                                                             System.out.print("CHECKING");
                                                             loading("long");
-                                                            if (checkEligibility()) {
+                                                            boolean isActiveTicket = checkUserTicket(new File("src\\files\\resetPinTickets\\tickets.txt"), getUserName());
+                                                            if (checkEligibility() || isActiveTicket) {
                                                                 do {
                                                                     System.out.println("""
                                                                           ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌─┐┬  ┬┌─┐┬┌┐ ┬  ┌─┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌
@@ -724,47 +729,6 @@ public class Process {
                 loading("short");
             }
         }
-        while (Main.adminLoggedIn) { // if signed is a user
-            System.out.println(": 1 : Show details");
-            System.out.println(": 2 : return to ADMIN menu");
-            System.out.println(": 3 : return to LOGIN menu");
-            System.out.print(">>>: ");
-            Main.temporaryString = Main.scanner.nextLine().trim();
-            switch (Main.temporaryString) {
-                case "1" -> {
-                    System.out.print("LOADING");
-                    loading("short");
-                    showAdminDetails();
-                }
-                case "2" -> {
-                    System.out.print("LOGGING OUT");
-                    loading("long");
-                    System.out.println("SUCCESSFULLY LOGGED OUT");
-                    System.out.print("RETURNING TO ADMIN MENU");
-                    loading("short");
-                    Main.adminLoggedIn = false;
-                    Main.loginCondition = false;
-                    Main.isAdmin = true;
-                }
-                case "3" -> {
-                    System.out.print("LOGGING OUT");
-                    loading("long");
-                    System.out.println("SUCCESSFULLY LOGGED OUT");
-                    System.out.print("RETURNING TO LOGIN MENU");
-                    loading("short");
-                    resetReturningToLoginMenu();
-                }
-                default -> {
-                    System.out.println("""
-                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬ ┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                        │ │││ └┐┌┘├─┤│  │  ││  │  ├─┤│ │││  ├┤   │
-                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴ ─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                    """);
-                    System.out.print("LOADING");
-                    loading("short");
-                }
-            }
-        }
     }
     protected List<String> viewUsers() {
         File directory = new File("src\\files\\accounts\\user\\");
@@ -776,5 +740,29 @@ public class Process {
             foldersInDirectory.add(directoryAsFile.getName());
         }
         return foldersInDirectory;
+    }
+    protected boolean checkUserTicket(File ticketFile, String userName) throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(ticketFile));
+        String s;
+
+        int lineCount = 0;
+
+        while ((s = bufferedReader.readLine())!=null) {
+            lineCount++;
+            int userIndex = s.indexOf(userName);
+            int ticketCheckIndex = s.indexOf("true");
+            if (userIndex > -1) {
+                if (ticketCheckIndex == 26) {
+                    if (userIndex == 39) {
+                        return true;
+                    }
+                }
+                System.out.println("Word was found at position::" + userIndex + "::on line" + lineCount);
+
+            }
+        }
+        bufferedReader.close();
+        return false;
     }
 }

@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public class Ticketing extends Process {
-    static boolean isThereATicket = false;
     public void submitResetTicket() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
         for (Map.Entry<String, Boolean> entry : resetPinTickets.entrySet()) {
@@ -17,21 +16,23 @@ public class Ticketing extends Process {
         }
         writer.close();
     }
-    public void editEligibility(boolean isAdmin) throws InterruptedException {
+    public void editEligibility(boolean isAdmin) throws InterruptedException, IOException {
         boolean givePermission = true;
         if (isAdmin) {
             while (givePermission) {
-                viewTickets();
-                if (isThereATicket) {
+                if (viewTickets()) {
+                    Process process = new Process();
                     System.out.println("ENTER THE USER YOU WANT TO GIVE PERMISSION TO CHANGE PIN");
                     System.out.print(">>>: ");
                     Main.temporaryString = Main.scanner.nextLine().trim();
                     if (!isNumber(Main.temporaryString)) {
                         setUserName(Main.temporaryString);
-                        if (Files.exists(Path.of("src\\" + "files\\" + "accounts\\" + "user\\" + getUserName() + "\\username.txt"))) {
+                        boolean isActiveTicket = process.checkUserTicket(new File("src\\files\\resetPinTickets\\tickets.txt"), getUserName());
+                        if (Files.exists(Path.of("src\\files\\accounts\\user\\" + getUserName() + "\\username.txt")) && isActiveTicket) {
                             isEligibleToChangePin.put(getUserName(),true);
                             System.out.print("GIVING PERMISSION");
                             loading("long");
+                            submitTicket();
                             resetPinTickets.remove(getUserName());
                             givePermission = false;
                             System.out.println("PERMISSION GRANTED (!)");
@@ -108,20 +109,31 @@ public class Ticketing extends Process {
             }
         }
     }
-    protected void viewTickets() {
+    protected boolean viewTickets() throws InterruptedException {
         try {
-            String line;
-            BufferedReader reader =  new BufferedReader(new FileReader("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
-            isThereATicket = true;
-            System.out.println("""
+            BufferedReader reader =  new BufferedReader(new FileReader("src\\files\\resetPinTickets\\tickets.txt"));
+            if (!reader.readLine().isEmpty()) {
+                String line;
+                System.out.println("""
                     ┬ ┬┌─┐┌─┐┬─┐┌─┐  ┬ ┬┬ ┬┌─┐  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┬─┐┌─┐┌─┐┌─┐┌┬┐  ┌─┐┬┌┐┌
                     │ │└─┐├┤ ├┬┘└─┐  │││├─┤│ │  │││├─┤│││ │    │ │ │  ├┬┘├┤ └─┐├┤  │   ├─┘││││
                     └─┘└─┘└─┘┴└─└─┘  └┴┘┴ ┴└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  ┴└─└─┘└─┘└─┘ ┴   ┴  ┴┘└┘
-                    """);
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+                """);
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+                reader.close();
+                return true;
             }
-            reader.close();
+            else {
+                System.out.println("""
+                    ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
+                    ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
+                    ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
+                """);
+                System.out.print("RETURNING TO ADMIN MENU");
+                loading("short");
+            }
         } catch (FileNotFoundException | NullPointerException fNFe) {
             System.out.println("""
                ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
@@ -131,5 +143,6 @@ public class Ticketing extends Process {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
     }
 }

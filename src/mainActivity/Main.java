@@ -76,7 +76,7 @@ public class Main {
             if (!isExit) {
                 process.allAdminAndUserMenu(isAdmin);
                 while (adminLoggedIn) { // if signed is a user
-                    System.out.println(": 1 : Show details");
+                    System.out.println(": 1 : Show ADMIN selections");
                     System.out.println(": 2 : return to ADMIN menu");
                     System.out.println(": 3 : return to LOGIN menu");
                     System.out.print(">>>: ");
@@ -118,7 +118,7 @@ public class Main {
                 }
 
                 while (userLoggedIn) { // if signed is a user
-                    System.out.println(": 1 : Show details");
+                    System.out.println(": 1 : Show USER selections");
                     System.out.println(": 2 : return to user menu");
                     System.out.println(": 3 : return to login menu");
                     System.out.print(">>>: ");
