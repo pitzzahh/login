@@ -1,38 +1,46 @@
 package framework;
 
 import mainActivity.Main;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Ticketing extends Process {
-    public void submitResetTicket() throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("src\\" + "files\\" + "resetPinTickets\\" + "\\tickets.txt"));
-        for (Map.Entry<String, Boolean> entry : insertTicket.entrySet()) {
-            writer.write("[ IS TRYING TO RESET PIN: " + entry.getValue() + " ]" + " USER: " + entry.getKey()) ;
-            writer.newLine();
+    public boolean submitResetTicket(String user) throws InterruptedException, IOException {
+        File userAccountFolder = new File ("src\\files\\resetPinTickets\\usersWhoWantsToResetPin\\"+ user + ".txt");
+        boolean success = userAccountFolder.createNewFile();
+        if (success) {
+            System.out.print("SUBMITTING");
+            loading("long");
+            System.out.println("SUCCESSFULLY SUBMITTED RESET TICKET");
+            return true;
         }
-        writer.close();
+        return false;
     }
     public void editEligibility(boolean isAdmin) throws InterruptedException, IOException {
         boolean givePermission = true;
         if (isAdmin) {
             while (givePermission) {
                 if (viewTickets()) {
-                    Process process = new Process();
-                    System.out.println("ENTER THE USER YOU WANT TO GIVE PERMISSION TO CHANGE PIN");
+                    System.out.println("\nENTER THE USER YOU WANT TO GIVE PERMISSION TO CHANGE PIN");
                     System.out.print(">>>: ");
                     Main.temporaryString = Main.scanner.nextLine().trim();
                     if (!isNumber(Main.temporaryString)) {
                         setUserName(Main.temporaryString);
                         if (Files.exists(Path.of("src\\files\\accounts\\user\\" + getUserName() + "\\username.txt"))) {
-                            isEligibleToChangePin.put(getUserName(),true);
+                            BufferedWriter writer = new BufferedWriter(new FileWriter("src\\files\\resetPinTickets\\tickets.txt"));
+                            insertTicket.put(getUserName(), true);
+                            for (Map.Entry<String, Boolean> entry : insertTicket.entrySet()) {
+                                writer.write("[ IS TRYING TO RESET PIN: " + entry.getValue() + " ]" + " USER: " + entry.getKey()) ;
+                                writer.newLine();
+                            }
+                            writer.close();
                             System.out.print("GIVING PERMISSION");
                             loading("long");
-                            insertTicket.remove(getUserName());
-                            submitResetTicket();
                             givePermission = false;
                             System.out.println("PERMISSION GRANTED (!)");
                             System.out.println("=========================");
@@ -116,20 +124,17 @@ public class Ticketing extends Process {
         }
     }
     protected boolean viewTickets() throws InterruptedException {
+        List<String> tickets = viewUserTickets();
         try {
-            BufferedReader reader =  new BufferedReader(new FileReader("src\\files\\resetPinTickets\\tickets.txt"));
-            if (!reader.readLine().isEmpty()) {
-                File file = new File("src\\files\\resetPinTickets\\tickets.txt");
-                Scanner sc = new Scanner(file);
+            if (tickets.size() != 0) {
                 System.out.println("""
-                    ┬ ┬┌─┐┌─┐┬─┐┌─┐  ┬ ┬┬ ┬┌─┐  ┬ ┬┌─┐┌┐┌┌┬┐  ┌┬┐┌─┐  ┬─┐┌─┐┌─┐┌─┐┌┬┐  ┌─┐┬┌┐┌
-                    │ │└─┐├┤ ├┬┘└─┐  │││├─┤│ │  │││├─┤│││ │    │ │ │  ├┬┘├┤ └─┐├┤  │   ├─┘││││
-                    └─┘└─┘└─┘┴└─└─┘  └┴┘┴ ┴└─┘  └┴┘┴ ┴┘└┘ ┴    ┴ └─┘  ┴└─└─┘└─┘└─┘ ┴   ┴  ┴┘└┘
+                    ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
+                    │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
+                    ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
                 """);
-                while (sc.hasNextLine()) {
-                    System.out.println(sc.nextLine());
+                for (int i = 0; i < tickets.size(); i++) {
+                    System.out.printf("USER     [%d]: %s\n", ( i + 1 ), FilenameUtils.getBaseName(tickets.get(i)));
                 }
-                reader.close();
                 return true;
             }
             else {
@@ -141,14 +146,13 @@ public class Ticketing extends Process {
                 System.out.print("RETURNING TO ADMIN MENU");
                 loading("short");
             }
-        } catch (FileNotFoundException | NullPointerException fNFe) {
+        } catch (NullPointerException fNFe) {
             System.out.println("""
                ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
                ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
                ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
             """);
-        } catch (IOException e) {
-            e.printStackTrace();
+            fNFe.printStackTrace();
         }
         return false;
     }

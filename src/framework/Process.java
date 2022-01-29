@@ -10,7 +10,6 @@ public class Process {
     private String userName;
     private String pin;
     public static boolean isResettingPin = false;
-    static final Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
     static final Hashtable<String, Boolean> insertTicket = new Hashtable<>();
 
     public String getUserName() {
@@ -65,13 +64,11 @@ public class Process {
     }
     /**
      *  Enables the user to send reset pin ticket and storing their ticket in a HashTable, only if the user forgot his/her password.
-     *  @throws IOException if the {@link framework.Ticketing#submitResetTicket}
-     *  method's input and output process was interrupted
      */
-    public void submitTicket() throws IOException {
+    public boolean submitTicket() throws InterruptedException, IOException {
         insertTicket.put(getUserName(), true);
         Ticketing ticketing = new Ticketing();
-        ticketing.submitResetTicket();
+        return ticketing.submitResetTicket(getUserName());
     }
     /**
      *  User functionalities if the user is logged in.
@@ -479,7 +476,6 @@ public class Process {
                                                         case "1" -> {
                                                             System.out.print("CHECKING");
                                                             loading("long");
-
                                                             if (checkEligibility()) {
                                                                 do {
                                                                     System.out.println("""
@@ -503,9 +499,19 @@ public class Process {
                                                                                 Main.userLoggedIn = false;
                                                                                 Main.loginCondition = false;
                                                                                 Main.isAdmin = false;
-                                                                                insertTicket.put(getUserName(), false);
-                                                                                Ticketing ticketing = new Ticketing();
-                                                                                ticketing.submitResetTicket();
+                                                                                File userAccountFolder = new File ("src\\files\\resetPinTickets\\usersWhoWantsToResetPin\\"+ getUserName() + ".txt");
+                                                                                boolean success = userAccountFolder.delete();
+                                                                                if (success) {
+                                                                                    BufferedWriter writer = new BufferedWriter(new FileWriter("src\\files\\resetPinTickets\\tickets.txt"));
+                                                                                    insertTicket.put(getUserName(), false);
+                                                                                    for (Map.Entry<String, Boolean> entry : insertTicket.entrySet()) {
+                                                                                        writer.write("[ IS TRYING TO RESET PIN: " + entry.getValue() + " ]" + " USER: " + entry.getKey() + " TICKET CLOSED") ;
+                                                                                        writer.newLine();
+                                                                                    }
+                                                                                    System.out.print("CHANGING YOUR PIN");
+                                                                                    loading("long");
+                                                                                    System.out.println("SUCCESSFULLY CHANGED YOUR PIN");
+                                                                                }
                                                                             }
                                                                             case "2" -> {
                                                                                 insertCredentials = false;
@@ -555,14 +561,13 @@ public class Process {
                                                                         if (isNumber(Main.temporaryString)) {
                                                                             switch (Main.temporaryString) {
                                                                                 case "1" -> {
-                                                                                    submitTicket();
+                                                                                    if (!submitTicket()) {
+                                                                                        System.out.println("YOU ALREADY SUBMITTED A TICKET");
+                                                                                    }
                                                                                     insertCredentials = false;
                                                                                     Main.userLoggedIn = false;
                                                                                     Main.loginCondition = false;
                                                                                     Main.isAdmin = false;
-                                                                                    System.out.print("SUBMITTING");
-                                                                                    loading("long");
-                                                                                    System.out.println("SUCCESSFULLY SUBMITTED RESET TICKET");
                                                                                     System.out.print("RETURNING TO USER MENU");
                                                                                     loading("short");
                                                                                 }
@@ -737,15 +742,26 @@ public class Process {
         }
     }
     protected List<String> viewUsers() {
-        File directory = new File("src\\files\\accounts\\user\\");
+        File usersDirectory = new File("src\\files\\accounts\\user\\");
         FileFilter directoryFileFilter = File::isDirectory;
-        File[] directoryListAsFile = directory.listFiles(directoryFileFilter);
+        File[] directoryListAsFile = usersDirectory.listFiles(directoryFileFilter);
         assert directoryListAsFile != null;
-        List<String> foldersInDirectory = new ArrayList<>(directoryListAsFile.length);
+        List<String> users = new ArrayList<>(directoryListAsFile.length);
         for (File directoryAsFile : directoryListAsFile) {
-            foldersInDirectory.add(directoryAsFile.getName());
+            users.add(directoryAsFile.getName());
         }
-        return foldersInDirectory;
+        return users;
+    }
+    protected List<String> viewUserTickets() {
+        File userTicketsDirectory = new File("src\\files\\resetPinTickets\\usersWhoWantsToResetPin\\");
+        FileFilter allFiles = File::isFile;
+        File[] filesAsList = userTicketsDirectory.listFiles(allFiles);
+        assert filesAsList != null;
+        List<String> tickets = new ArrayList<>(filesAsList.length);
+        for (File directoryAsFile : filesAsList) {
+            tickets.add(directoryAsFile.getName());
+        }
+        return tickets;
     }
     protected boolean checkUserTicket(File ticketFile, String userName) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(ticketFile));

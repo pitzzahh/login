@@ -121,7 +121,7 @@ public class Main {
                             System.out.print("LOGGING OUT");
                             process.loading("long");
                             System.out.println("SUCCESSFULLY LOGGED OUT");
-                            System.out.print("RETURNING TO " + account + " MENU");
+                            System.out.print("RETURNING TO LOGIN MENU");
                             process.loading("short");
                             process.resetReturningToLoginMenu();
                         }
