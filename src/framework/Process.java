@@ -9,6 +9,7 @@ import static pinGenerator.PinGenerator.generatePin;
 public class Process {
     private String userName;
     private String pin;
+    public static boolean isResettingPin = false;
     static final Hashtable<String, Boolean> isEligibleToChangePin = new Hashtable<>();
     static final Hashtable<String, Boolean> insertTicket = new Hashtable<>();
 
@@ -51,12 +52,15 @@ public class Process {
      */
     public boolean checkEligibility() {
         try {
-            boolean check = isEligibleToChangePin.get(getUserName()); // gets the value of the key which is the username
-            if (check) {
+            boolean isActiveTicket = checkUserTicket(new File("src\\files\\resetPinTickets\\tickets.txt"), getUserName());
+            if (isActiveTicket) {
                 return true;
             }
         }
-        catch (NullPointerException ignored) {}
+        catch (NullPointerException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
     /**
@@ -148,7 +152,6 @@ public class Process {
             case "3" -> {
                 Ticketing ticketing = new Ticketing();
                 ticketing.editEligibility(Main.isAdmin);
-                showAdminDetails();
             }
             case "4" -> {
                 Main.adminLoggedIn = false;
@@ -271,8 +274,8 @@ public class Process {
      * @throws InterruptedException if the thread is interrupted during execution
      */
     public void resetPin() throws IOException, InterruptedException {
-        boolean isActiveTicket = checkUserTicket(new File("src\\files\\resetPinTickets\\tickets.txt"), getUserName());
-        if (checkEligibility() || isActiveTicket) {
+        if (checkEligibility()) {
+            isResettingPin = true;
             File changePinCode = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\pin.txt");
             File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
             char[] oneTimePin = generatePin();
@@ -476,8 +479,8 @@ public class Process {
                                                         case "1" -> {
                                                             System.out.print("CHECKING");
                                                             loading("long");
-                                                            boolean isActiveTicket = checkUserTicket(new File("src\\files\\resetPinTickets\\tickets.txt"), getUserName());
-                                                            if (checkEligibility() || isActiveTicket) {
+
+                                                            if (checkEligibility()) {
                                                                 do {
                                                                     System.out.println("""
                                                                           ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌─┐┬  ┬┌─┐┬┌┐ ┬  ┌─┐  ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌

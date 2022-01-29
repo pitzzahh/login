@@ -1,7 +1,6 @@
 package framework;
 
 import mainActivity.Main;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,19 +27,19 @@ public class Ticketing extends Process {
                     Main.temporaryString = Main.scanner.nextLine().trim();
                     if (!isNumber(Main.temporaryString)) {
                         setUserName(Main.temporaryString);
-                        boolean isActiveTicket = process.checkUserTicket(new File("src\\files\\resetPinTickets\\tickets.txt"), getUserName());
-                        if (Files.exists(Path.of("src\\files\\accounts\\user\\" + getUserName() + "\\username.txt")) && isActiveTicket) {
+                        if (Files.exists(Path.of("src\\files\\accounts\\user\\" + getUserName() + "\\username.txt"))) {
                             isEligibleToChangePin.put(getUserName(),true);
                             System.out.print("GIVING PERMISSION");
                             loading("long");
                             insertTicket.remove(getUserName());
-                            submitTicket();
+                            submitResetTicket();
                             givePermission = false;
                             System.out.println("PERMISSION GRANTED (!)");
                             System.out.println("=========================");
                             System.out.println("|PRESS ENTER TO CONTINUE|");
                             System.out.println("=========================");
                             Main.scanner.nextLine();
+                            showAdminDetails();
                         }
                         else {
                             do {
@@ -51,7 +50,7 @@ public class Ticketing extends Process {
                             """);
                                 System.out.println(": 1 : Retry");
                                 System.out.println(": 2 : Return to ADMIN SELECTION");
-                                System.out.println(": 3 : Return to LOGIN MENU");
+                                System.out.println(": 3 : Return to ADMIN MENU");
                                 System.out.print(">>>: ");
                                 Main.temporaryString = Main.scanner.nextLine().trim();
                                 if (isNumber(Main.temporaryString)) {
@@ -61,15 +60,21 @@ public class Ticketing extends Process {
                                             loading("short");
                                         }
                                         case "2" -> {
-                                            System.out.print("RETURNING TO ADMIN MENU");
+                                            System.out.print("RETURNING TO ADMIN SELECTION");
                                             loading("short");
                                             givePermission = false;
+                                            showAdminDetails();
                                         }
                                         case "3" -> {
-                                            System.out.print("RETURNING TO LOGIN MENU");
-                                            loading("short");
-                                            resetReturningToLoginMenu();
+                                            Main.adminLoggedIn = false;
+                                            Main.loginCondition = false;
+                                            Main.isAdmin = true;
                                             givePermission = false;
+                                            System.out.print("LOGGING OUT");
+                                            loading("long");
+                                            System.out.println("SUCCESSFULLY LOGGED OUT");
+                                            System.out.print("RETURNING TO ADMIN MENU");
+                                            loading("short");
                                         }
                                         default -> {
                                             System.out.println("""

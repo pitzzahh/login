@@ -116,10 +116,12 @@ public class PinGenerator {
         System.out.println("SUCCESSFULLY CREATED (!)");
         System.out.print("RETURNING TO LOGIN MENU");
         process.loading("short");
-        System.out.println("=========================");
-        System.out.print("YOUR PIN: ");
-        for (char c : oneTimePin) {
-            System.out.print(c);
+        if (!Process.isResettingPin) {
+            System.out.println("=========================");
+            System.out.print("YOUR PIN: ");
+            for (char c : oneTimePin) {
+                System.out.print(c);
+            }
         }
         System.out.println("\n=========================");
         System.out.println("|PRESS ENTER TO CONTINUE|");
