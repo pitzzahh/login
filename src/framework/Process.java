@@ -112,7 +112,7 @@ public class Process {
                 System.out.print("ENTER USER ACCOUNT YOU WANT TO REMOVE: ");
                 String name = Main.scanner.nextLine().trim();
                 if (!name.isEmpty()) {
-                    File user = new File("src\\files\\accounts\\user\\" + name);
+                    File user = new File("src\\files\\accounts\\user\\" + name + "'s Folder");
                     if (user.exists()) {
                         try {
                             FileUtils.deleteDirectory(new File(String.valueOf(user))); //deletes the whole folder
@@ -191,6 +191,7 @@ public class Process {
                 for (int i = 0; i < allUsers.size(); i++) {
                     File userName = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\username.txt");
                     File userPasswords = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\pin.txt");
+
                     Scanner userNameScanner = new Scanner(userName);
                     String username =  userNameScanner.nextLine();
                     Scanner passwordScanner = new Scanner(userPasswords);
@@ -232,14 +233,14 @@ public class Process {
         Main.temporaryString = Main.scanner.nextLine().trim();
         if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
             setUserName(Main.temporaryString);
-            File userAccountFolder = new File ("src\\files\\accounts\\user\\" + getUserName());
+            File userAccountFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\");
             boolean success = userAccountFolder.mkdirs();
             if (success) {
                 char[] oneTimePin = generatePin();
                 setPin(String.valueOf(oneTimePin));
-                File userName = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\username.txt");
-                File userPin = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\pin.txt");
-                File userLoginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
+                File userName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\username.txt");
+                File userPin = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\pin.txt");
+                File userLoginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempt.txt");
                 write(getUserName(), userName);
                 write(getPin(), userPin);
                 if (getPin().length() == 6) {
@@ -273,8 +274,8 @@ public class Process {
     public void resetPin() throws IOException, InterruptedException {
         if (checkEligibility()) {
             isResettingPin = true;
-            File changePinCode = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\pin.txt");
-            File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
+            File changePinCode = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\pin.txt");
+            File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempt.txt");
             char[] oneTimePin = generatePin();
             setPin(String.valueOf(oneTimePin));
             System.out.println("[" + getPin() + "] is your new pin code " + getUserName());
@@ -358,8 +359,8 @@ public class Process {
                         checkPassword = new File ("src\\files\\accounts\\admin\\password.txt");
                     }
                     else {
-                        checkUserName = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\username.txt");
-                        checkPassword = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\pin.txt");
+                        checkUserName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\username.txt");
+                        checkPassword = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\pin.txt");
                     }
                     try {
                         Scanner validateUserName = new Scanner(checkUserName);
@@ -375,7 +376,7 @@ public class Process {
                     System.out.print("LOGGING IN");
                     loading("long");
                     if (getUserName().equals(username) && getPin().equals(password) && !invalidUser) {
-                        File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
+                        File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempt.txt");
                         System.out.println("""
                                  ┬  ┌─┐┌─┐┌─┐┌─┐┌┬┐  ┬ ┌┐┌  ┬
                                  │  │ ││ ┬│ ┬├┤  ││  │ │││  │
@@ -423,7 +424,7 @@ public class Process {
                                         loading("short");
                                         if (!isAdmin) {
                                             try {
-                                                File loginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "\\loginAttempt.txt");
+                                                File loginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempt.txt");
                                                 Scanner loginCountUpdater = new Scanner(loginAttempt);
                                                 int count = loginCountUpdater.nextInt();
                                                 loginCountUpdater.close();
@@ -542,7 +543,7 @@ public class Process {
                                                                 } while (!Main.temporaryString.equals("1") && !Main.temporaryString.equals("2") && !Main.temporaryString.equals("3"));
                                                             }
                                                             else {
-                                                                File checkUser = new File ("src\\files\\accounts\\user\\" + getUserName());
+                                                                File checkUser = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder");
                                                                 if (checkUser.isDirectory()) {
                                                                     do {
                                                                         System.out.println("""

@@ -2,7 +2,6 @@ package framework;
 
 import mainActivity.Main;
 import org.apache.commons.io.FilenameUtils;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +30,7 @@ public class Ticketing extends Process {
                     Main.temporaryString = Main.scanner.nextLine().trim();
                     if (!isNumber(Main.temporaryString)) {
                         setUserName(Main.temporaryString);
-                        if (Files.exists(Path.of("src\\files\\accounts\\user\\" + getUserName() + "\\username.txt"))) {
+                        if (Files.exists(Path.of("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\username.txt"))) {
                             BufferedWriter writer = new BufferedWriter(new FileWriter("src\\files\\resetPinTickets\\tickets.txt"));
                             insertTicket.put(getUserName(), true);
                             for (Map.Entry<String, Boolean> entry : insertTicket.entrySet()) {
@@ -123,7 +122,7 @@ public class Ticketing extends Process {
             }
         }
     }
-    protected boolean viewTickets() throws InterruptedException {
+    protected boolean viewTickets() throws InterruptedException, IOException {
         List<String> tickets = viewUserTickets();
         try {
             if (tickets.size() != 0) {
@@ -143,16 +142,22 @@ public class Ticketing extends Process {
                     ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
                     ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
                 """);
-                System.out.print("RETURNING TO ADMIN MENU");
+                System.out.print("RETURNING TO ADMIN SELECTION");
                 loading("short");
+                showAdminDetails();
             }
         } catch (NullPointerException fNFe) {
             System.out.println("""
-               ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
-               ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
-               ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
+                ╔═╗╦═╗╦═╗╔═╗╦═╗
+                ║╣ ╠╦╝╠╦╝║ ║╠╦╝
+                ╚═╝╩╚═╩╚═╚═╝╩╚═
             """);
             fNFe.printStackTrace();
+            System.out.print("RETURNING TO ADMIN SELECTION");
+            loading("short");
+            showAdminDetails();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return false;
     }
