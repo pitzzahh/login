@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class PinGenerator {
-    // kung ilang haba yung pin
+    // field on how long the pin is
     static byte lengthOfPin;
     static final Process process = new Process();
     static final Random random = new Random();
@@ -19,7 +19,7 @@ public class PinGenerator {
 
         Scanner scanner = new Scanner(System.in);
         String response;
-        String otpType = "";
+        String pinType = "";
         System.out.println("WHAT TYPE OF PIN YOU WANT TO USE?");
         System.out.println(": 1 : random numbers");
         System.out.println(": 2 : random letters");
@@ -30,8 +30,8 @@ public class PinGenerator {
 
         if (response.equals("1") || response.equals("2")) {
             switch (response) {
-                case "1" -> otpType = "NUMBERS";
-                case "2" -> otpType = "LETTERS";
+                case "1" -> pinType = "NUMBERS";
+                case "2" -> pinType = "LETTERS";
                 default -> {
                     lengthOfPin = 6;
                     System.out.println("INVALID CHOICE (!)");
@@ -70,11 +70,12 @@ public class PinGenerator {
                 }
             }
 
-            // dito ilalagay yung mga generated numbers (di siya numbers actually mga characters lang)
+            // storing each randomly generated characters into this char array
             oneTimePin = new char[lengthOfPin];
-            // dito maga loop lang na 4 na beses, it means apat na beses maga generate ng numbers
-            switch (otpType) {
+            // checks which type of pin is it
+            switch (pinType) {
                 case "NUMBERS" -> {
+                    // generates random numbers regarding
                     for (int index = 0; index < lengthOfPin; index++) {
                         // dito i store niya lang sa listahan yung 4 numbers na generated
                         oneTimePin[index] = numbers.charAt(random.nextInt(numbers.length()));
@@ -114,19 +115,29 @@ public class PinGenerator {
         if (!Process.isResettingPin) {
             System.out.print("CREATING YOUR ACCOUNT");
             process.loading("long");
-            System.out.println("SUCCESSFULLY CREATED (!)");
-            System.out.print("RETURNING TO LOGIN MENU");
-            process.loading("short");
-            System.out.println("=========================");
-            System.out.print("YOUR PIN: ");
-            for (char c : oneTimePin) {
-                System.out.print(c);
-            }
-            System.out.println("\n=========================");
-            System.out.println("|PRESS ENTER TO CONTINUE|");
-            System.out.println("=========================");
-            scanner.nextLine();
         }
+        else {
+            System.out.print("CHANGING YOUR PIN");
+            process.loading("long");
+        }
+        if (!Process.isResettingPin) {
+            System.out.println("SUCCESSFULLY CREATED (!)");
+        }
+        else {
+            System.out.println("SUCCESSFULLY CHANGED YOUR PIN (!)");
+        }
+        System.out.println("=========================");
+        System.out.print("YOUR PIN: ");
+        for (char c : oneTimePin) {
+            System.out.print(c);
+        }
+        System.out.println("\n=========================");
+        System.out.print("RETURNING TO LOGIN MENU");
+        process.loading("short");
+        System.out.println("=========================");
+        System.out.println("|PRESS ENTER TO CONTINUE|");
+        System.out.println("=========================");
+        scanner.nextLine();
         return oneTimePin;
     }
 }
