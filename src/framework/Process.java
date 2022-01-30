@@ -24,299 +24,6 @@ public class Process {
     public void setPin(String pin) {
         this.pin = pin;
     }
-    public void write(String whatToWrite, File file) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        writer.write(whatToWrite);
-        writer.close();
-    }
-    /**
-     *  Checks if a String that is passed in is a number or not.
-     *  @param numberString a String that contains an integer value.
-     *  @return true if the String that is passed in is a number or not.
-     */
-    public boolean isNumber(String numberString) {
-        try {
-            Byte.parseByte(numberString);
-            return true;
-        }
-        catch (NumberFormatException ignored) {
-        }
-        return false;
-    }
-    /**
-     *  Checks if the user is eligible to change his/her pin.
-     *  getting the userName and checks if the username exists as a key in a HashTable.
-     *  gets the value of that key and checks if true or not.
-     *  @return true if the key has the value true in a Hashtable.
-     */
-    public boolean checkEligibility() {
-        try {
-            boolean isActiveTicket = checkUserTicket(new File("src\\files\\resetPinTickets\\tickets.txt"), getUserName());
-            if (isActiveTicket) {
-                return true;
-            }
-        }
-        catch (NullPointerException ignored) {
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    /**
-     *  Enables the user to send reset pin ticket and storing their ticket in a HashTable, only if the user forgot his/her password.
-     */
-    public boolean submitTicket() throws InterruptedException, IOException {
-        insertTicket.put(getUserName(), true);
-        Ticketing ticketing = new Ticketing();
-        return ticketing.submitResetTicket(getUserName());
-    }
-    /**
-     *  User functionalities if the user is logged in.
-     */
-    public void showUserDetails() {
-        // TODO add user selections
-        System.out.println("""
-            ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
-            │ │└─┐├┤ ├┬┘  └─┐├┤ │  ├┤ │   │ ││ ││││
-            └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
-        """);
-    }
-    /**
-     *  Admin functionalities if the admin is logged in.
-     *  Enables the admin to view user accounts, remove user accounts, and view tickets of user who want to reset their pin.
-     *  @throws InterruptedException if the thread is interrupted during execution.
-     */
-    public void showAdminDetails() throws InterruptedException, IOException {
-        System.out.println("""
-            ┌─┐┌┬┐ ┌┬┐ ┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
-            ├─┤ ││ │││ │ │││  └─┐├┤ │  ├┤ │   │ ││ ││││
-            ┴ ┴ ┴┘ ┴ ┴ ┴ ┘└┘  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
-        """);
-        System.out.println(": 1 : View accounts");
-        System.out.println(": 2 : Remove accounts");
-        System.out.println(": 3 : View tickets");
-        System.out.println(": 4 : return to ADMIN menu");
-        System.out.println(": 5 : return to LOGIN menu");
-        System.out.print(">>>: ");
-        Main.temporaryString = Main.scanner.nextLine().trim();
-        switch (Main.temporaryString) {
-            case "1" -> {
-                listOfUsersAndPasswords();
-                System.out.println("\n=========================");
-                System.out.println("|PRESS ENTER TO CONTINUE|");
-                System.out.println("=========================");
-                Main.scanner.nextLine();
-                showAdminDetails();
-            }
-            case "2" -> {
-                System.out.print("ENTER USER ACCOUNT YOU WANT TO REMOVE: ");
-                String name = Main.scanner.nextLine().trim();
-                if (!name.isEmpty()) {
-                    File user = new File("src\\files\\accounts\\user\\" + name + "'s Folder");
-                    if (user.exists()) {
-                        try {
-                            FileUtils.deleteDirectory(new File(String.valueOf(user))); //deletes the whole folder
-                            System.out.printf("REMOVING THE ACCOUNT: [%s]", name);
-                            loading("long");
-                            System.out.println("SUCCESSFULLY REMOVED (!)");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    else {
-                        System.out.println("""
-                            ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐
-                            │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │\s
-                            └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴\s
-                        """);
-                    }
-                }
-                else {
-                    System.out.println("""
-                        ┬ ┬┌┐┌┬┌─┌┐┌┌─┐┬ ┬┌┐┌  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
-                        │ ││││├┴┐││││ │││││││  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
-                        └─┘┘└┘┴ ┴┘└┘└─┘└┴┘┘└┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
-                     """);
-                }
-                System.out.print("RETURNING TO ADMIN SELECTION");
-                loading("short");
-                System.out.println("\n=========================");
-                System.out.println("|PRESS ENTER TO CONTINUE|");
-                System.out.println("=========================");
-                Main.scanner.nextLine();
-                showAdminDetails();
-            }
-            case "3" -> {
-                Ticketing ticketing = new Ticketing();
-                ticketing.editEligibility(Main.isAdmin);
-            }
-            case "4" -> {
-                Main.adminLoggedIn = false;
-                Main.loginCondition = false;
-                Main.isAdmin = true;
-                System.out.print("LOGGING OUT");
-                loading("long");
-                System.out.println("SUCCESSFULLY LOGGED OUT");
-                System.out.print("RETURNING TO ADMIN MENU");
-                loading("short");
-            }
-            case "5" -> {
-                resetReturningToLoginMenu();
-                System.out.print("LOGGING OUT");
-                loading("long");
-                System.out.print("RETURNING TO LOGIN MENU");
-                loading("short");
-            }
-            default -> {
-                System.out.println("""
-                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                """);
-                System.out.print("LOADING");
-                loading("short");
-                showAdminDetails();
-            }
-        }
-    }
-    private void listOfUsersAndPasswords() throws InterruptedException {
-        List<String> allUsers = viewUsers();
-        try {
-            if (allUsers.size() != 0) {
-                System.out.println("""
-                    ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
-                    │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
-                    ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
-                """);
-                for (int i = 0; i < allUsers.size(); i++) {
-                    File userName = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\username.txt");
-                    File userPasswords = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\pin.txt");
-
-                    Scanner userNameScanner = new Scanner(userName);
-                    String username =  userNameScanner.nextLine();
-                    Scanner passwordScanner = new Scanner(userPasswords);
-                    String password =  passwordScanner.nextLine();
-                    System.out.printf("USER     [%d]: %s\n", ( i + 1 ), username);
-                    System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), password);
-                    userNameScanner.close();
-                    passwordScanner.close();
-                }
-            }
-            else {
-                System.out.println("""
-                  ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
-                   │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
-                   ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
-                """);
-                System.out.print("RETURNING TO ADMIN SELECTION");
-                loading("short");
-            }
-        } catch (FileNotFoundException fNfE) {
-            System.out.println("""
-                ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┬┬  ┌─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┬┐┬┌─┐┌─┐┬┌┐┌┌─┐
-                │ │└─┐├┤ ├┬┘  ├┤ ││  ├┤ └─┐  ├─┤├┬┘├┤   ││││└─┐└─┐│││││ ┬
-                └─┘└─┘└─┘┴└─  └  ┴┴─┘└─┘└─┘  ┴ ┴┴└─└─┘  ┴ ┴┴└─┘└─┘┴┘└┘└─┘
-            """);
-            System.out.print("RETURNING TO ADMIN SELECTION");
-            loading("short");
-        }
-    }
-
-    /**
-     *  Admin functionalities if the admin is logged in.
-     *  Method that allows the user to create accounts.
-     *  @throws IOException if input output process was interrupted
-     *  @throws InterruptedException if the thread is interrupted during execution
-     */
-    public void createUserAccount() throws IOException, InterruptedException {
-        System.out.print("ENTER USERNAME: ");
-        Main.temporaryString = Main.scanner.nextLine().trim();
-        if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
-            setUserName(Main.temporaryString);
-            File userAccountFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\");
-            boolean success = userAccountFolder.mkdirs();
-            if (success) {
-                char[] oneTimePin = generatePin();
-                setPin(String.valueOf(oneTimePin));
-                File userName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\username.txt");
-                File userPin = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\pin.txt");
-                File userLoginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempt.txt");
-                write(getUserName(), userName);
-                write(getPin(), userPin);
-                if (getPin().length() == 6) {
-                    write("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
-                }
-                else {
-                    write("6", userLoginAttempt); // 6 login attempts
-                }
-                Main.userLoggedIn = false;
-                Main.loginCondition = true;
-            }
-            else {
-                System.out.println("""
-                    ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐  ┌─┐┬  ┬─┐┌─┐┌─┐┌┬┐┬ ┬  ┌─┐─┐ ┬┬┌─┐┌┬┐┌─┐┌┬┐        \s
-                    │ │└─┐├┤ ├┬┘│││├─┤│││├┤   ├─┤│  ├┬┘├┤ ├─┤ ││└┬┘  ├┤ ┌┴┬┘│└─┐ │ ├┤  ││        \s
-                    └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  ┴ ┴┴─┘┴└─└─┘┴ ┴─┴┘ ┴   └─┘┴ └─┴└─┘ ┴ └─┘─┴┘        \s
-                    ┌─┐┬  ┌─┐┌─┐┌─┐┌─┐  ┌┬┐┬─┐┬ ┬  ┌─┐┌┐┌┌─┐┌┬┐┬ ┬┌─┐┬─┐  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
-                    ├─┘│  ├┤ ├─┤└─┐├┤    │ ├┬┘└┬┘  ├─┤││││ │ │ ├─┤├┤ ├┬┘  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
-                    ┴  ┴─┘└─┘┴ ┴└─┘└─┘   ┴ ┴└─ ┴   ┴ ┴┘└┘└─┘ ┴ ┴ ┴└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
-                """);
-                System.out.print("RETURNING TO USER MENU");
-                loading("short");
-            }
-        }
-    }
-    /**
-     *  Method that resets the pins of the user, if the user is eligible to change pin
-     * @throws IOException if input output process was interrupted
-     * @throws InterruptedException if the thread is interrupted during execution
-     */
-    public void resetPin() throws IOException, InterruptedException {
-        if (checkEligibility()) {
-            isResettingPin = true;
-            File changePinCode = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\pin.txt");
-            File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempt.txt");
-            char[] oneTimePin = generatePin();
-            setPin(String.valueOf(oneTimePin));
-            System.out.println("[" + getPin() + "] is your new pin code " + getUserName());
-            write(getPin(), changePinCode);
-            if (getPin().length() == 6) {
-                write("4", updateAttempt); // 4 login attempts, if the user did not follow instructions carefully
-            }
-            else {
-                write("6", updateAttempt); // 6 login attempts
-            }
-            Main.userLoggedIn = false;
-            Main.loginCondition = true;
-        }
-    }
-    /*
-     * Method that prints a tailing dot like it was loading
-     */
-    public void loading(String delay) throws InterruptedException {
-        if (delay.equals("long")){
-            for (int i = 1; i <= 3; i++) {
-                TimeUnit.MILLISECONDS.sleep(700);
-                System.out.print('.');
-            }
-        }
-        else if (delay.equals("short")){
-            for (int i = 1; i <= 3; i++) {
-                TimeUnit.MILLISECONDS.sleep(400);
-                System.out.print('.');
-            }
-        }
-        System.out.println();
-    }
-    /*
-     *
-     */
-    public void resetReturningToLoginMenu() {
-        Main.isAdmin = false;
-        Main.userLoggedIn = false;
-        Main.adminLoggedIn = false;
-        Main.loginCondition = true;
-    }
     public void allAdminAndUserMenu(boolean isAdmin) throws IOException, InterruptedException {
         if (isAdmin) {
             System.out.println("""
@@ -359,8 +66,8 @@ public class Process {
                         checkPassword = new File ("src\\files\\accounts\\admin\\password.txt");
                     }
                     else {
-                        checkUserName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\username.txt");
-                        checkPassword = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\pin.txt");
+                        checkUserName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
+                        checkPassword = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
                     }
                     try {
                         Scanner validateUserName = new Scanner(checkUserName);
@@ -376,7 +83,7 @@ public class Process {
                     System.out.print("LOGGING IN");
                     loading("long");
                     if (getUserName().equals(username) && getPin().equals(password) && !invalidUser) {
-                        File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempt.txt");
+                        File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                         System.out.println("""
                                  ┬  ┌─┐┌─┐┌─┐┌─┐┌┬┐  ┬ ┌┐┌  ┬
                                  │  │ ││ ┬│ ┬├┤  ││  │ │││  │
@@ -387,7 +94,7 @@ public class Process {
                         }
                         else {
                             Main.userLoggedIn = true;
-                            write("6", updateAttempt); // reset to 6 login attempts if the user finally logged in
+                            writeToATextFile("6", updateAttempt); // reset to 6 login attempts if the user finally logged in
                         }
                         insertCredentials = false;
                     }
@@ -424,12 +131,12 @@ public class Process {
                                         loading("short");
                                         if (!isAdmin) {
                                             try {
-                                                File loginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempt.txt");
+                                                File loginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                                                 Scanner loginCountUpdater = new Scanner(loginAttempt);
                                                 int count = loginCountUpdater.nextInt();
                                                 loginCountUpdater.close();
                                                 count -= 1;
-                                                write(String.valueOf(count), loginAttempt);
+                                                writeToATextFile(String.valueOf(count), loginAttempt);
                                                 if (count <= 0) {
                                                     Main.userLoggedIn = false;
                                                     Main.loginCondition = true;
@@ -500,19 +207,9 @@ public class Process {
                                                                                 Main.userLoggedIn = false;
                                                                                 Main.loginCondition = false;
                                                                                 Main.isAdmin = false;
-                                                                                File userAccountFolder = new File ("src\\files\\resetPinTickets\\usersWhoWantsToResetPin\\"+ getUserName() + ".txt");
-                                                                                boolean success = userAccountFolder.delete();
-                                                                                if (success) {
-                                                                                    BufferedWriter writer = new BufferedWriter(new FileWriter("src\\files\\resetPinTickets\\tickets.txt"));
-                                                                                    insertTicket.put(getUserName(), false);
-                                                                                    for (Map.Entry<String, Boolean> entry : insertTicket.entrySet()) {
-                                                                                        writer.write("[ IS TRYING TO RESET PIN: " + entry.getValue() + " ]" + " USER: " + entry.getKey() + " TICKET CLOSED") ;
-                                                                                        writer.newLine();
-                                                                                    }
-                                                                                    System.out.print("CHANGING YOUR PIN");
-                                                                                    loading("long");
-                                                                                    System.out.println("SUCCESSFULLY CHANGED YOUR PIN");
-                                                                                }
+                                                                                File ticketFile = new File ("src\\files\\resetPinTickets\\"+ getUserName() + ".txt");
+                                                                                writeToATextFile("false", ticketFile);
+                                                                                ticketFile.deleteOnExit();
                                                                             }
                                                                             case "2" -> {
                                                                                 insertCredentials = false;
@@ -742,6 +439,178 @@ public class Process {
             }
         }
     }
+    /**
+     *  User functionalities if the user is logged in.
+     */
+    public void showUserDetails() {
+        // TODO add user selections
+        System.out.println("""
+            ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
+            │ │└─┐├┤ ├┬┘  └─┐├┤ │  ├┤ │   │ ││ ││││
+            └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
+        """);
+    }
+    /**
+     *  Admin functionalities if the admin is logged in.
+     *  Enables the admin to view user accounts, remove user accounts, and view tickets of user who want to reset their pin.
+     *  @throws InterruptedException if the thread is interrupted during execution.
+     */
+    public void showAdminDetails() throws InterruptedException, IOException {
+        System.out.println("""
+            ┌─┐┌┬┐ ┌┬┐ ┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
+            ├─┤ ││ │││ │ │││  └─┐├┤ │  ├┤ │   │ ││ ││││
+            ┴ ┴ ┴┘ ┴ ┴ ┴ ┘└┘  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
+        """);
+        System.out.println(": 1 : View accounts");
+        System.out.println(": 2 : Remove accounts");
+        System.out.println(": 3 : View tickets");
+        System.out.println(": 4 : return to ADMIN menu");
+        System.out.println(": 5 : return to LOGIN menu");
+        System.out.print(">>>: ");
+        Main.temporaryString = Main.scanner.nextLine().trim();
+        switch (Main.temporaryString) {
+            case "1" -> {
+                listOfUsersAndPasswords();
+                System.out.println("\n=========================");
+                System.out.println("|PRESS ENTER TO CONTINUE|");
+                System.out.println("=========================");
+                Main.scanner.nextLine();
+                showAdminDetails();
+            }
+            case "2" -> {
+                System.out.print("ENTER USER ACCOUNT YOU WANT TO REMOVE: ");
+                String name = Main.scanner.nextLine().trim();
+                if (!name.isEmpty()) {
+                    File user = new File("src\\files\\accounts\\user\\" + name + "'s Folder"); // users folder
+                    if (user.exists()) {
+                        try {
+                            FileUtils.deleteDirectory(new File(String.valueOf(user))); //deletes the whole user folder
+                            System.out.printf("REMOVING THE ACCOUNT: [%s]", name);
+                            loading("long");
+                            System.out.println("SUCCESSFULLY REMOVED (!)");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else {
+                        System.out.println("""
+                            ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐
+                            │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │\s
+                            └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴\s
+                        """);
+                    }
+                }
+                else {
+                    System.out.println("""
+                        ┬ ┬┌┐┌┬┌─┌┐┌┌─┐┬ ┬┌┐┌  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
+                        │ ││││├┴┐││││ │││││││  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
+                        └─┘┘└┘┴ ┴┘└┘└─┘└┴┘┘└┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
+                     """);
+                }
+                System.out.print("RETURNING TO ADMIN SELECTION");
+                loading("short");
+                System.out.println("\n=========================");
+                System.out.println("|PRESS ENTER TO CONTINUE|");
+                System.out.println("=========================");
+                Main.scanner.nextLine();
+                showAdminDetails();
+            }
+            case "3" -> {
+                Ticketing ticketing = new Ticketing();
+                ticketing.editEligibility(Main.isAdmin);
+            }
+            case "4" -> {
+                Main.adminLoggedIn = false;
+                Main.loginCondition = false;
+                Main.isAdmin = true;
+                System.out.print("LOGGING OUT");
+                loading("long");
+                System.out.println("SUCCESSFULLY LOGGED OUT");
+                System.out.print("RETURNING TO ADMIN MENU");
+                loading("short");
+            }
+            case "5" -> {
+                resetReturningToLoginMenu();
+                System.out.print("LOGGING OUT");
+                loading("long");
+                System.out.print("RETURNING TO LOGIN MENU");
+                loading("short");
+            }
+            default -> {
+                System.out.println("""
+                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                """);
+                System.out.print("LOADING");
+                loading("short");
+                showAdminDetails();
+            }
+        }
+    }
+    private void listOfUsersAndPasswords() throws InterruptedException {
+        List<String> allUsers = viewUsers();
+        try {
+            if (allUsers.size() != 0) {
+                System.out.println("""
+                    ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
+                    │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
+                    ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
+                """);
+                for (int i = 0; i < allUsers.size(); i++) {
+                    File userName = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\username.txt");
+                    File userPasswords = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\pin.txt");
+
+                    Scanner userNameScanner = new Scanner(userName);
+                    String username =  userNameScanner.nextLine();
+                    Scanner passwordScanner = new Scanner(userPasswords);
+                    String password =  passwordScanner.nextLine();
+                    System.out.printf("USER     [%d]: %s\n", ( i + 1 ), username);
+                    System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), password);
+                    userNameScanner.close();
+                    passwordScanner.close();
+                }
+            }
+            else {
+                System.out.println("""
+                  ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
+                   │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
+                   ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
+                """);
+                System.out.print("RETURNING TO ADMIN SELECTION");
+                loading("short");
+            }
+        } catch (FileNotFoundException fNfE) {
+            System.out.println("""
+                ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┬┬  ┌─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┬┐┬┌─┐┌─┐┬┌┐┌┌─┐
+                │ │└─┐├┤ ├┬┘  ├┤ ││  ├┤ └─┐  ├─┤├┬┘├┤   ││││└─┐└─┐│││││ ┬
+                └─┘└─┘└─┘┴└─  └  ┴┴─┘└─┘└─┘  ┴ ┴┴└─└─┘  ┴ ┴┴└─┘└─┘┴┘└┘└─┘
+            """);
+            System.out.print("RETURNING TO ADMIN SELECTION");
+            loading("short");
+        }
+    }
+
+
+    /*
+     * Method that prints a tailing dot like it was loading
+     */
+    public void loading(String delay) throws InterruptedException {
+        if (delay.equals("long")){
+            for (int i = 1; i <= 3; i++) {
+                TimeUnit.MILLISECONDS.sleep(700);
+                System.out.print('.');
+            }
+        }
+        else if (delay.equals("short")){
+            for (int i = 1; i <= 3; i++) {
+                TimeUnit.MILLISECONDS.sleep(400);
+                System.out.print('.');
+            }
+        }
+        System.out.println();
+    }
+
     protected List<String> viewUsers() {
         File usersDirectory = new File("src\\files\\accounts\\user\\");
         FileFilter directoryFileFilter = File::isDirectory;
@@ -754,7 +623,8 @@ public class Process {
         return users;
     }
     protected List<String> viewUserTickets() {
-        File userTicketsDirectory = new File("src\\files\\resetPinTickets\\usersWhoWantsToResetPin\\");
+        // TODO store user tickets in one directory and list all the files name in a List<String>
+        File userTicketsDirectory = new File("src\\files\\resetPinTickets\\");
         FileFilter allFiles = File::isFile;
         File[] filesAsList = userTicketsDirectory.listFiles(allFiles);
         assert filesAsList != null;
@@ -764,21 +634,137 @@ public class Process {
         }
         return tickets;
     }
-    protected boolean checkUserTicket(File ticketFile, String userName) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(ticketFile));
-        String s;
-        while ((s = bufferedReader.readLine())!=null) {
-            int userIndex = s.indexOf(userName);
-            int ticketCheckIndex = s.indexOf("true");
-            if (userIndex > -1) {
-                if (ticketCheckIndex == 26) {
-                    if (userIndex == 39) {
-                        return true;
-                    }
+    protected boolean checkUserTicket(File ticketFile) throws IOException {
+        String fileValue = null;
+        try {
+            File file = new File(String.valueOf(ticketFile));
+            Scanner checkTicket = new Scanner(file);
+            fileValue = checkTicket.nextLine();
+        } catch (FileNotFoundException ignored) {
+        }
+        assert fileValue != null;
+        return fileValue.equals("true");
+    }
+    /**
+     *  Admin functionalities if the admin is logged in.
+     *  Method that allows the user to create accounts.
+     *  @throws IOException if input output process was interrupted
+     *  @throws InterruptedException if the thread is interrupted during execution
+     */
+    public void createUserAccount() throws IOException, InterruptedException {
+        System.out.print("ENTER USERNAME: ");
+        Main.temporaryString = Main.scanner.nextLine().trim();
+        if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
+            setUserName(Main.temporaryString);
+            File userAccountFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\");
+            boolean success = userAccountFolder.mkdirs();
+            if (success) {
+                char[] oneTimePin = generatePin();
+                setPin(String.valueOf(oneTimePin));
+                File userName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
+                File userPin = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
+                File userLoginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
+                writeToATextFile(getUserName(), userName);
+                writeToATextFile(getPin(), userPin);
+                if (getPin().length() == 6) {
+                    writeToATextFile("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
                 }
+                else {
+                    writeToATextFile("6", userLoginAttempt); // 6 login attempts
+                }
+                Main.userLoggedIn = false;
+                Main.loginCondition = true;
+            }
+            else {
+                System.out.println("""
+                    ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐  ┌─┐┬  ┬─┐┌─┐┌─┐┌┬┐┬ ┬  ┌─┐─┐ ┬┬┌─┐┌┬┐┌─┐┌┬┐        \s
+                    │ │└─┐├┤ ├┬┘│││├─┤│││├┤   ├─┤│  ├┬┘├┤ ├─┤ ││└┬┘  ├┤ ┌┴┬┘│└─┐ │ ├┤  ││        \s
+                    └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  ┴ ┴┴─┘┴└─└─┘┴ ┴─┴┘ ┴   └─┘┴ └─┴└─┘ ┴ └─┘─┴┘        \s
+                    ┌─┐┬  ┌─┐┌─┐┌─┐┌─┐  ┌┬┐┬─┐┬ ┬  ┌─┐┌┐┌┌─┐┌┬┐┬ ┬┌─┐┬─┐  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
+                    ├─┘│  ├┤ ├─┤└─┐├┤    │ ├┬┘└┬┘  ├─┤││││ │ │ ├─┤├┤ ├┬┘  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
+                    ┴  ┴─┘└─┘┴ ┴└─┘└─┘   ┴ ┴└─ ┴   ┴ ┴┘└┘└─┘ ┴ ┴ ┴└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
+                """);
+                System.out.print("RETURNING TO USER MENU");
+                loading("short");
             }
         }
-        bufferedReader.close();
+    }
+    /**
+     *  Method that resets the pins of the user, if the user is eligible to change pin
+     * @throws IOException if input output process was interrupted
+     * @throws InterruptedException if the thread is interrupted during execution
+     */
+    public void resetPin() throws IOException, InterruptedException {
+        if (checkEligibility()) {
+            isResettingPin = true;
+            File changePinCode = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
+            File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
+            char[] oneTimePin = generatePin();
+            setPin(String.valueOf(oneTimePin));
+            writeToATextFile(getPin(), changePinCode);
+            if (getPin().length() == 6) {
+                writeToATextFile("4", updateAttempt); // 4 login attempts, if the user did not follow instructions carefully
+            }
+            else {
+                writeToATextFile("6", updateAttempt); // 6 login attempts
+            }
+            Main.userLoggedIn = false;
+            Main.loginCondition = true;
+        }
+    }
+    public void writeToATextFile(String whatToWrite, File file) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+        bufferedWriter.write(whatToWrite);
+        bufferedWriter.close();
+    }
+    /**
+     *  Checks if a String that is passed in is a number or not.
+     *  @param numberString a String that contains an integer value.
+     *  @return true if the String that is passed in is a number or not.
+     */
+    public boolean isNumber(String numberString) {
+        try {
+            Byte.parseByte(numberString);
+            return true;
+        }
+        catch (NumberFormatException ignored) {
+        }
         return false;
+    }
+    /**
+     *  Checks if the user is eligible to change his/her pin.
+     *  getting the userName and checks if the username exists as a key in a HashTable.
+     *  gets the value of that key and checks if true or not.
+     *  @return true if the key has the value true in a Hashtable.
+     */
+    public boolean checkEligibility() {
+        try {
+            boolean isActiveTicket = checkUserTicket(new File("src\\files\\resetPinTickets\\" + getUserName() + ".txt"));
+            if (isActiveTicket) {
+                return true;
+            }
+        }
+        catch (NullPointerException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    /**
+     *  Enables the user to send reset pin ticket and storing their ticket in a HashTable, only if the user forgot his/her password.
+     */
+    public boolean submitTicket() throws InterruptedException, IOException {
+        insertTicket.put(getUserName(), true);
+        Ticketing ticketing = new Ticketing();
+        return ticketing.submitResetTicket(getUserName());
+    }
+    /*
+     *
+     */
+    public void resetReturningToLoginMenu() {
+        Main.isAdmin = false;
+        Main.userLoggedIn = false;
+        Main.adminLoggedIn = false;
+        Main.loginCondition = true;
     }
 }
