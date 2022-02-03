@@ -22,7 +22,7 @@ public class Ticketing extends Process {
         boolean ticketExist = ticketFile.exists();
         if (!ticketExist) {
             if (ticketFile.createNewFile()) {
-                writeToATextFile("false", ticketFile);
+                writeToATextFile("false", ticketFile); // writes false to the ticket file
                 System.out.print("SUBMITTING");
                 loading("long");
                 System.out.println("SUCCESSFULLY SUBMITTED RESET TICKET");
@@ -69,7 +69,7 @@ public class Ticketing extends Process {
                                     loading("short");
                                     System.out.print("RETURNING TO ADMIN SELECTION");
                                     loading("short");
-                                    showAdminDetails();
+                                    givePermission = false;
                                 }
                             } catch (FileNotFoundException fileNotFoundException) {
                                 System.out.println("""
@@ -152,7 +152,15 @@ public class Ticketing extends Process {
                     }
                 }
                 else {
+                    System.out.println("""
+                        ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
+                        ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
+                        ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
+                    """);
+                    System.out.print("RETURNING TO ADMIN SELECTION");
+                    loading("short");
                     givePermission = false;
+                    showAdminDetails();
                 }
             }
         }
@@ -161,15 +169,25 @@ public class Ticketing extends Process {
         List<String> tickets = viewUserTickets();
         try {
             if (tickets.size() != 0) {
-                System.out.println("""
-                    ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
-                    │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
-                    ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
-                """);
-                for (int i = 0; i < tickets.size(); i++) {
-                    System.out.printf("USER     [%d]: %s\n", ( i + 1 ), FilenameUtils.getBaseName(tickets.get(i)));
+                try {
+                    File ticket = new File("src\\files\\resetPinTickets\\"+ getUserName() + ".txt");
+                    Scanner ticketScanner = new Scanner(ticket);
+                    String checkIfTrue = ticketScanner.nextLine();
+                    System.out.println("""
+                         ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
+                         │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
+                         ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
+                     """);
+                    if (ticket.exists() && checkIfTrue.equals("false")) {
+                        for (int i = 0; i < tickets.size(); i++) {
+                            System.out.printf("USER     [%d]: %s\n", ( i + 1 ), FilenameUtils.getBaseName(tickets.get(i)));
+                        }
+                        return true;
+                    }
+                } catch (FileNotFoundException ignored) {
+                    return false;
                 }
-                return true;
+                return false;
             }
             else {
                 System.out.println("""

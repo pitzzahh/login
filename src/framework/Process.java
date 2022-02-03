@@ -657,14 +657,16 @@ public class Process {
         if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
             setUserName(Main.temporaryString);
             File userAccountFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\");
-            boolean success = userAccountFolder.mkdirs();
+            File credentialsFolder = new File ("src\\files\\accounts\\user\\" + "test" + "'s Folder\\credentials");
+            File attemptsFolder = new File ("src\\files\\accounts\\user\\" + "test" + "'s Folder\\loginAttempts");
+            boolean success = (userAccountFolder.mkdirs() && credentialsFolder.mkdirs() && attemptsFolder.mkdirs());
             if (success) {
+                File userName = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
+                File userPin = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
+                File userLoginAttempt = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
+                writeToATextFile(getUserName(), userName);
                 char[] oneTimePin = PinGenerator.generatePin();
                 setPin(String.valueOf(oneTimePin));
-                File userName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
-                File userPin = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
-                File userLoginAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
-                writeToATextFile(getUserName(), userName);
                 writeToATextFile(getPin(), userPin);
                 if (getPin().length() == 6) {
                     writeToATextFile("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
