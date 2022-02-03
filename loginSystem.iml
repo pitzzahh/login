@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="commons-io-2.11.0" level="project" />
+    <orderEntry type="library" name="myLibrary" level="project" />
   </component>
 </module>

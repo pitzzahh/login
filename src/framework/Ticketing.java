@@ -9,8 +9,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Ticketing extends Process {
+    /**
+     * Creates a ticket file named after the username.
+     * <p>Checks if the file already exist or not, if not
+     * it creates a new file and write false to that text file.
+     * @return true if the file does not exist and successfully created a new ticket file
+     * @throws InterruptedException if the thread is interrupted while writing to the file.
+     * @throws IOException if the file was not present.
+     */
     public boolean submitResetTicket(String user) throws InterruptedException, IOException {
-        File ticketFile = new File ("src\\files\\resetPinTickets\\"+ user + ".txt");
+        File ticketFile = new File ("src\\files\\resetPinTickets\\" + user + ".txt");
         boolean ticketExist = ticketFile.exists();
         if (!ticketExist) {
             if (ticketFile.createNewFile()) {

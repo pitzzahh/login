@@ -4,7 +4,7 @@ import mainActivity.Main;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import static pinGenerator.PinGenerator.generatePin;
+import myCodes.myProjects.pinGenerator.PinGenerator;
 
 public class Process {
     private String userName;
@@ -62,8 +62,8 @@ public class Process {
                     Main.temporaryString = Main.scanner.nextLine().trim();
                     setPin(Main.temporaryString);
                     if (isAdmin) {
-                        checkUserName = new File ("src\\files\\accounts\\admin\\username.txt");
-                        checkPassword = new File ("src\\files\\accounts\\admin\\password.txt");
+                        checkUserName = new File ("src\\files\\accounts\\admin\\credentials\\username.txt");
+                        checkPassword = new File ("src\\files\\accounts\\admin\\credentials\\password.txt");
                     }
                     else {
                         checkUserName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
@@ -659,7 +659,7 @@ public class Process {
             File userAccountFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\");
             boolean success = userAccountFolder.mkdirs();
             if (success) {
-                char[] oneTimePin = generatePin();
+                char[] oneTimePin = PinGenerator.generatePin();
                 setPin(String.valueOf(oneTimePin));
                 File userName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
                 File userPin = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
@@ -672,6 +672,21 @@ public class Process {
                 else {
                     writeToATextFile("6", userLoginAttempt); // 6 login attempts
                 }
+                System.out.print("CREATING YOUR ACCOUNT");
+                loading("long");
+                System.out.println("SUCCESSFULLY CREATED (!)");
+                System.out.println("=========================");
+                System.out.print("YOUR PIN: ");
+                for (char c : oneTimePin) {
+                    System.out.print(c);
+                }
+                System.out.println("\n=========================");
+                System.out.print("RETURNING TO LOGIN MENU");
+                loading("short");
+                System.out.println("=========================");
+                System.out.println("|PRESS ENTER TO CONTINUE|");
+                System.out.println("=========================");
+                Main.scanner.nextLine();
                 Main.userLoggedIn = false;
                 Main.loginCondition = true;
             }
@@ -699,7 +714,7 @@ public class Process {
             isResettingPin = true;
             File changePinCode = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
             File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
-            char[] oneTimePin = generatePin();
+            char[] oneTimePin = PinGenerator.generatePin();
             setPin(String.valueOf(oneTimePin));
             writeToATextFile(getPin(), changePinCode);
             if (getPin().length() == 6) {
@@ -708,6 +723,21 @@ public class Process {
             else {
                 writeToATextFile("6", updateAttempt); // 6 login attempts
             }
+            System.out.print("CHANGING YOUR PIN");
+            loading("long");
+            System.out.println("SUCCESSFULLY CHANGED YOUR PIN (!)");
+            System.out.println("=========================");
+            System.out.print("YOUR PIN: ");
+            for (char c : oneTimePin) {
+                System.out.print(c);
+            }
+            System.out.println("\n=========================");
+            System.out.print("RETURNING TO LOGIN MENU");
+            loading("short");
+            System.out.println("=========================");
+            System.out.println("|PRESS ENTER TO CONTINUE|");
+            System.out.println("=========================");
+            Main.scanner.nextLine();
             Main.userLoggedIn = false;
             Main.loginCondition = true;
         }
