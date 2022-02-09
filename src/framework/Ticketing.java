@@ -1,12 +1,13 @@
 package framework;
 
-import mainActivity.Main;
 import org.apache.commons.io.FilenameUtils;
-import java.io.*;
+import lib.utilities.FileUtil;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Scanner;
+import mainActivity.Main;
+import java.util.List;
+import java.io.*;
 
 public class Ticketing extends Process {
     /**
@@ -22,7 +23,7 @@ public class Ticketing extends Process {
         boolean ticketExist = ticketFile.exists();
         if (!ticketExist) {
             if (ticketFile.createNewFile()) {
-                writeToATextFile("false", ticketFile); // writes false to the ticket file
+                FileUtil.writeToATextFile("false", ticketFile); // writes false to the ticket file
                 System.out.print("SUBMITTING");
                 loading("long");
                 System.out.println("SUCCESSFULLY SUBMITTED RESET TICKET");
@@ -50,7 +51,7 @@ public class Ticketing extends Process {
                                     System.out.print("GIVING PERMISSION");
                                     loading("long");
                                     givePermission = false;
-                                    writeToATextFile("true", ticket);
+                                    FileUtil.writeToATextFile("true", ticket);
                                     System.out.println("PERMISSION GRANTED (!)");
                                     System.out.println("=========================");
                                     System.out.println("|PRESS ENTER TO CONTINUE|");

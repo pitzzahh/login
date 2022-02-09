@@ -1,10 +1,14 @@
 package framework;
+
+
 import org.apache.commons.io.FileUtils;
-import mainActivity.Main;
-import java.io.*;
-import java.util.*;
 import java.util.concurrent.TimeUnit;
-import myCodes.myProjects.pinGenerator.PinGenerator;
+import lib.utilities.PinGenerator;
+import lib.utilities.SecurityUtil;
+import lib.utilities.FileUtil;
+import mainActivity.Main;
+import java.util.*;
+import java.io.*;
 
 public class Process {
     private String userName;
@@ -52,9 +56,6 @@ public class Process {
                 while (insertCredentials) {
                     File checkUserName;
                     File checkPassword;
-                    String username = "";
-                    String password = "";
-                    boolean invalidUser = false;
                     System.out.print("ENTER USERNAME: ");
                     Main.temporaryString = Main.scanner.nextLine().trim();
                     setUserName(Main.temporaryString);
@@ -69,34 +70,26 @@ public class Process {
                         checkUserName = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
                         checkPassword = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
                     }
-                    try {
-                        Scanner validateUserName = new Scanner(checkUserName);
-                        username = validateUserName.nextLine();
-                        Scanner validatePassword = new Scanner(checkPassword);
-                        password =  validatePassword.nextLine();
-                        validateUserName.close();
-                        validatePassword.close();
-                    }
-                    catch (FileNotFoundException | NoSuchElementException caughtException) {
-                        invalidUser = true;
-                    }
                     System.out.print("LOGGING IN");
                     loading("long");
-                    if (getUserName().equals(username) && getPin().equals(password) && !invalidUser) {
-                        File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
-                        System.out.println("""
+                    if (SecurityUtil.checkCredentials(checkUserName, checkPassword, getUserName(), getPin(), isAdmin)) {
+                        try {
+                            File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
+                            System.out.println("""
                                  ┬  ┌─┐┌─┐┌─┐┌─┐┌┬┐  ┬ ┌┐┌  ┬
                                  │  │ ││ ┬│ ┬├┤  ││  │ │││  │
                                  ┴─┘└─┘└─┘└─┘└─┘─┴┘  ┴ ┘└┘  o
                             """);
-                        if (isAdmin) {
-                            Main.adminLoggedIn = true;
+                            if (isAdmin) {
+                                Main.adminLoggedIn = true;
+                            }
+                            else {
+                                Main.userLoggedIn = true;
+                                FileUtil.writeToATextFile("6", updateAttempt); // reset to 6 login attempts if the user finally logged in
+                            }
+                            insertCredentials = false;
+                        } catch (FileNotFoundException ignored) {
                         }
-                        else {
-                            Main.userLoggedIn = true;
-                            writeToATextFile("6", updateAttempt); // reset to 6 login attempts if the user finally logged in
-                        }
-                        insertCredentials = false;
                     }
                     else {
                         do {
@@ -136,7 +129,7 @@ public class Process {
                                                 int count = loginCountUpdater.nextInt();
                                                 loginCountUpdater.close();
                                                 count -= 1;
-                                                writeToATextFile(String.valueOf(count), loginAttempt);
+                                                FileUtil.writeToATextFile(String.valueOf(count), loginAttempt);
                                                 if (count <= 0) {
                                                     Main.userLoggedIn = false;
                                                     Main.loginCondition = true;
@@ -208,7 +201,7 @@ public class Process {
                                                                                 Main.loginCondition = false;
                                                                                 Main.isAdmin = false;
                                                                                 File ticketFile = new File ("src\\files\\resetPinTickets\\"+ getUserName() + ".txt");
-                                                                                writeToATextFile("false", ticketFile);
+                                                                                FileUtil.writeToATextFile("false", ticketFile);
                                                                                 ticketFile.deleteOnExit();
                                                                             }
                                                                             case "2" -> {
@@ -548,43 +541,28 @@ public class Process {
             }
         }
     }
-    private void listOfUsersAndPasswords() throws InterruptedException {
+    private void listOfUsersAndPasswords() throws InterruptedException, FileNotFoundException {
         List<String> allUsers = viewUsers();
-        try {
-            if (allUsers.size() != 0) {
-                System.out.println("""
-                    ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
-                    │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
-                    ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
-                """);
-                for (int i = 0; i < allUsers.size(); i++) {
-                    File userName = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\username.txt");
-                    File userPasswords = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\pin.txt");
-
-                    Scanner userNameScanner = new Scanner(userName);
-                    String username =  userNameScanner.nextLine();
-                    Scanner passwordScanner = new Scanner(userPasswords);
-                    String password =  passwordScanner.nextLine();
-                    System.out.printf("USER     [%d]: %s\n", ( i + 1 ), username);
-                    System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), password);
-                    userNameScanner.close();
-                    passwordScanner.close();
-                }
-            }
-            else {
-                System.out.println("""
-                  ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
-                   │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
-                   ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
-                """);
-                System.out.print("RETURNING TO ADMIN SELECTION");
-                loading("short");
-            }
-        } catch (FileNotFoundException fNfE) {
+        if (allUsers.size() != 0) {
             System.out.println("""
-                ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┬┬  ┌─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┬┐┬┌─┐┌─┐┬┌┐┌┌─┐
-                │ │└─┐├┤ ├┬┘  ├┤ ││  ├┤ └─┐  ├─┤├┬┘├┤   ││││└─┐└─┐│││││ ┬
-                └─┘└─┘└─┘┴└─  └  ┴┴─┘└─┘└─┘  ┴ ┴┴└─└─┘  ┴ ┴┴└─┘└─┘┴┘└┘└─┘
+                ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
+                │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
+                ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
+            """);
+            for (int i = 0; i < allUsers.size(); i++) {
+                File userName = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\username.txt");
+                File userPasswords = new File ("src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\pin.txt");
+                String credentials = SecurityUtil.viewCredentials(userName, userPasswords, Main.isAdmin);
+                String[] cred =  credentials.split(" +");
+                System.out.printf("USER     [%d]: %s\n", ( i + 1 ), cred[0]);
+                System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), cred[1]);
+            }
+        }
+        else {
+            System.out.println("""
+              ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
+               │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
+               ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
             """);
             System.out.print("RETURNING TO ADMIN SELECTION");
             loading("short");
@@ -657,22 +635,23 @@ public class Process {
         if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
             setUserName(Main.temporaryString);
             File userAccountFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\");
-            File credentialsFolder = new File ("src\\files\\accounts\\user\\" + "test" + "'s Folder\\credentials");
-            File attemptsFolder = new File ("src\\files\\accounts\\user\\" + "test" + "'s Folder\\loginAttempts");
-            boolean success = (userAccountFolder.mkdirs() && credentialsFolder.mkdirs() && attemptsFolder.mkdirs());
-            if (success) {
+            File cache = new File ("C:\\Users\\Public\\Cache\\" + getUserName() + "'s Folder\\");
+            File credentialsFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials");
+            File attemptsFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts");
+            if (userAccountFolder.mkdirs() && credentialsFolder.mkdirs() && attemptsFolder.mkdirs() | cache.mkdirs()) {
                 File userName = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
                 File userPin = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
                 File userLoginAttempt = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
-                writeToATextFile(getUserName(), userName);
+                FileUtil.writeToATextFile(getUserName(), userName);
                 char[] oneTimePin = PinGenerator.generatePin();
                 setPin(String.valueOf(oneTimePin));
-                writeToATextFile(getPin(), userPin);
+                FileUtil.writeToATextFile(getPin(), userPin);
+                SecurityUtil.encrypt(userName, userPin, getUserName());
                 if (getPin().length() == 6) {
-                    writeToATextFile("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
+                    FileUtil.writeToATextFile("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
                 }
                 else {
-                    writeToATextFile("6", userLoginAttempt); // 6 login attempts
+                    FileUtil.writeToATextFile("6", userLoginAttempt); // 6 login attempts
                 }
                 System.out.print("CREATING YOUR ACCOUNT");
                 loading("long");
@@ -718,12 +697,12 @@ public class Process {
             File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
             char[] oneTimePin = PinGenerator.generatePin();
             setPin(String.valueOf(oneTimePin));
-            writeToATextFile(getPin(), changePinCode);
+            FileUtil.writeToATextFile(getPin(), changePinCode);
             if (getPin().length() == 6) {
-                writeToATextFile("4", updateAttempt); // 4 login attempts, if the user did not follow instructions carefully
+                FileUtil.writeToATextFile("4", updateAttempt); // 4 login attempts, if the user did not follow instructions carefully
             }
             else {
-                writeToATextFile("6", updateAttempt); // 6 login attempts
+                FileUtil.writeToATextFile("6", updateAttempt); // 6 login attempts
             }
             System.out.print("CHANGING YOUR PIN");
             loading("long");
@@ -743,11 +722,6 @@ public class Process {
             Main.userLoggedIn = false;
             Main.loginCondition = true;
         }
-    }
-    public void writeToATextFile(String whatToWrite, File file) throws IOException {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-        bufferedWriter.write(whatToWrite);
-        bufferedWriter.close();
     }
     /**
      *  Checks if a String that is passed in is a number or not.
@@ -790,8 +764,8 @@ public class Process {
         Ticketing ticketing = new Ticketing();
         return ticketing.submitResetTicket(getUserName());
     }
-    /*
-     *
+    /**
+     * Resets the fields in order to return to the login menu.
      */
     public void resetReturningToLoginMenu() {
         Main.isAdmin = false;
