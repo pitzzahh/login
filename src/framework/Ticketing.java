@@ -20,9 +20,10 @@ public class Ticketing extends Process {
      */
     public boolean submitResetTicket(String user) throws InterruptedException, IOException {
         File ticketFile = new File ("src\\files\\resetPinTickets\\" + user + ".txt");
-        boolean ticketExist = ticketFile.exists();
-        if (!ticketExist) {
-            if (ticketFile.createNewFile()) {
+        Scanner ticketScanner = new Scanner(ticketFile);
+        String isFalse = ticketScanner.nextLine();
+        if (isFalse.equals("false")) {
+            if (!ticketFile.exists() || ticketFile.createNewFile() || ticketFile.exists()) {
                 FileUtil.writeToATextFile("false", ticketFile); // writes false to the ticket file
                 System.out.print("SUBMITTING");
                 loading("long");
@@ -171,24 +172,28 @@ public class Ticketing extends Process {
         try {
             if (tickets.size() != 0) {
                 try {
-                    File ticket = new File("src\\files\\resetPinTickets\\"+ getUserName() + ".txt");
-                    Scanner ticketScanner = new Scanner(ticket);
-                    String checkIfTrue = ticketScanner.nextLine();
-                    System.out.println("""
-                         ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
-                         │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
-                         ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
-                     """);
-                    if (ticket.exists() && checkIfTrue.equals("false")) {
-                        for (int i = 0; i < tickets.size(); i++) {
-                            System.out.printf("USER     [%d]: %s\n", ( i + 1 ), FilenameUtils.getBaseName(tickets.get(i)));
+                    for (int i = 0; i < tickets.size(); i++) {
+                        File ticket = new File("src\\files\\resetPinTickets\\" + tickets.get(i) + ".txt");
+                        Scanner ticketScanner = new Scanner(ticket);
+                        String checkIfFalse = ticketScanner.nextLine();
+                        if (checkIfFalse.equals("false")) {
+                            System.out.println("""
+                            ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐
+                            │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐
+                            ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘
+                        """);
+                            if (ticket.exists()) {
+                                System.out.printf("USER     [%d]: %s\n", ( i + 1 ), FilenameUtils.getBaseName(tickets.get(i)));
+                                return true;
+                            }
                         }
-                        return true;
+                        else {
+                            return false;
+                        }
                     }
                 } catch (FileNotFoundException ignored) {
                     return false;
                 }
-                return false;
             }
             else {
                 System.out.println("""

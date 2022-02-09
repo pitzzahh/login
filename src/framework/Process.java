@@ -1,12 +1,14 @@
 package framework;
 
-
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.FileUtils;
 import java.util.concurrent.TimeUnit;
 import lib.utilities.PinGenerator;
 import lib.utilities.SecurityUtil;
 import lib.utilities.FileUtil;
 import mainActivity.Main;
+
+
 import java.util.*;
 import java.io.*;
 
@@ -74,7 +76,6 @@ public class Process {
                     loading("long");
                     if (SecurityUtil.checkCredentials(checkUserName, checkPassword, getUserName(), getPin(), isAdmin)) {
                         try {
-                            File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                             System.out.println("""
                                  ┬  ┌─┐┌─┐┌─┐┌─┐┌┬┐  ┬ ┌┐┌  ┬
                                  │  │ ││ ┬│ ┬├┤  ││  │ │││  │
@@ -85,10 +86,12 @@ public class Process {
                             }
                             else {
                                 Main.userLoggedIn = true;
+                                File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                                 FileUtil.writeToATextFile("6", updateAttempt); // reset to 6 login attempts if the user finally logged in
                             }
                             insertCredentials = false;
                         } catch (FileNotFoundException ignored) {
+                            System.out.println("HERE");
                         }
                     }
                     else {
@@ -468,37 +471,50 @@ public class Process {
                 System.out.println("|PRESS ENTER TO CONTINUE|");
                 System.out.println("=========================");
                 Main.scanner.nextLine();
+                Main.temporaryString = "";
                 showAdminDetails();
             }
             case "2" -> {
-                System.out.print("ENTER USER ACCOUNT YOU WANT TO REMOVE: ");
-                String name = Main.scanner.nextLine().trim();
-                if (!name.isEmpty()) {
-                    File user = new File("src\\files\\accounts\\user\\" + name + "'s Folder"); // users folder
-                    if (user.exists()) {
-                        try {
-                            FileUtils.deleteDirectory(new File(String.valueOf(user))); //deletes the whole user folder
-                            System.out.printf("REMOVING THE ACCOUNT: [%s]", name);
-                            loading("long");
-                            System.out.println("SUCCESSFULLY REMOVED (!)");
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                List<String> users = viewUsers();
+                if (users.size() != 0) {
+                    System.out.print("ENTER USER ACCOUNT YOU WANT TO REMOVE: ");
+                    String name = Main.scanner.nextLine().trim();
+                    if (!name.isEmpty()) {
+                        File user = new File("src\\files\\accounts\\user\\" + name + "'s Folder"); // users folder
+                        File userCache = new File("C:\\Users\\Public\\Cache\\" + name + "'s Folder");
+                        if (user.exists()) {
+                            try {
+                                FileUtils.deleteDirectory(new File(String.valueOf(user))); //deletes the whole user folder
+                                FileUtils.deleteDirectory(new File(String.valueOf(userCache))); //deletes the whole user cache folder
+                                System.out.printf("REMOVING THE ACCOUNT: [%s]", name);
+                                loading("long");
+                                System.out.println("SUCCESSFULLY REMOVED (!)");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                    else {
-                        System.out.println("""
+                        else {
+                            System.out.println("""
                             ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐
                             │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │\s
                             └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴\s
                         """);
+                        }
                     }
-                }
-                else {
-                    System.out.println("""
+                    else {
+                        System.out.println("""
                         ┬ ┬┌┐┌┬┌─┌┐┌┌─┐┬ ┬┌┐┌  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
                         │ ││││├┴┐││││ │││││││  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
                         └─┘┘└┘┴ ┴┘└┘└─┘└┴┘┘└┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
                      """);
+                    }
+                }
+                else {
+                    System.out.println("""
+                       ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
+                        │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
+                        ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
+                    """);
                 }
                 System.out.print("RETURNING TO ADMIN SELECTION");
                 loading("short");
@@ -506,6 +522,7 @@ public class Process {
                 System.out.println("|PRESS ENTER TO CONTINUE|");
                 System.out.println("=========================");
                 Main.scanner.nextLine();
+                Main.temporaryString = "";
                 showAdminDetails();
             }
             case "3" -> {
@@ -537,6 +554,7 @@ public class Process {
                 """);
                 System.out.print("LOADING");
                 loading("short");
+                Main.temporaryString = "";
                 showAdminDetails();
             }
         }
@@ -601,14 +619,13 @@ public class Process {
         return users;
     }
     protected List<String> viewUserTickets() {
-        // TODO store user tickets in one directory and list all the files name in a List<String>
         File userTicketsDirectory = new File("src\\files\\resetPinTickets\\");
         FileFilter allFiles = File::isFile;
         File[] filesAsList = userTicketsDirectory.listFiles(allFiles);
         assert filesAsList != null;
         List<String> tickets = new ArrayList<>(filesAsList.length);
-        for (File directoryAsFile : filesAsList) {
-            tickets.add(directoryAsFile.getName());
+        for (File file : filesAsList) {
+            tickets.add(FilenameUtils.getBaseName(file.getName()));
         }
         return tickets;
     }
@@ -646,7 +663,8 @@ public class Process {
                 char[] oneTimePin = PinGenerator.generatePin();
                 setPin(String.valueOf(oneTimePin));
                 FileUtil.writeToATextFile(getPin(), userPin);
-                SecurityUtil.encrypt(userName, userPin, getUserName());
+                SecurityUtil.encryptUserName(userName, getUserName());
+                SecurityUtil.encryptPin(userPin, getUserName());
                 if (getPin().length() == 6) {
                     FileUtil.writeToATextFile("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
                 }
@@ -693,10 +711,12 @@ public class Process {
     public void resetPin() throws IOException, InterruptedException {
         if (checkEligibility()) {
             isResettingPin = true;
+            File username = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
             File changePinCode = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\pin.txt");
             File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
             char[] oneTimePin = PinGenerator.generatePin();
             setPin(String.valueOf(oneTimePin));
+            FileUtil.writeToATextFile(getUserName(), username);
             FileUtil.writeToATextFile(getPin(), changePinCode);
             if (getPin().length() == 6) {
                 FileUtil.writeToATextFile("4", updateAttempt); // 4 login attempts, if the user did not follow instructions carefully
@@ -704,6 +724,7 @@ public class Process {
             else {
                 FileUtil.writeToATextFile("6", updateAttempt); // 6 login attempts
             }
+            SecurityUtil.encryptPin(changePinCode, getUserName());
             System.out.print("CHANGING YOUR PIN");
             loading("long");
             System.out.println("SUCCESSFULLY CHANGED YOUR PIN (!)");
