@@ -55,7 +55,7 @@ public class Main {
                         loginCondition = false;
                         isAdmin = false;
                         System.out.print("EXITING THE PROGRAM");
-                        process.loading("short");
+                        Process.loading("short");
                         System.out.println("""
                             ┌┬┐┬ ┬┌─┐┌┐┌┬┌─  ┬ ┬┌─┐┬ ┬  ┌─┐┌─┐┬─┐  ┬ ┬┌─┐┬┌┐┌┌─┐  ┌┬┐┬ ┬  ┌─┐┬─┐┌─┐┌─┐┬─┐┌─┐┌┬┐
                              │ ├─┤├─┤│││├┴┐  └┬┘│ ││ │  ├┤ │ │├┬┘  │ │└─┐│││││ ┬  │││└┬┘  ├─┘├┬┘│ ││ ┬├┬┘├─┤│││
@@ -69,7 +69,7 @@ public class Main {
                             ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                         """);
                         System.out.print("RETURNING TO LOGIN MENU");
-                        process.loading("short");
+                        Process.loading("short");
                     }
                 }
             }
@@ -91,7 +91,7 @@ public class Main {
                     switch (temporaryString) {
                         case "1" -> {
                             System.out.print("LOADING");
-                            process.loading("short");
+                            Process.loading("short");
                             if (adminLoggedIn) {
                                 process.showAdminDetails();
                             }
@@ -101,10 +101,10 @@ public class Main {
                         }
                         case "2" -> {
                             System.out.print("LOGGING OUT");
-                            process.loading("long");
+                            Process.loading("long");
                             System.out.println("SUCCESSFULLY LOGGED OUT");
                             System.out.print("RETURNING TO " + account + " MENU");
-                            process.loading("short");
+                            Process.loading("short");
 
                             if (adminLoggedIn) {
                                 adminLoggedIn = false;
@@ -119,10 +119,10 @@ public class Main {
                         }
                         case "3" -> {
                             System.out.print("LOGGING OUT");
-                            process.loading("long");
+                            Process.loading("long");
                             System.out.println("SUCCESSFULLY LOGGED OUT");
                             System.out.print("RETURNING TO LOGIN MENU");
-                            process.loading("short");
+                            Process.loading("short");
                             process.resetReturningToLoginMenu();
                         }
                         default -> {
@@ -132,7 +132,7 @@ public class Main {
                                 ┴ ┘└┘  └┘ ┴ ┴┴─┘┴ ─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
                             """);
                             System.out.print("LOADING");
-                            process.loading("short");
+                            Process.loading("short");
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package framework;
 
+import lib.utilities.misc.InputChecker;
 import org.apache.commons.io.FilenameUtils;
 import lib.utilities.FileUtil;
 import java.nio.file.Files;
@@ -41,7 +42,7 @@ public class Ticketing extends Process {
                     System.out.println("\nENTER THE USER YOU WANT TO GIVE PERMISSION TO CHANGE PIN");
                     System.out.print(">>>: ");
                     Main.temporaryString = Main.scanner.nextLine().trim();
-                    if (!isNumber(Main.temporaryString)) {
+                    if (!InputChecker.isInteger(Main.temporaryString)) {
                         setUserName(Main.temporaryString);
                         if (Files.exists(Path.of("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt"))) {
                             try {
@@ -97,7 +98,7 @@ public class Ticketing extends Process {
                                 System.out.println(": 3 : Return to ADMIN MENU");
                                 System.out.print(">>>: ");
                                 Main.temporaryString = Main.scanner.nextLine().trim();
-                                if (isNumber(Main.temporaryString)) {
+                                if (InputChecker.isInteger(Main.temporaryString)) {
                                     switch (Main.temporaryString) {
                                         case "1" -> {
                                             System.out.print("RETRYING");
