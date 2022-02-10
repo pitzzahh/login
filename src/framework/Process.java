@@ -9,6 +9,8 @@ import lib.computing.calculator.neat.Calculator;
 import lib.computing.collatzConjecture.Collatz;
 import lib.computing.conversion.centimeter.CentimeterConversion;
 import lib.computing.conversion.meter.MeterConversion;
+import lib.computing.daysBetweenDates.noLeapYear.RemainingDaysNoLearYear;
+import lib.computing.daysBetweenDates.withLeapYear.RemainingDaysWithLeapYear;
 import lib.computing.quadrantAnalyzer.QuadrantAnalyzer;
 import lib.computing.statistics.MeanMedianModeStandardDeviation;
 import lib.games.guessingGames.guessTheWords.GuessTheWord;
@@ -48,6 +50,7 @@ public class Process {
     private static boolean computeCollatzConjecture;
     private static boolean centimeterConversion;
     private static boolean meterConversion;
+    private static boolean daysBetweenDates;
     private static boolean quadrantAnalyzer;
     private static boolean meanMedianModeSd;
 
@@ -514,8 +517,9 @@ public class Process {
                     System.out.println(": 8 : Centimeter Conversion");
                     System.out.println(": 9 : Meter conversion");
                     System.out.println(":10 : Quadrant analyzer");
-                    System.out.println(":11 : Compute mean, median, mode, and standard deviation");
-                    System.out.println(":12 : Return to USER Selection");
+                    System.out.println(":11 : Compute days between two dates");
+                    System.out.println(":12 : Compute mean, median, mode, and standard deviation");
+                    System.out.println(":13 : Return to USER Selection");
                     System.out.print(">>>: ");
                     Main.temporaryString = Main.scanner.nextLine().trim();
                     switch (Main.temporaryString) {
@@ -740,7 +744,37 @@ public class Process {
                                 tryAgain("quadrantAnalyzer", "computations");
                             }
                         }
-                        case "11"-> {
+                        case "11" -> {
+                            daysBetweenDates = true;
+                            while (daysBetweenDates) {
+                                System.out.println("WHAT TYPE OF COMPUTATION YOU WANT TO USE?");
+                                System.out.println(": 1 : No leap year");
+                                System.out.println(": 2 : With leap year");
+                                System.out.print(">>>: ");
+                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                switch (Main.temporaryString) {
+                                    case "1" -> {
+                                        RemainingDaysNoLearYear.run();
+                                        tryAgain("daysBetweenDates", "computations");
+                                    }
+                                    case "2" -> {
+                                        RemainingDaysWithLeapYear.run();
+                                        tryAgain("daysBetweenDates", "computations");
+                                    }
+                                    default -> {
+                                        System.err.println("""
+                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                        """);
+                                        System.out.print("LOADING");
+                                        loading("short");
+                                        Main.temporaryString = "";
+                                    }
+                                }
+                            }
+                        }
+                        case "12"-> {
                             double[] doubleArray;
                             byte length;
                             double doubleChoice;
@@ -781,7 +815,7 @@ public class Process {
                                 }
                             }
                         }
-                        case "12" -> {
+                        case "13" -> {
                             System.out.print("RETURNING TO USER SELECTIONS");
                             loading("short");
                             performComputation = false;
@@ -1331,7 +1365,7 @@ public class Process {
     private static void tryAgain(String whichComputation, String whichSelection) throws InterruptedException {
         Main.scanner.reset();
         Main.temporaryString = "";
-        System.out.println("DO YOU WANT TO DO IT AGAIN? ");
+        System.out.println("\nDO YOU WANT TO DO IT AGAIN? ");
         System.out.println(": 1 : Yes");
         System.out.println(": 2 : No");
         System.out.print(">>>: ");
@@ -1358,6 +1392,7 @@ public class Process {
                     case "collatz" -> computeCollatzConjecture = false;
                     case "centimeterConversion" -> centimeterConversion = false;
                     case "meterConversion" -> meterConversion = false;
+                    case "computeDaysBetweenDates" -> daysBetweenDates = false;
                     case "quadrantAnalyzer" -> quadrantAnalyzer = false;
                     case "meanMedianModeSd" -> meanMedianModeSd = false;
                     case "guessingGame" -> playGuessingGame = false;
