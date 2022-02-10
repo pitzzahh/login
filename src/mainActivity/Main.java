@@ -63,7 +63,7 @@ public class Main {
                         """);
                     }
                     default -> {
-                        System.out.println("""
+                        System.err.println("""
                             ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                             │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                             ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -93,10 +93,10 @@ public class Main {
                             System.out.print("LOADING");
                             Process.loading("short");
                             if (adminLoggedIn) {
-                                process.showAdminDetails();
+                                process.adminSelections();
                             }
                             if (userLoggedIn) {
-                                process.showUserDetails();
+                                process.userSelections();
                             }
                         }
                         case "2" -> {
@@ -126,7 +126,7 @@ public class Main {
                             process.resetReturningToLoginMenu();
                         }
                         default -> {
-                            System.out.println("""
+                            System.err.println("""
                                 ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬ ┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                 │ │││ └┐┌┘├─┤│  │  ││  │  ├─┤│ │││  ├┤   │
                                 ┴ ┘└┘  └┘ ┴ ┴┴─┘┴ ─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o

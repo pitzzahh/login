@@ -59,14 +59,14 @@ public class Ticketing extends Process {
                                     System.out.println("|PRESS ENTER TO CONTINUE|");
                                     System.out.println("=========================");
                                     Main.scanner.nextLine();
-                                    showAdminDetails();
+                                    adminSelections();
                                 }
                                 else {
                                     if (checkIfTrue.equals("true")) {
-                                        System.out.println("ALREADY GRANTED PERMISSION (!)");
+                                        System.err.println("ALREADY GRANTED PERMISSION (!)");
                                     }
                                     else {
-                                        System.out.println("USER EXISTS BUT NO TICKET SUBMITTED (!)");
+                                        System.err.println("USER EXISTS BUT NO TICKET SUBMITTED (!)");
                                     }
                                     System.out.print("LOADING");
                                     loading("short");
@@ -75,7 +75,7 @@ public class Ticketing extends Process {
                                     givePermission = false;
                                 }
                             } catch (FileNotFoundException fileNotFoundException) {
-                                System.out.println("""
+                                System.err.println("""
                                     ╔═╗╦═╗╦═╗╔═╗╦═╗
                                     ║╣ ╠╦╝╠╦╝║ ║╠╦╝
                                     ╚═╝╩╚═╩╚═╚═╝╩╚═
@@ -83,12 +83,12 @@ public class Ticketing extends Process {
                                 fileNotFoundException.printStackTrace();
                                 System.out.print("RETURNING TO ADMIN SELECTION");
                                 loading("short");
-                                showAdminDetails();
+                                adminSelections();
                             }
                         }
                         else {
                             do {
-                                System.out.println("""
+                                System.err.println("""
                                 ┬ ┬┬─┐┌─┐┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐  ┬
                                 │││├┬┘│ │││││ ┬  │ │└─┐├┤ ├┬┘│││├─┤│││├┤   │
                                 └┴┘┴└─└─┘┘└┘└─┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  o
@@ -108,7 +108,7 @@ public class Ticketing extends Process {
                                             System.out.print("RETURNING TO ADMIN SELECTION");
                                             loading("short");
                                             givePermission = false;
-                                            showAdminDetails();
+                                            adminSelections();
                                         }
                                         case "3" -> {
                                             Main.adminLoggedIn = false;
@@ -122,7 +122,7 @@ public class Ticketing extends Process {
                                             loading("short");
                                         }
                                         default -> {
-                                            System.out.println("""
+                                            System.err.println("""
                                              ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                              │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                              ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -133,7 +133,7 @@ public class Ticketing extends Process {
                                     }
                                 }
                                 else {
-                                    System.out.println("""
+                                    System.err.println("""
                                       ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                       │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                       ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -145,7 +145,7 @@ public class Ticketing extends Process {
                         }
                     }
                     else {
-                        System.out.println("""
+                        System.err.println("""
                             ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                             │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                             ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -155,7 +155,7 @@ public class Ticketing extends Process {
                     }
                 }
                 else {
-                    System.out.println("""
+                    System.err.println("""
                         ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
                         ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
                         ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
@@ -163,7 +163,7 @@ public class Ticketing extends Process {
                     System.out.print("RETURNING TO ADMIN SELECTION");
                     loading("short");
                     givePermission = false;
-                    showAdminDetails();
+                    adminSelections();
                 }
             }
         }
@@ -197,17 +197,17 @@ public class Ticketing extends Process {
                 }
             }
             else {
-                System.out.println("""
+                System.err.println("""
                     ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐
                     ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤\s
                     ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘
                 """);
                 System.out.print("RETURNING TO ADMIN SELECTION");
                 loading("short");
-                showAdminDetails();
+                adminSelections();
             }
         } catch (NullPointerException fNFe) {
-            System.out.println("""
+            System.err.println("""
                 ╔═╗╦═╗╦═╗╔═╗╦═╗
                 ║╣ ╠╦╝╠╦╝║ ║╠╦╝
                 ╚═╝╩╚═╩╚═╚═╝╩╚═
@@ -215,7 +215,7 @@ public class Ticketing extends Process {
             fNFe.printStackTrace();
             System.out.print("RETURNING TO ADMIN SELECTION");
             loading("short");
-            showAdminDetails();
+            adminSelections();
         } catch (IOException e) {
             e.printStackTrace();
         }
