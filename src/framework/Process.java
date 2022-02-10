@@ -4,6 +4,21 @@ import lib.computing.algorithms.recursion.factorial.Factorial;
 import lib.computing.algorithms.recursion.fibonacci.Fibonacci;
 import lib.computing.algorithms.recursion.sumOfAllNumbers.SumOfAllNumbers;
 import lib.computing.algorithms.sorting.quickSort.QuickSort;
+import lib.computing.calculateHypotenuse.HypotenuseComputer;
+import lib.computing.calculator.neat.Calculator;
+import lib.computing.collatzConjecture.Collatz;
+import lib.computing.conversion.centimeter.CentimeterConversion;
+import lib.computing.conversion.meter.MeterConversion;
+import lib.computing.quadrantAnalyzer.QuadrantAnalyzer;
+import lib.computing.statistics.MeanMedianModeStandardDeviation;
+import lib.games.guessingGames.guessTheWords.GuessTheWord;
+import lib.games.guessingGames.myFirstGuessingGame.MyFirstGuessingGame;
+import lib.games.headAndTails.HeadAndTails;
+import lib.games.mathProblemGenerator.MathProblemGenerator;
+import lib.games.rockPaperScissors.normal.RockPaperScissors;
+import lib.games.ticTacToe.simpleTicTacToe.SimpleTicTacToeGame;
+import lib.games.ticTacToe.ticTacToeWithMiniMaxAlgorithm.TicTacToe;
+import lib.systems.studentManagementSystem.main.MainActivity;
 import lib.utilities.misc.InputChecker;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.FileUtils;
@@ -23,10 +38,28 @@ public class Process {
     public static boolean isResettingPin = false;
     static final Hashtable<String, Boolean> insertTicket = new Hashtable<>();
 
+    // computing
     private static boolean computeFactorial;
     private static boolean computeFibonacci;
-    private static boolean computeSumOfAllNumbers = true;
-    private static boolean sort = true;
+    private static boolean computeSumOfAllNumbers;
+    private static boolean sort;
+    private static boolean computeHypotenuse;
+    private static boolean runCalculator;
+    private static boolean computeCollatzConjecture;
+    private static boolean centimeterConversion;
+    private static boolean meterConversion;
+    private static boolean quadrantAnalyzer;
+    private static boolean meanMedianModeSd;
+
+    // games
+    private static boolean playGuessingGame;
+    private static boolean playHeadAndTails;
+    private static boolean mathProblemGame;
+    private static boolean playRockPaperScissors;
+    private static boolean playTicTacToe;
+
+    // systems
+    private static boolean runStudentManagementSystem;
 
     public String getUserName() {
         return userName;
@@ -106,7 +139,7 @@ public class Process {
                     }
                     else {
                         do {
-                            System.out.println("""
+                            System.err.println("""
                                     ┬ ┬┬─┐┌─┐┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
                                     │││├┬┘│ │││││ ┬  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
                                     └┴┘┴└─└─┘┘└┘└─┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
@@ -448,12 +481,12 @@ public class Process {
     /**
      *  User functionalities if the user is logged in.
      */
-    public void showUserDetails() throws InterruptedException {
+    public void userSelections() throws InterruptedException {
         // TODO add user selections
         System.out.println("""
-            ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
-            │ │└─┐├┤ ├┬┘  └─┐├┤ │  ├┤ │   │ ││ ││││
-            └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
+            ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
+            │ │└─┐├┤ ├┬┘  └─┐├┤ │  ├┤ │   │ ││ ││││└─┐
+            └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘└─┘
         """);
         System.out.println(": 1 : Perform computation");
         System.out.println(": 2 : Play Games");
@@ -466,6 +499,11 @@ public class Process {
             case "1" -> {
                 boolean performComputation = true;
                 while (performComputation) {
+                    System.out.println("""
+                        ┌─┐┌─┐┌┬┐┌─┐┬ ┬┌┬┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
+                        │  │ ││││├─┘│ │ │ ├─┤ │ ││ ││││└─┐
+                        └─┘└─┘┴ ┴┴  └─┘ ┴ ┴ ┴ ┴ ┴└─┘┘└┘└─┘
+                    """);
                     System.out.println(": 1 : Compute factorial");
                     System.out.println(": 2 : Compute Fibonacci");
                     System.out.println(": 3 : Sum all numbers");
@@ -491,10 +529,17 @@ public class Process {
                                 if (InputChecker.isInteger(Main.temporaryString)) {
                                     int number = Integer.parseInt(Main.temporaryString);
                                     factorial.setNumber(number).getFactorial();
-                                    tryAgain("computeFactorial");
+                                    tryAgain("computeFactorial", "computations");
                                 }
                                 else {
-                                    System.err.println("THAT IS NOT A NUMBER (!)");
+                                    System.err.println("""
+                                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                    """);
+                                    System.out.print("LOADING");
+                                    loading("short");
+                                    Main.temporaryString = "";
                                 }
                             }
                         }
@@ -515,7 +560,7 @@ public class Process {
                                         if (InputChecker.isInteger(Main.temporaryString)) {
                                             int fibonacciAtNthPosition = Integer.parseInt(Main.temporaryString);
                                             fibonacci.setNumber(fibonacciAtNthPosition).getFibonacciNumberAtNth();
-                                            tryAgain("computeFibonacci");
+                                            tryAgain("computeFibonacci", "computations");
                                         }
                                     }
                                     case "2" -> {
@@ -525,10 +570,19 @@ public class Process {
                                         if (InputChecker.isInteger(Main.temporaryString)) {
                                             int fibonacciNumberUntilN = Integer.parseInt(Main.temporaryString);
                                             fibonacci.setNumber(fibonacciNumberUntilN).getFibonacciNumberUntilN();
-                                            tryAgain("computeFibonacci");
+                                            tryAgain("computeFibonacci", "computations");
                                         }
                                     }
-                                    default -> System.err.println("PLEASE CHOOSE 1 or 2");
+                                    default -> {
+                                        System.err.println("""
+                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                        """);
+                                        System.out.print("LOADING");
+                                        loading("short");
+                                        Main.temporaryString = "";
+                                    }
                                 }
                             }
                         }
@@ -542,10 +596,17 @@ public class Process {
                                 if (InputChecker.isInteger(Main.temporaryString)) {
                                     int number = Integer.parseInt(Main.temporaryString);
                                     sumOfAllNumbers.setNumber(number).getSumOfAllNumbers();
-                                    tryAgain("computeSumOfAllNumbers");
+                                    tryAgain("computeSumOfAllNumbers", "computations");
                                 }
                                 else {
-                                    System.err.println("THAT IS NOT A NUMBER (!)");
+                                    System.err.println("""
+                                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                    """);
+                                    System.out.print("LOADING");
+                                    loading("short");
+                                    Main.temporaryString = "";
                                 }
                             }
                         }
@@ -585,33 +646,350 @@ public class Process {
                                                 }
                                             }
                                             QuickSort.sort(intArray); // sorting
-                                            tryAgain("sort");
+                                            tryAgain("sort", "computations");
                                         }
                                         else {
-                                            System.err.println("THAT IS NOT A NUMBER");
+                                            System.err.println("""
+                                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                            """);
+                                            System.out.print("LOADING");
+                                            loading("short");
+                                            Main.temporaryString = "";
                                         }
                                     }
                                     case "2" -> {
-
+                                        System.out.println("HOW MANY NUMBERS YOU WANT TO SORT?");
+                                        System.out.print(">>>: ");
+                                        Main.temporaryString = Main.scanner.nextLine().trim();
+                                        if (InputChecker.isByte(Main.temporaryString)) {
+                                            System.err.println("PLEASE ENTER ONLY NUMBERS IN THIS PROCESS");
+                                            System.err.println("IF YOU ENTERED A CHARACTER OR A STRING\nTHE PROGRAM WILL AUTOMATICALLY INSERT 1.0 IN THE ARRAY");
+                                            length = Byte.parseByte(Main.temporaryString);
+                                            doubleArray = new double[length];
+                                            for (int i = 0; i < doubleArray.length; i++) {
+                                                System.out.println("ENTER DECIMAL NUMBERS");
+                                                System.out.print(">>>: ");
+                                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                                if (InputChecker.isDouble(Main.temporaryString)) {
+                                                    doubleChoice = Double.parseDouble(Main.temporaryString);
+                                                    doubleArray[i] = doubleChoice;
+                                                }
+                                                else {
+                                                    doubleArray[i] = 1.0;
+                                                }
+                                            }
+                                            QuickSort.sort(doubleArray); // sorting
+                                            tryAgain("sort", "computations");
+                                        }
+                                        else {
+                                            System.err.println("""
+                                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                                │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                            """);
+                                            System.out.print("LOADING");
+                                            loading("short");
+                                            Main.temporaryString = "";
+                                        }
                                     }
                                 }
                             }
                         }
+                        case "5" -> {
+                            computeHypotenuse = true;
+                            while (computeHypotenuse) {
+                                HypotenuseComputer.runComputeHypotenuse();
+                                tryAgain("computeHypotenuse", "computations");
+                            }
+                        }
+                        case "6" -> {
+                            runCalculator = true;
+                            while (runCalculator) {
+                                Calculator calculator = new Calculator();
+                                calculator.runCalculator();
+                                tryAgain("calculator", "computations");
+                            }
+                        }
+                        case "7" -> {
+                            computeCollatzConjecture = true;
+                            while (computeCollatzConjecture) {
+                                Collatz.runCollatzConjecture();
+                                tryAgain("collatz", "computations");
+                            }
+                        }
+                        case "8" -> {
+                            centimeterConversion = true;
+                            while (centimeterConversion) {
+                                CentimeterConversion.runCentimeterConversion();
+                                tryAgain("centimeterConversion", "computations");
+                            }
+                        }
+                        case "9" -> {
+                            meterConversion = true;
+                            while (meterConversion) {
+                                MeterConversion.runMeterConversion();
+                                tryAgain("meterConversion", "computations");
+                            }
+                        }
+                        case "10"-> {
+                            quadrantAnalyzer = true;
+                            while (quadrantAnalyzer) {
+                                QuadrantAnalyzer.run();
+                                tryAgain("quadrantAnalyzer", "computations");
+                            }
+                        }
+                        case "11"-> {
+                            double[] doubleArray;
+                            byte length;
+                            double doubleChoice;
+                            meanMedianModeSd = true;
+                            while (meanMedianModeSd) {
+                                System.out.println("HOW MANY NUMBERS YOU WANT TO ADD IN THE LIST?");
+                                System.out.print(">>>: ");
+                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                if (InputChecker.isByte(Main.temporaryString)) {
+                                    System.err.println("PLEASE ENTER ONLY NUMBERS IN THIS PROCESS");
+                                    System.err.println("IF YOU ENTERED A CHARACTER OR A STRING\nTHE PROGRAM WILL AUTOMATICALLY INSERT 1.0 IN THE ARRAY");
+                                    length = Byte.parseByte(Main.temporaryString);
+                                    doubleArray = new double[length];
+                                    for (int i = 0; i < doubleArray.length; i++) {
+                                        System.out.println("ENTER DECIMAL NUMBERS");
+                                        System.out.print(">>>: ");
+                                        Main.temporaryString = Main.scanner.nextLine().trim();
+                                        if (InputChecker.isDouble(Main.temporaryString)) {
+                                            doubleChoice = Double.parseDouble(Main.temporaryString);
+                                            doubleArray[i] = doubleChoice;
+                                        }
+                                        else {
+                                            doubleArray[i] = 1.0;
+                                        }
+                                    }
+                                    MeanMedianModeStandardDeviation.computeMeanMedianModeStandardDeviation(doubleArray);
+                                    tryAgain("meanMedianModeSd", "computations");
+                                }
+                                else {
+                                    System.err.println("""
+                                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                    """);
+                                    System.out.print("LOADING");
+                                    loading("short");
+                                    Main.temporaryString = "";
+                                }
+                            }
+                        }
+                        case "12" -> {
+                            System.out.print("RETURNING TO USER SELECTIONS");
+                            loading("short");
+                            performComputation = false;
+                            userSelections();
+                        }
+                        default -> {
+                            System.err.println("""
+                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                            """);
+                            System.out.print("LOADING");
+                            loading("short");
+                            Main.temporaryString = "";
+                        }
                     }
                 }
+            }
+            case "2" -> {
+                boolean playGames = true;
+                while (playGames) {
+                    System.out.println("""
+                        ┌─┐┌─┐┌┬┐┌─┐┌─┐
+                        │ ┬├─┤│││├┤ └─┐
+                        └─┘┴ ┴┴ ┴└─┘└─┘
+                    """);
+                    System.out.println(": 1 : Play guessing games");
+                    System.out.println(": 2 : Play head and tails");
+                    System.out.println(": 3 : Play math problem generator");
+                    System.out.println(": 4 : Play rock paper scissors");
+                    System.out.println(": 5 : Play Tic Tac Toe");
+                    System.out.println(": 6 : Return to USER Selection");
+                    System.out.print(">>>: ");
+                    Main.temporaryString = Main.scanner.nextLine().trim();
+                    switch (Main.temporaryString) {
+                        case "1" -> {
+                            playGuessingGame = true;
+                            while (playGuessingGame) {
+                                System.out.println(": 1 : Play guess the word");
+                                System.out.println(": 2 : Play simple guessing game");
+                                System.out.print(">>>: ");
+                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                switch (Main.temporaryString) {
+                                    case "1" -> {
+                                        GuessTheWord.runGuess();
+                                        tryAgain("guessingGame", "games");
+                                    }
+                                    case "2" -> {
+                                        MyFirstGuessingGame.run();
+                                        tryAgain("guessingGame", "games");
+                                    }
+                                    default -> {
+                                        System.err.println("""
+                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                        """);
+                                        System.out.print("LOADING");
+                                        loading("short");
+                                        Main.temporaryString = "";
+                                    }
+                                }
+                            }
+                        }
+                        case "2" -> {
+                            playHeadAndTails = true;
+                            while (playHeadAndTails) {
+                                HeadAndTails.run();
+                                tryAgain("headAndTails", "games");
+                            }
+                        }
+                        case "3" -> {
+                            MathProblemGenerator mathProblemGenerator = new MathProblemGenerator();
+                            mathProblemGame = true;
+                            while (mathProblemGame) {
+                                mathProblemGenerator.run();
+                                tryAgain("guessingGame", "games");
+                            }
+                        }
+                        case "4" -> {
+                            playRockPaperScissors = true;
+                            while (playRockPaperScissors) {
+                                System.out.println(": 1 : Play rock paper scissors (not OOP)");
+                                System.out.println(": 2 : Play rock paper scissors (OOP)");
+                                System.out.print(">>>: ");
+                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                switch (Main.temporaryString) {
+                                    case "1" -> {
+                                        RockPaperScissors rockPaperScissors = new RockPaperScissors();
+                                        rockPaperScissors.run();
+                                        tryAgain("rockPaperScissors", "games");
+                                    }
+                                    case "2" -> {
+                                        lib.games.rockPaperScissors.objectOriented.RockPaperScissors rockPaperScissors = new lib.games.rockPaperScissors.objectOriented.RockPaperScissors();
+                                        rockPaperScissors.run();
+                                        tryAgain("rockPaperScissors", "games");
+                                    }
+                                    default -> {
+                                        System.err.println("""
+                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                        """);
+                                        System.out.print("LOADING");
+                                        loading("short");
+                                        Main.temporaryString = "";
+                                    }
+                                }
+                            }
+                        }
+                        case "5" -> {
+                            playTicTacToe = true;
+                            while (playTicTacToe) {
+                                System.out.println(": 1 : Play simple tic tac toe");
+                                System.out.println(": 2 : Play tic tac toe with minimax algorithm");
+                                System.out.print(">>>: ");
+                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                switch (Main.temporaryString) {
+                                    case "1" -> {
+                                        SimpleTicTacToeGame simpleTicTacToeGame = new SimpleTicTacToeGame();
+                                        simpleTicTacToeGame.run();
+                                        tryAgain("ticTacToe", "games");
+                                    }
+                                    case "2" -> {
+                                        TicTacToe ticTacToe = new TicTacToe();
+                                        ticTacToe.run();
+                                        tryAgain("ticTacToe", "games");
+                                    }
+                                    default -> {
+                                        System.err.println("""
+                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                                        """);
+                                        System.out.print("LOADING");
+                                        loading("short");
+                                        Main.temporaryString = "";
+                                    }
+                                }
+                            }
+                        }
+                        case "6" -> {
+                            System.out.print("RETURNING TO USER SELECTIONS");
+                            loading("short");
+                            playGames = false;
+                            userSelections();
+                        }
+                        default -> {
+                            System.err.println("""
+                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                                │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                            """);
+                            System.out.print("LOADING");
+                            loading("short");
+                            Main.temporaryString = "";
+                        }
+                    }
+                }
+            }
+            case "3" -> {
+                runStudentManagementSystem = true;
+                while (runStudentManagementSystem) {
+                    MainActivity mainActivity = new MainActivity();
+                    mainActivity.run();
+                    tryAgain("studentManagementSystem", "systems");
+                }
+            }
+            case "4" -> {
+                Main.userLoggedIn = false;
+                Main.loginCondition = false;
+                Main.isAdmin = false;
+                System.out.print("LOGGING OUT");
+                loading("long");
+                System.out.println("SUCCESSFULLY LOGGED OUT");
+                System.out.print("RETURNING TO USER MENU");
+                loading("short");
+            }
+            case "5" -> {
+                resetReturningToLoginMenu();
+                System.out.print("LOGGING OUT");
+                loading("long");
+                System.out.print("RETURNING TO LOGIN MENU");
+                loading("short");
+            }
+            default -> {
+                System.err.println("""
+                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
+                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
+                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
+                """);
+                System.out.print("LOADING");
+                loading("short");
+                Main.temporaryString = "";
+                userSelections();
             }
         }
     }
     /**
-     *  Admin functionalities if the admin is logged in.
-     *  Enables the admin to view user accounts, remove user accounts, and view tickets of user who want to reset their pin.
-     *  @throws InterruptedException if the thread is interrupted during execution.
+     * Admin functionalities if the admin is logged in.
+     * Enables the admin to view user accounts, remove user accounts, and view tickets of user who want to reset their pin.
+     * @throws InterruptedException if the thread is interrupted during execution.
      */
-    public void showAdminDetails() throws InterruptedException, IOException {
+    public void adminSelections() throws InterruptedException, IOException {
         System.out.println("""
-            ┌─┐┌┬┐ ┌┬┐ ┬ ┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
-            ├─┤ ││ │││ │ │││  └─┐├┤ │  ├┤ │   │ ││ ││││
-            ┴ ┴ ┴┘ ┴ ┴ ┴ ┘└┘  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
+            ┌─┐┌┬┐┌┬┐┬┌┐┌  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
+            ├─┤ │││││││││  └─┐├┤ │  ├┤ │   │ ││ ││││└─┐
+            ┴ ┴─┴┘┴ ┴┴┘└┘  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘└─┘
         """);
         System.out.println(": 1 : View accounts");
         System.out.println(": 2 : Remove accounts");
@@ -628,7 +1006,7 @@ public class Process {
                 System.out.println("=========================");
                 Main.scanner.nextLine();
                 Main.temporaryString = "";
-                showAdminDetails();
+                adminSelections();
             }
             case "2" -> {
                 List<String> users = viewUsers();
@@ -666,7 +1044,7 @@ public class Process {
                     }
                 }
                 else {
-                    System.err.println("""
+                    System.out.println("""
                        ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
                         │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
                         ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
@@ -679,7 +1057,7 @@ public class Process {
                 System.out.println("=========================");
                 Main.scanner.nextLine();
                 Main.temporaryString = "";
-                showAdminDetails();
+                adminSelections();
             }
             case "3" -> {
                 Ticketing ticketing = new Ticketing();
@@ -711,7 +1089,7 @@ public class Process {
                 System.out.print("LOADING");
                 loading("short");
                 Main.temporaryString = "";
-                showAdminDetails();
+                adminSelections();
             }
         }
     }
@@ -950,8 +1328,10 @@ public class Process {
         Main.adminLoggedIn = false;
         Main.loginCondition = true;
     }
-    private static void tryAgain(String whichComputation) throws InterruptedException {
-        System.out.println("DO YOU WANT TO COMPUTE AGAIN? ");
+    private static void tryAgain(String whichComputation, String whichSelection) throws InterruptedException {
+        Main.scanner.reset();
+        Main.temporaryString = "";
+        System.out.println("DO YOU WANT TO DO IT AGAIN? ");
         System.out.println(": 1 : Yes");
         System.out.println(": 2 : No");
         System.out.print(">>>: ");
@@ -962,23 +1342,33 @@ public class Process {
                 loading("short");
             }
             case "2" -> {
-                System.out.print("RETURNING TO COMPUTATION SELECTION");
+                switch (whichSelection) {
+                    case "computations" -> System.out.print("RETURNING TO COMPUTATION SELECTION");
+                    case "games" -> System.out.print("RETURNING TO GAMES SELECTION");
+                    case "systems" -> System.out.print("RETURNING TO SYSTEMS SELECTION");
+                }
                 loading("short");
                 switch (whichComputation) {
                     case "computeFactorial" -> computeFactorial = false;
                     case "computeFibonacci" -> computeFibonacci = false;
                     case "computeSumOfAllNumbers" -> computeSumOfAllNumbers = false;
                     case "sort" -> sort = false;
+                    case "computeHypotenuse" -> computeHypotenuse = false;
+                    case "calculator" -> runCalculator = false;
+                    case "collatz" -> computeCollatzConjecture = false;
+                    case "centimeterConversion" -> centimeterConversion = false;
+                    case "meterConversion" -> meterConversion = false;
+                    case "quadrantAnalyzer" -> quadrantAnalyzer = false;
+                    case "meanMedianModeSd" -> meanMedianModeSd = false;
+                    case "guessingGame" -> playGuessingGame = false;
+                    case "headAndTails" -> playHeadAndTails = false;
+                    case "mathProblemGenerator" -> mathProblemGame = false;
+                    case "rockPaperScissors" -> playRockPaperScissors = false;
+                    case "ticTacToe" -> playTicTacToe = false;
+                    case "studentManagementSystem" -> runStudentManagementSystem = false;
                 }
-
             }
             default -> System.err.println("PLEASE CHOOSE 1 or 2");
         }
-    }
-    private static void resetUserSelectionPerformComputation() {
-        computeFactorial = true;
-        computeFibonacci = true;
-        computeSumOfAllNumbers = true;
-        sort = true;
     }
 }
