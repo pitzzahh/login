@@ -1,9 +1,14 @@
 package framework;
 
+import lib.computing.algorithms.recursion.factorial.Factorial;
+import lib.computing.algorithms.recursion.fibonacci.Fibonacci;
+import lib.computing.algorithms.recursion.sumOfAllNumbers.SumOfAllNumbers;
+import lib.computing.algorithms.sorting.quickSort.QuickSort;
+import lib.utilities.misc.InputChecker;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.FileUtils;
 import java.util.concurrent.TimeUnit;
-import lib.utilities.PinGenerator;
+import lib.utilities.misc.PinGenerator;
 import lib.utilities.SecurityUtil;
 import lib.utilities.FileUtil;
 import mainActivity.Main;
@@ -17,6 +22,11 @@ public class Process {
     private String pin;
     public static boolean isResettingPin = false;
     static final Hashtable<String, Boolean> insertTicket = new Hashtable<>();
+
+    private static boolean computeFactorial;
+    private static boolean computeFibonacci;
+    private static boolean computeSumOfAllNumbers = true;
+    private static boolean sort = true;
 
     public String getUserName() {
         return userName;
@@ -222,7 +232,7 @@ public class Process {
                                                                                 loading("short");
                                                                             }
                                                                             default -> {
-                                                                                System.out.println("""
+                                                                                System.err.println("""
                                                                                     ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                                                                     │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                                                                     ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -280,7 +290,7 @@ public class Process {
                                                                                     loading("short");
                                                                                 }
                                                                                 default -> {
-                                                                                    System.out.println("""
+                                                                                    System.err.println("""
                                                                                         ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                                                                         │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                                                                         ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -295,7 +305,7 @@ public class Process {
                                                                 else {
                                                                     insertCredentials = false;
                                                                     resetReturningToLoginMenu();
-                                                                    System.out.println("""
+                                                                    System.err.println("""
                                                                             ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐  ┬
                                                                             │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │   │
                                                                             └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴   o
@@ -320,7 +330,7 @@ public class Process {
                                                             loading("short");
                                                         }
                                                         default -> {
-                                                            System.out.println("""
+                                                            System.err.println("""
                                                                     ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                                                     │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                                                     ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -365,7 +375,7 @@ public class Process {
                                             resetReturningToLoginMenu();
                                         }
                                         else {
-                                            System.out.println("""
+                                            System.err.println("""
                                                  ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                                  │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                                  ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -375,7 +385,7 @@ public class Process {
                                         }
                                     }
                                     default -> {
-                                        System.out.println("""
+                                        System.err.println("""
                                             ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                             │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                             ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -386,7 +396,7 @@ public class Process {
                                 }
                             }
                             else {
-                                System.out.println("""
+                                System.err.println("""
                                      ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                                      │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                                      ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -415,7 +425,7 @@ public class Process {
                     resetReturningToLoginMenu();
                 }
                 else {
-                    System.out.println("""
+                    System.err.println("""
                         ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                         │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                         ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -425,7 +435,7 @@ public class Process {
                 }
             }
             default -> {
-                System.out.println("""
+                System.err.println("""
                     ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                     │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                     ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -438,13 +448,159 @@ public class Process {
     /**
      *  User functionalities if the user is logged in.
      */
-    public void showUserDetails() {
+    public void showUserDetails() throws InterruptedException {
         // TODO add user selections
         System.out.println("""
             ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
             │ │└─┐├┤ ├┬┘  └─┐├┤ │  ├┤ │   │ ││ ││││
             └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘
         """);
+        System.out.println(": 1 : Perform computation");
+        System.out.println(": 2 : Play Games");
+        System.out.println(": 3 : Start systems");
+        System.out.println(": 4 : return to USER menu");
+        System.out.println(": 5 : return to LOGIN menu");
+        System.out.print(">>>: ");
+        Main.temporaryString = Main.scanner.nextLine().trim();
+        switch (Main.temporaryString) {
+            case "1" -> {
+                boolean performComputation = true;
+                while (performComputation) {
+                    System.out.println(": 1 : Compute factorial");
+                    System.out.println(": 2 : Compute Fibonacci");
+                    System.out.println(": 3 : Sum all numbers");
+                    System.out.println(": 4 : Sort a number");
+                    System.out.println(": 5 : Compute hypotenuse");
+                    System.out.println(": 6 : Start calculator");
+                    System.out.println(": 7 : Compute Collatz conjecture");
+                    System.out.println(": 8 : Centimeter Conversion");
+                    System.out.println(": 9 : Meter conversion");
+                    System.out.println(":10 : Quadrant analyzer");
+                    System.out.println(":11 : Compute mean, median, mode, and standard deviation");
+                    System.out.println(":12 : Return to USER Selection");
+                    System.out.print(">>>: ");
+                    Main.temporaryString = Main.scanner.nextLine().trim();
+                    switch (Main.temporaryString) {
+                        case "1" -> {
+                            Factorial factorial = new Factorial();
+                            computeFactorial = true;
+                            while (computeFactorial) {
+                                System.out.println("Enter a number");
+                                System.out.print(">>>: ");
+                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                if (InputChecker.isInteger(Main.temporaryString)) {
+                                    int number = Integer.parseInt(Main.temporaryString);
+                                    factorial.setNumber(number).getFactorial();
+                                    tryAgain("computeFactorial");
+                                }
+                                else {
+                                    System.err.println("THAT IS NOT A NUMBER (!)");
+                                }
+                            }
+                        }
+                        case "2" -> {
+                            Fibonacci fibonacci = new Fibonacci();
+                            computeFibonacci = true;
+                            while (computeFibonacci) {
+                                System.out.println("HOW DO YOU WANT TO COMPUTE FIBONACCI?");
+                                System.out.println(": 1 : Get the fibonacci at nth position");
+                                System.out.println(": 2 : Get the fibonacci until nth position");
+                                System.out.print(">>>: ");
+                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                switch (Main.temporaryString) {
+                                    case "1" -> {
+                                        System.out.println("Enter a number");
+                                        System.out.print(">>>: ");
+                                        Main.temporaryString = Main.scanner.nextLine().trim();
+                                        if (InputChecker.isInteger(Main.temporaryString)) {
+                                            int fibonacciAtNthPosition = Integer.parseInt(Main.temporaryString);
+                                            fibonacci.setNumber(fibonacciAtNthPosition).getFibonacciNumberAtNth();
+                                            tryAgain("computeFibonacci");
+                                        }
+                                    }
+                                    case "2" -> {
+                                        System.out.println("Enter a number");
+                                        System.out.print(">>>: ");
+                                        Main.temporaryString = Main.scanner.nextLine().trim();
+                                        if (InputChecker.isInteger(Main.temporaryString)) {
+                                            int fibonacciNumberUntilN = Integer.parseInt(Main.temporaryString);
+                                            fibonacci.setNumber(fibonacciNumberUntilN).getFibonacciNumberUntilN();
+                                            tryAgain("computeFibonacci");
+                                        }
+                                    }
+                                    default -> System.err.println("PLEASE CHOOSE 1 or 2");
+                                }
+                            }
+                        }
+                        case "3" -> {
+                            SumOfAllNumbers sumOfAllNumbers = new SumOfAllNumbers();
+                            computeSumOfAllNumbers = true;
+                            while (computeSumOfAllNumbers) {
+                                System.out.println("Enter a number");
+                                System.out.print(">>>: ");
+                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                if (InputChecker.isInteger(Main.temporaryString)) {
+                                    int number = Integer.parseInt(Main.temporaryString);
+                                    sumOfAllNumbers.setNumber(number).getSumOfAllNumbers();
+                                    tryAgain("computeSumOfAllNumbers");
+                                }
+                                else {
+                                    System.err.println("THAT IS NOT A NUMBER (!)");
+                                }
+                            }
+                        }
+                        case "4" -> {
+                            byte length;
+                            int[] intArray;
+                            double[] doubleArray;
+                            int intChoice;
+                            double doubleChoice;
+                            sort = true;
+                            while (sort) {
+                                System.out.println("WHAT TYPE OF NUMBERS DO YOU WANT TO SORT?");
+                                System.out.println(": 1 : Whole numbers");
+                                System.out.println(": 2 : Numbers with decimal");
+                                System.out.print(">>>: ");
+                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                switch (Main.temporaryString) {
+                                    case "1" -> {
+                                        System.out.println("HOW MANY NUMBERS YOU WANT TO SORT?");
+                                        System.out.print(">>>: ");
+                                        Main.temporaryString = Main.scanner.nextLine().trim();
+                                        if (InputChecker.isByte(Main.temporaryString)) {
+                                            System.err.println("PLEASE ENTER ONLY NUMBERS IN THIS PROCESS");
+                                            System.err.println("IF YOU ENTERED A CHARACTER OR A STRING\nTHE PROGRAM WILL AUTOMATICALLY INSERT 1 IN THE ARRAY");
+                                            length = Byte.parseByte(Main.temporaryString);
+                                            intArray = new int[length];
+                                            for (int i = 0; i < intArray.length; i++) {
+                                                System.out.println("ENTER WHOLE NUMBERS");
+                                                System.out.print(">>>: ");
+                                                Main.temporaryString = Main.scanner.nextLine().trim();
+                                                if (InputChecker.isInteger(Main.temporaryString)) {
+                                                    intChoice = Integer.parseInt(Main.temporaryString);
+                                                    intArray[i] = intChoice;
+                                                }
+                                                else {
+                                                    intArray[i] = 1;
+                                                }
+                                            }
+                                            QuickSort.sort(intArray); // sorting
+                                            tryAgain("sort");
+                                        }
+                                        else {
+                                            System.err.println("THAT IS NOT A NUMBER");
+                                        }
+                                    }
+                                    case "2" -> {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     /**
      *  Admin functionalities if the admin is logged in.
@@ -494,7 +650,7 @@ public class Process {
                             }
                         }
                         else {
-                            System.out.println("""
+                            System.err.println("""
                             ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐
                             │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │\s
                             └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴\s
@@ -502,7 +658,7 @@ public class Process {
                         }
                     }
                     else {
-                        System.out.println("""
+                        System.err.println("""
                         ┬ ┬┌┐┌┬┌─┌┐┌┌─┐┬ ┬┌┐┌  ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐
                         │ ││││├┴┐││││ │││││││  │ │└─┐├┤ ├┬┘│││├─┤│││├┤\s
                         └─┘┘└┘┴ ┴┘└┘└─┘└┴┘┘└┘  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
@@ -510,7 +666,7 @@ public class Process {
                     }
                 }
                 else {
-                    System.out.println("""
+                    System.err.println("""
                        ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
                         │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
                         ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
@@ -547,7 +703,7 @@ public class Process {
                 loading("short");
             }
             default -> {
-                System.out.println("""
+                System.err.println("""
                     ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
                     │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
                     ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
@@ -577,7 +733,7 @@ public class Process {
             }
         }
         else {
-            System.out.println("""
+            System.err.println("""
               ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
                │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
                ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
@@ -591,7 +747,7 @@ public class Process {
     /*
      * Method that prints a tailing dot like it was loading
      */
-    public void loading(String delay) throws InterruptedException {
+    public static void loading(String delay) throws InterruptedException {
         if (delay.equals("long")){
             for (int i = 1; i <= 3; i++) {
                 TimeUnit.MILLISECONDS.sleep(700);
@@ -646,7 +802,7 @@ public class Process {
      *  @throws IOException if input output process was interrupted
      *  @throws InterruptedException if the thread is interrupted during execution
      */
-    public void createUserAccount() throws IOException, InterruptedException {
+    private void createUserAccount() throws IOException, InterruptedException {
         System.out.print("ENTER USERNAME: ");
         Main.temporaryString = Main.scanner.nextLine().trim();
         if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
@@ -690,7 +846,7 @@ public class Process {
                 Main.loginCondition = true;
             }
             else {
-                System.out.println("""
+                System.err.println("""
                     ┬ ┬┌─┐┌─┐┬─┐┌┐┌┌─┐┌┬┐┌─┐  ┌─┐┬  ┬─┐┌─┐┌─┐┌┬┐┬ ┬  ┌─┐─┐ ┬┬┌─┐┌┬┐┌─┐┌┬┐        \s
                     │ │└─┐├┤ ├┬┘│││├─┤│││├┤   ├─┤│  ├┬┘├┤ ├─┤ ││└┬┘  ├┤ ┌┴┬┘│└─┐ │ ├┤  ││        \s
                     └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘  ┴ ┴┴─┘┴└─└─┘┴ ┴─┴┘ ┴   └─┘┴ └─┴└─┘ ┴ └─┘─┴┘        \s
@@ -708,7 +864,7 @@ public class Process {
      * @throws IOException if input output process was interrupted
      * @throws InterruptedException if the thread is interrupted during execution
      */
-    public void resetPin() throws IOException, InterruptedException {
+    private void resetPin() throws IOException, InterruptedException {
         if (checkEligibility()) {
             isResettingPin = true;
             File username = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.txt");
@@ -749,7 +905,7 @@ public class Process {
      *  @param numberString a String that contains an integer value.
      *  @return true if the String that is passed in is a number or not.
      */
-    public boolean isNumber(String numberString) {
+    private boolean isNumber(String numberString) {
         try {
             Byte.parseByte(numberString);
             return true;
@@ -764,7 +920,7 @@ public class Process {
      *  gets the value of that key and checks if true or not.
      *  @return true if the key has the value true in a Hashtable.
      */
-    public boolean checkEligibility() {
+    private boolean checkEligibility() {
         try {
             boolean isActiveTicket = checkUserTicket(new File("src\\files\\resetPinTickets\\" + getUserName() + ".txt"));
             if (isActiveTicket) {
@@ -780,7 +936,7 @@ public class Process {
     /**
      *  Enables the user to send reset pin ticket and storing their ticket in a HashTable, only if the user forgot his/her password.
      */
-    public boolean submitTicket() throws InterruptedException, IOException {
+    private boolean submitTicket() throws InterruptedException, IOException {
         insertTicket.put(getUserName(), true);
         Ticketing ticketing = new Ticketing();
         return ticketing.submitResetTicket(getUserName());
@@ -793,5 +949,36 @@ public class Process {
         Main.userLoggedIn = false;
         Main.adminLoggedIn = false;
         Main.loginCondition = true;
+    }
+    private static void tryAgain(String whichComputation) throws InterruptedException {
+        System.out.println("DO YOU WANT TO COMPUTE AGAIN? ");
+        System.out.println(": 1 : Yes");
+        System.out.println(": 2 : No");
+        System.out.print(">>>: ");
+        Main.temporaryString = Main.scanner.nextLine().trim();
+        switch (Main.temporaryString) {
+            case "1" -> {
+                System.out.print("PROCEEDING");
+                loading("short");
+            }
+            case "2" -> {
+                System.out.print("RETURNING TO COMPUTATION SELECTION");
+                loading("short");
+                switch (whichComputation) {
+                    case "computeFactorial" -> computeFactorial = false;
+                    case "computeFibonacci" -> computeFibonacci = false;
+                    case "computeSumOfAllNumbers" -> computeSumOfAllNumbers = false;
+                    case "sort" -> sort = false;
+                }
+
+            }
+            default -> System.err.println("PLEASE CHOOSE 1 or 2");
+        }
+    }
+    private static void resetUserSelectionPerformComputation() {
+        computeFactorial = true;
+        computeFibonacci = true;
+        computeSumOfAllNumbers = true;
+        sort = true;
     }
 }
