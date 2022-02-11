@@ -20,10 +20,16 @@ public class Ticketing extends Process {
      * @throws IOException if the file was not present.
      */
     public boolean submitResetTicket(String user) throws InterruptedException, IOException {
-        File ticketFile = new File ("src\\files\\resetPinTickets\\" + user + ".txt");
-        Scanner ticketScanner = new Scanner(ticketFile);
-        String isFalse = ticketScanner.nextLine();
-        if (isFalse.equals("false")) {
+        File ticketFile = new File("src\\files\\resetPinTickets\\" + user + ".txt");
+        boolean newTicket = false;
+        String isFalse = "";
+        if (!ticketFile.exists()) {
+            newTicket = ticketFile.createNewFile();
+        } else {
+            Scanner ticketScanner = new Scanner(ticketFile);
+            isFalse = ticketScanner.nextLine();
+        }
+        if (isFalse.equals("false") || newTicket) {
             if (!ticketFile.exists() || ticketFile.createNewFile() || ticketFile.exists()) {
                 FileUtil.writeToATextFile("false", ticketFile); // writes false to the ticket file
                 System.out.print("SUBMITTING");
