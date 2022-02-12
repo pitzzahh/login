@@ -10,4 +10,4 @@
 * 
 * additional library used:
 * https://commons.apache.org/proper/commons-io/
-* https://github.com/pitzzahh/lib
+* https://github.com/pitzzahh/lib/tree/main/src/jar
