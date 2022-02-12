@@ -6,7 +6,7 @@
 * This is a simple login program, this allows users to sign in
 * and create their accounts, their credentials are encrypted and stored in a specific 
 * directory in this project folder. 
-* (validation credentials are stored in the local disk: C:\Users\Public\Cache\)
+* (validation credentials are stored in the content root: src\files\accounts)
 * 
 * additional library used:
 * https://commons.apache.org/proper/commons-io/
