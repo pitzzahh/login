@@ -3,6 +3,7 @@ package framework;
 import org.apache.commons.io.FilenameUtils;
 import lib.utilities.misc.InputChecker;
 import lib.utilities.misc.Decorations;
+import lib.utilities.misc.Loading;
 import lib.utilities.FileUtil;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,7 +35,7 @@ public class Ticketing extends Process {
             if (!ticketFile.exists() || ticketFile.createNewFile() || ticketFile.exists()) {
                 FileUtil.writeToATextFile("false", ticketFile); // writes false to the ticket file
                 System.out.print(Decorations.TEXT_BLUE + "SUBMITTING" + Decorations.TEXT_RESET);
-                loading("long");
+                Loading.dotLoading("long");
                 System.out.println(Decorations.TEXT_GREEN + "SUCCESSFULLY SUBMITTED RESET TICKET" + Decorations.TEXT_RESET);
                 return true;
             }
@@ -58,13 +59,11 @@ public class Ticketing extends Process {
                                 String checkIfTrue = ticketScanner.nextLine();
                                 if (ticket.exists() && checkIfTrue.equals("false")) {
                                     System.out.print(Decorations.TEXT_YELLOW + "GIVING PERMISSION" + Decorations.TEXT_RESET);
-                                    loading("long");
+                                    Loading.dotLoading("long");
                                     givePermission = false;
                                     FileUtil.writeToATextFile("true", ticket);
                                     System.out.println(Decorations.TEXT_GREEN + "PERMISSION GRANTED (!)" + Decorations.TEXT_RESET);
-                                    System.out.println(Decorations.TEXT_GREEN + "=========================" + Decorations.TEXT_RESET);
-                                    System.out.println(Decorations.TEXT_GREEN + "|" + Decorations.TEXT_BLUE + "PRESS ENTER TO CONTINUE" + Decorations.TEXT_GREEN + "|" + Decorations.TEXT_RESET);
-                                    System.out.println(Decorations.TEXT_GREEN + "=========================" + Decorations.TEXT_RESET);
+                                    Decorations.pressEnterToContinue();
                                     Main.scanner.nextLine();
                                     adminSelections();
                                 }
@@ -75,10 +74,10 @@ public class Ticketing extends Process {
                                     else {
                                         System.out.println(Decorations.TEXT_RED + "USER EXISTS BUT NO TICKET SUBMITTED (!)" + Decorations.TEXT_RESET);
                                     }
-                                    System.out.print("LOADING");
-                                    loading("short");
-                                    System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
-                                    loading("short");
+                                    System.out.print(Decorations.TEXT_GREEN + "LOADING" + Decorations.TEXT_RESET);
+                                    Loading.dotLoading("short");
+                                    System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + " MENU" + Decorations.TEXT_RESET);
+                                    Loading.dotLoading("short");
                                     givePermission = false;
                                 }
                             } catch (FileNotFoundException fileNotFoundException) {
@@ -90,7 +89,7 @@ public class Ticketing extends Process {
                                         " ╚═╝╩╚═╩╚═╚═╝╩╚═"   +
                                         Decorations.TEXT_RESET);
                                 System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
-                                loading("short");
+                                Loading.dotLoading("short");
                                 adminSelections();
                             }
                         }
@@ -111,11 +110,11 @@ public class Ticketing extends Process {
                                     switch (Main.temporaryString) {
                                         case "1" -> {
                                             System.out.print(Decorations.TEXT_YELLOW + "RETRYING" + Decorations.TEXT_RESET);
-                                            loading("short");
+                                            Loading.dotLoading("short");
                                         }
                                         case "2" -> {
                                             System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
-                                            loading("short");
+                                            Loading.dotLoading("short");
                                             givePermission = false;
                                             adminSelections();
                                         }
@@ -125,58 +124,31 @@ public class Ticketing extends Process {
                                             Main.isAdmin = true;
                                             givePermission = false;
                                             System.out.print(Decorations.TEXT_YELLOW + "LOGGING OUT" + Decorations.TEXT_RESET);
-                                            loading("long");
+                                            Loading.dotLoading("long");
                                             System.out.println(Decorations.TEXT_BLUE + "SUCCESSFULLY LOGGED OUT" + Decorations.TEXT_RESET);
                                             System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
-                                            loading("short");
+                                            Loading.dotLoading("short");
                                         }
                                         default -> {
-                                            System.out.println(
-                                                    Decorations.TEXT_RED +
-                                                    " ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬\n" +
-                                                    " │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │\n" +
-                                                    " ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o"   +
-                                                    Decorations.TEXT_RESET);
-                                            System.out.print("LOADING");
-                                            loading("short");
+                                            Loading.loadingInvalidChoice();
+                                            Loading.dotLoading("short");
                                         }
                                     }
                                 }
                                 else {
-                                    System.out.println(
-                                            Decorations.TEXT_RED +
-                                            " ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬\n" +
-                                            " │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │\n" +
-                                            " ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o"   +
-                                            Decorations.TEXT_RESET);
-                                    System.out.print("LOADING");
-                                    loading("short");
+                                    Loading.loadingInvalidChoice();
+                                    Loading.dotLoading("short");
                                 }
                             } while (!Main.temporaryString.equals("1") && !Main.temporaryString.equals("2") && !Main.temporaryString.equals("3"));
                         }
                     }
                     else {
-                        System.out.println(
-                                Decorations.TEXT_RED +
-                                " ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬\n" +
-                                " │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │\n" +
-                                " ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o"   +
-                                Decorations.TEXT_RESET);
-                        System.out.print(Decorations.TEXT_GREEN + "LOADING" + Decorations.TEXT_RESET);
-                        loading("short");
+                        Loading.loadingInvalidChoice();
+                        Loading.dotLoading("short");
                     }
                 }
                 else {
-                    System.out.println(
-                            Decorations.TEXT_RED +
-                            " ┌┐┌┌─┐  ┌┬┐┬┌─┐┬┌─┌─┐┌┬┐┌─┐  ┌─┐┬  ┬┌─┐┬┬  ┌─┐┬  ┌┐ ┌─┐\n" +
-                            " ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤s\n" +
-                            " ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘"   +
-                            Decorations.TEXT_RESET);
-                    System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
-                    loading("short");
                     givePermission = false;
-                    adminSelections();
                 }
             }
         }
@@ -218,7 +190,7 @@ public class Ticketing extends Process {
                     " ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘"   +
                     Decorations.TEXT_RESET);
                 System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
-                loading("short");
+                Loading.dotLoading("short");
                 Main.scanner.reset();
                 Main.temporaryString = "";
                 adminSelections();
@@ -232,7 +204,7 @@ public class Ticketing extends Process {
                     " ╚═╝╩╚═╩╚═╚═╝╩╚═"   +
                     Decorations.TEXT_RESET);
             System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
-            loading("short");
+            Loading.dotLoading("short");
             adminSelections();
         } catch (Exception e) {
             e.printStackTrace();

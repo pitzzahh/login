@@ -20,13 +20,13 @@ import lib.computing.quadrantAnalyzer.QuadrantAnalyzer;
 import lib.computing.conversion.meter.MeterConversion;
 import lib.computing.calculator.neat.Calculator;
 import lib.computing.collatzConjecture.Collatz;
-import lib.utilities.misc.Decorations;
 import org.apache.commons.io.FilenameUtils;
 import lib.games.headAndTails.HeadAndTails;
 import lib.utilities.misc.PinGenerator;
 import lib.utilities.misc.InputChecker;
 import org.apache.commons.io.FileUtils;
-import java.util.concurrent.TimeUnit;
+import lib.utilities.misc.Decorations;
+import lib.utilities.misc.Loading;
 import lib.utilities.SecurityUtil;
 import lib.utilities.FileUtil;
 import javax.crypto.SecretKey;
@@ -120,23 +120,23 @@ public class Process {
                     setPin(Main.temporaryString);
                     if (isAdmin) {
                         try {
-                            checkUserName = SecurityUtil.AES.loadFromKeyStore("admin", "src\\files\\accounts\\admin\\credentials\\username.keystore");
+                            checkUserName = SecurityUtil.AES.loadFromKeyStore(getUserName(), "src\\files\\accounts\\admin\\credentials\\username.keystore");
                         } catch (Exception e) {
                             isWrongUserName = true;
                         }
                         try {
-                            checkPassword = SecurityUtil.AES.loadFromKeyStore("admin", "src\\files\\accounts\\admin\\credentials\\password.keystore");
+                            checkPassword = SecurityUtil.AES.loadFromKeyStore(getPin(), "src\\files\\accounts\\admin\\credentials\\password.keystore");
                         } catch (Exception e) {
                             isWrongPassword = true;
                         }
                     } else {
                         try {
-                            checkUserName = SecurityUtil.AES.loadFromKeyStore("admin", "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.keystore");
+                            checkUserName = SecurityUtil.AES.loadFromKeyStore(getUserName(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.keystore");
                         } catch (Exception e) {
                             isWrongUserName = true;
                         }
                         try {
-                            checkPassword = SecurityUtil.AES.loadFromKeyStore("admin", "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
+                            checkPassword = SecurityUtil.AES.loadFromKeyStore(getPin(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
                         } catch (Exception e) {
                             isWrongPassword = true;
                         }
@@ -156,7 +156,7 @@ public class Process {
                         decryptedPassword = SecurityUtil.AES.decrypt(decryptedPinData, checkPassword, cipher);
                     }
                     System.out.print(Decorations.TEXT_YELLOW + "LOGGING IN" + Decorations.TEXT_RESET);
-                    loading("long");
+                    Loading.dotLoading("long");
                     if ((decryptedUsername.equals(getUserName()) && decryptedPassword.equals(getPin())) && !loginCount.equals("0") && (!isWrongUserName && !isWrongPassword)) {
                         try {
                             System.out.println(
@@ -167,10 +167,12 @@ public class Process {
                                     Decorations.TEXT_RESET);
                             if (isAdmin) {
                                 Main.adminLoggedIn = true;
+                                Main.account = Decorations.TEXT_BLUE + "ADMIN" + Decorations.TEXT_RESET;
                             } else {
                                 Main.userLoggedIn = true;
                                 File updateAttempt = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                                 FileUtil.writeToATextFile("6", updateAttempt); // reset to 6 login attempts if the user finally logged in
+                                Main.account = Decorations.TEXT_GREEN + "USER" + Decorations.TEXT_RESET;
                             }
                             insertCredentials = false;
                         } catch (FileNotFoundException ignored) {
@@ -186,10 +188,8 @@ public class Process {
                                 " you can talk to the admin, bring your userName and request a new pin code." +
                                 Decorations.TEXT_RESET);
                         System.out.print(Decorations.TEXT_GREEN + "PROCEEDING TO LOGIN MENU" + Decorations.TEXT_RESET);
-                        loading("short");
-                        System.out.println(Decorations.TEXT_GREEN + "=========================" + Decorations.TEXT_RESET);
-                        System.out.println(Decorations.TEXT_GREEN + "|" + Decorations.TEXT_BLUE + "PRESS ENTER TO CONTINUE" + Decorations.TEXT_GREEN + "|" + Decorations.TEXT_RESET);
-                        System.out.println(Decorations.TEXT_GREEN + "=========================" + Decorations.TEXT_RESET);
+                        Loading.dotLoading("short");
+                        Decorations.pressEnterToContinue();
                         Main.scanner.nextLine();
                         resetReturningToLoginMenu();
                     }
@@ -223,7 +223,7 @@ public class Process {
                                 switch (Main.temporaryString) {
                                     case "1" -> {
                                         System.out.print(Decorations.TEXT_YELLOW + "RETRYING" + Decorations.TEXT_RESET);
-                                        loading("long");
+                                        Loading.dotLoading("long");
                                         if (!isAdmin) {
                                             try {
                                                 if (!isWrongUserName && !isWrongPassword) {
@@ -242,10 +242,8 @@ public class Process {
                                                                 " you can talk to the admin, bring your userName and request a new pin code." +
                                                                 Decorations.TEXT_RESET);
                                                         System.out.print(Decorations.TEXT_GREEN + "PROCEEDING TO LOGIN MENU" + Decorations.TEXT_RESET);
-                                                        loading("short");
-                                                        System.out.println(Decorations.TEXT_GREEN + "=========================" + Decorations.TEXT_RESET);
-                                                        System.out.println(Decorations.TEXT_GREEN + "|" + Decorations.TEXT_BLUE + "PRESS ENTER TO CONTINUE" + Decorations.TEXT_GREEN + "|" + Decorations.TEXT_RESET);
-                                                        System.out.println(Decorations.TEXT_GREEN + "=========================" + Decorations.TEXT_RESET);
+                                                        Loading.dotLoading("short");
+                                                        Decorations.pressEnterToContinue();
                                                         Main.scanner.nextLine();
                                                         resetReturningToLoginMenu();
                                                     }
@@ -279,7 +277,7 @@ public class Process {
                                                     switch (Main.temporaryString) {
                                                         case "1" -> {
                                                             System.out.print(Decorations.TEXT_YELLOW + "CHECKING" + Decorations.TEXT_RESET);
-                                                            loading("long");
+                                                            Loading.dotLoading("long");
                                                             if (checkEligibility()) {
                                                                 do {
                                                                     System.out.println(
@@ -313,24 +311,24 @@ public class Process {
                                                                                 Main.userLoggedIn = false;
                                                                                 Main.loginCondition = false;
                                                                                 System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
-                                                                                loading("short");
+                                                                                Loading.dotLoading("short");
                                                                             }
                                                                             case "3" -> {
                                                                                 insertCredentials = false;
                                                                                 Main.userLoggedIn = false;
                                                                                 Main.loginCondition = true;
                                                                                 System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
-                                                                                loading("short");
+                                                                                Loading.dotLoading("short");
                                                                             }
                                                                             default -> {
-                                                                                System.out.println();
-                                                                                System.err.println("""
-                                                                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                                                        """);
-                                                                                System.out.print("\nRETURNING TO USER MENU");
-                                                                                loading("short");
+                                                                                System.out.println(
+                                                                                        Decorations.TEXT_RED +
+                                                                                        " ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬\n" +
+                                                                                        " │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │\n" +
+                                                                                        " ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o"   +
+                                                                                        Decorations.TEXT_RESET);
+                                                                                System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                                                                                Loading.dotLoading("short");
                                                                             }
                                                                         }
                                                                     }
@@ -340,55 +338,49 @@ public class Process {
                                                                 File checkUser = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder");
                                                                 if (checkUser.isDirectory()) {
                                                                     do {
-                                                                        System.out.println();
-                                                                        System.out.println("""
-                                                                                    ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┬ ┬┌─┐┌┬┐  ┌─┐┌─┐┬─┐┌┬┐┬┌┬┐┌┬┐┌─┐┌┬┐ \s
-                                                                                    └┬┘│ ││ │  ├─┤├┬┘├┤   ││││ │ │   └┬┘├┤  │   ├─┘├┤ ├┬┘││││ │  │ ├┤  ││ \s
-                                                                                     ┴ └─┘└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘ ┴    ┴ └─┘ ┴   ┴  └─┘┴└─┴ ┴┴ ┴  ┴ └─┘─┴┘ \s
-                                                                                    ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌                     \s
-                                                                                     │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││                     \s
-                                                                                     ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘                     \s
-                                                                                """);
-                                                                        System.out.println("\n: 1 : Submit pin reset ticket");
-                                                                        System.out.println(": 2 : Return to USER MENU");
-                                                                        System.out.println(": 3 : Return to LOGIN MENU");
-                                                                        System.out.print(">>>: ");
+                                                                        System.out.println(Decorations.TEXT_RED +
+                                                                                " ┬ ┬┌─┐┬ ┬  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┬ ┬┌─┐┌┬┐  ┌─┐┌─┐┬─┐┌┬┐┬┌┬┐┌┬┐┌─┐┌┬┐  \n" +
+                                                                                " └┬┘│ ││ │  ├─┤├┬┘├┤   ││││ │ │   └┬┘├┤  │   ├─┘├┤ ├┬┘││││ │  │ ├┤  ││  \n" +
+                                                                                "  ┴ └─┘└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘ ┴    ┴ └─┘ ┴   ┴  └─┘┴└─┴ ┴┴ ┴  ┴ └─┘─┴┘  \n" +
+                                                                                " ┌┬┐┌─┐  ┌─┐┬ ┬┌─┐┌┐┌┌─┐┌─┐  ┬ ┬┌─┐┬ ┬┬─┐  ┌─┐┬┌┐┌                      \n" +
+                                                                                "  │ │ │  │  ├─┤├─┤││││ ┬├┤   └┬┘│ ││ │├┬┘  ├─┘││││                      \n" +
+                                                                                "  ┴ └─┘  └─┘┴ ┴┴ ┴┘└┘└─┘└─┘   ┴ └─┘└─┘┴└─  ┴  ┴┘└┘                      "   +
+                                                                                Decorations.TEXT_RESET);
+                                                                        System.out.println(Decorations.TEXT_GREEN  + ": 1 : Submit pin reset ticket" + Decorations.TEXT_RESET);
+                                                                        System.out.println(Decorations.TEXT_PURPLE + ": 2 : Return to " + Main.account + Decorations.TEXT_YELLOW + " MENU" + Decorations.TEXT_RESET);
+                                                                        System.out.println(Decorations.TEXT_GREEN  + ": 3 : return to LOGIN menu" + Decorations.TEXT_RESET);
+                                                                        System.out.print(Decorations.TEXT_YELLOW   + ">>>: " + Decorations.TEXT_RESET);
                                                                         Main.temporaryString = Main.scanner.nextLine().trim();
                                                                         if (isNumber(Main.temporaryString)) {
                                                                             switch (Main.temporaryString) {
                                                                                 case "1" -> {
                                                                                     if (!submitTicket()) {
-                                                                                        System.err.println("YOU ALREADY SUBMITTED A TICKET");
+                                                                                        System.out.println(Decorations.TEXT_RED + "YOU ALREADY SUBMITTED A TICKET" + Decorations.TEXT_RESET);
                                                                                     }
                                                                                     insertCredentials = false;
                                                                                     Main.userLoggedIn = false;
                                                                                     Main.loginCondition = false;
                                                                                     Main.isAdmin = false;
-                                                                                    System.out.print("\nRETURNING TO USER MENU");
-                                                                                    loading("short");
+                                                                                    System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                                                                                    Loading.dotLoading("short");
                                                                                 }
                                                                                 case "2" -> {
                                                                                     insertCredentials = false;
                                                                                     Main.userLoggedIn = false;
                                                                                     Main.loginCondition = false;
-                                                                                    System.out.print("RETURNING TO USER MENU");
-                                                                                    loading("short");
+                                                                                    System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                                                                                    Loading.dotLoading("short");
                                                                                 }
                                                                                 case "3" -> {
                                                                                     insertCredentials = false;
                                                                                     Main.userLoggedIn = false;
                                                                                     Main.loginCondition = true;
-                                                                                    System.out.print("RETURNING TO LOGIN MENU");
-                                                                                    loading("short");
+                                                                                    System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
+                                                                                    Loading.dotLoading("short");
                                                                                 }
                                                                                 default -> {
-                                                                                    System.err.println("""
-                                                                                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                                                                │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                                                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                                                            """);
-                                                                                    System.out.print("\nLOADING");
-                                                                                    loading("short");
+                                                                                    Loading.loadingInvalidChoice();
+                                                                                    Loading.dotLoading("short");
                                                                                 }
                                                                             }
                                                                         }
@@ -396,13 +388,14 @@ public class Process {
                                                                 } else {
                                                                     insertCredentials = false;
                                                                     resetReturningToLoginMenu();
-                                                                    System.err.println("""
-                                                                           ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐  ┬
-                                                                           │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │   │
-                                                                           └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴   o
-                                                                    """);
-                                                                    System.out.print("\nRETURNING TO LOGIN MENU");
-                                                                    loading("long");
+                                                                    System.out.println(
+                                                                            Decorations.TEXT_RED +
+                                                                            " ┬ ┬┌─┐┌─┐┬─┐  ┌┬┐┌─┐┌─┐┌─┐  ┌┐┌┌─┐┌┬┐  ┌─┐─┐ ┬┬┌─┐┌┬┐  ┬ \n" +
+                                                                            " │ │└─┐├┤ ├┬┘   │││ │├┤ └─┐  ││││ │ │   ├┤ ┌┴┬┘│└─┐ │   │ \n" +
+                                                                            " └─┘└─┘└─┘┴└─  ─┴┘└─┘└─┘└─┘  ┘└┘└─┘ ┴   └─┘┴ └─┴└─┘ ┴   o"    +
+                                                                            Decorations.TEXT_RESET);
+                                                                    System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
+                                                                    Loading.dotLoading("long");
                                                                 }
                                                             }
                                                         }
@@ -410,32 +403,27 @@ public class Process {
                                                             insertCredentials = false;
                                                             Main.userLoggedIn = false;
                                                             Main.loginCondition = false;
-                                                            System.out.print("RETURNING TO USER MENU");
-                                                            loading("short");
+                                                            System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                                                            Loading.dotLoading("short");
                                                         }
                                                         case "3" -> {
                                                             insertCredentials = false;
                                                             Main.userLoggedIn = false;
                                                             Main.loginCondition = true;
-                                                            System.out.print("RETURNING TO LOGIN MENU");
-                                                            loading("short");
+                                                            System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
+                                                            Loading.dotLoading("short");
                                                         }
                                                         default -> {
-                                                            System.err.println("""
-                                                                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                                    """);
-                                                            System.out.print("\nLOADING");
-                                                            loading("short");
+                                                            Loading.loadingInvalidChoice();
+                                                            Loading.dotLoading("short");
                                                         }
                                                     }
                                                 }
                                             } while (!Main.temporaryString.equals("1") && !Main.temporaryString.equals("2") && !Main.temporaryString.equals("3"));
                                         } else {
                                             insertCredentials = false;
-                                            System.out.print("RETURNING TO ADMIN MENU");
-                                            loading("short");
+                                            System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                                            Loading.dotLoading("short");
                                         }
                                     }
                                     case "3" -> {
@@ -443,14 +431,14 @@ public class Process {
                                             insertCredentials = false;
                                             Main.userLoggedIn = false;
                                             Main.loginCondition = false;
-                                            System.out.print("RETURNING TO USER MENU");
-                                            loading("short");
+                                            System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                                            Loading.dotLoading("short");
                                         } else {
                                             insertCredentials = false;
                                             Main.userLoggedIn = false;
                                             Main.loginCondition = true;
-                                            System.out.print("RETURNING TO LOGIN MENU");
-                                            loading("short");
+                                            System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
+                                            Loading.dotLoading("short");
                                             resetReturningToLoginMenu();
                                         }
                                     }
@@ -459,37 +447,22 @@ public class Process {
                                             insertCredentials = false;
                                             Main.userLoggedIn = false;
                                             Main.loginCondition = true;
-                                            System.out.print("RETURNING TO LOGIN MENU");
-                                            loading("short");
+                                            System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
+                                            Loading.dotLoading("short");
                                             resetReturningToLoginMenu();
                                         } else {
-                                            System.err.println("""
-                                                         ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                         │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                         ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                    """);
-                                            System.out.print("\nLOADING");
-                                            loading("short");
+                                            Loading.loadingInvalidChoice();
+                                            Loading.dotLoading("short");
                                         }
                                     }
                                     default -> {
-                                        System.err.println("""
-                                                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                                """);
-                                        System.out.print("\nLOADING");
-                                        loading("short");
+                                        Loading.loadingInvalidChoice();
+                                        Loading.dotLoading("short");
                                     }
                                 }
                             } else {
-                                System.err.println("""
-                                             ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                             │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                             ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                        """);
-                                System.out.print("\nLOADING");
-                                loading("short");
+                                Loading.loadingInvalidChoice();
+                                Loading.dotLoading("short");
                             }
                         } while (!Main.temporaryString.equals("1") && !Main.temporaryString.equals("2") && !Main.temporaryString.equals("3") && !Main.temporaryString.equals("4"));
                     }
@@ -497,8 +470,8 @@ public class Process {
             }
             case "2" -> {
                 if (isAdmin) {
-                    System.out.print("RETURNING TO LOGIN MENU");
-                    loading("short");
+                    System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
+                    Loading.dotLoading("short");
                     resetReturningToLoginMenu();
                 }
                 else {
@@ -507,28 +480,18 @@ public class Process {
             }
             case "3" -> {
                 if (!isAdmin) {
-                    System.out.print("RETURNING TO LOGIN MENU");
-                    loading("short");
+                    System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
+                    Loading.dotLoading("short");
                     resetReturningToLoginMenu();
                 }
                 else {
-                    System.err.println("""
-                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                    """);
-                    System.out.print("\nLOADING");
-                    loading("short");
+                    Loading.loadingInvalidChoice();
+                    Loading.dotLoading("short");
                 }
             }
             default -> {
-                System.err.println("""
-                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                """);
-                System.out.print("\nLOADING");
-                loading("short");
+                Loading.loadingInvalidChoice();
+                Loading.dotLoading("short");
             }
         }
     }
@@ -536,55 +499,57 @@ public class Process {
      *  User functionalities if the user is logged in.
      */
     public void userSelections() throws InterruptedException {
-        // TODO add user selections
-        System.out.println("""
-            ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
-            │ │└─┐├┤ ├┬┘  └─┐├┤ │  ├┤ │   │ ││ ││││└─┐
-            └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘└─┘
-        """);
-        System.out.println(": 1 : Perform computation");
-        System.out.println(": 2 : Play Games");
-        System.out.println(": 3 : Start systems");
-        System.out.println(": 4 : return to USER menu");
-        System.out.println(": 5 : return to LOGIN menu");
-        System.out.print(">>>: ");
+        System.out.println(
+                Decorations.TEXT_GREEN +
+                " ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐\n" +
+                " │ │└─┐├┤ ├┬┘  └─┐├┤ │  ├┤ │   │ ││ ││││└─┐\n" +
+                " └─┘└─┘└─┘┴└─  └─┘└─┘┴─┘└─┘└─┘ ┴ ┴└─┘┘└┘└─┘"   +
+                Decorations.TEXT_RESET);
+        System.out.println(Decorations.TEXT_YELLOW + ": 1 : Perform computation" + Decorations.TEXT_RESET);
+        System.out.println(Decorations.TEXT_BLUE   + ": 2 : Play Games" + Decorations.TEXT_RESET);
+        System.out.println(Decorations.TEXT_GREEN  + ": 3 : Start systems" + Decorations.TEXT_RESET);
+        System.out.println(Decorations.TEXT_PURPLE + ": 4 : return to USER menu" + Decorations.TEXT_RESET);
+        System.out.println(Decorations.TEXT_GREEN  + ": 2 : return to LOGIN menu" + Decorations.TEXT_RESET);
+        System.out.print(Decorations.TEXT_YELLOW  + ">>>: " + Decorations.TEXT_RESET);
         Main.temporaryString = Main.scanner.nextLine().trim();
         switch (Main.temporaryString) {
             case "1" -> {
                 boolean performComputation = true;
                 while (performComputation) {
-                    System.out.println("""
-                        ┌─┐┌─┐┌┬┐┌─┐┬ ┬┌┬┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
-                        │  │ ││││├─┘│ │ │ ├─┤ │ ││ ││││└─┐
-                        └─┘└─┘┴ ┴┴  └─┘ ┴ ┴ ┴ ┴ ┴└─┘┘└┘└─┘
-                    """);
-                    System.out.println(": 1 : Compute factorial");
-                    System.out.println(": 2 : Compute Fibonacci");
-                    System.out.println(": 3 : Sum all numbers");
-                    System.out.println(": 4 : Sort a number");
-                    System.out.println(": 5 : Compute hypotenuse");
-                    System.out.println(": 6 : Start calculator");
-                    System.out.println(": 7 : Compute Collatz conjecture");
-                    System.out.println(": 8 : Centimeter Conversion");
-                    System.out.println(": 9 : Meter conversion");
-                    System.out.println(":10 : Quadrant analyzer");
-                    System.out.println(":11 : Compute days between two dates");
-                    System.out.println(":12 : Compute mean, median, mode, and standard deviation");
-                    System.out.println(":13 : Return to USER Selection");
-                    System.out.print(">>>: ");
+                    System.out.println(
+                            Decorations.TEXT_YELLOW +
+                            " ┌─┐┌─┐┌┬┐┌─┐┬ ┬┌┬┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐\n" +
+                            " │  │ ││││├─┘│ │ │ ├─┤ │ ││ ││││└─┐\n" +
+                            " └─┘└─┘┴ ┴┴  └─┘ ┴ ┴ ┴ ┴ ┴└─┘┘└┘└─┘"   +
+                            Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ": 1 : Compute factorial" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ": 2 : Compute Fibonacci" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ": 3 : Sum all numbers" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ": 4 : Sort a number" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ": 5 : Compute hypotenuse" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ": 6 : Start calculator" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ": 7 : Compute Collatz conjecture" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ": 8 : Centimeter Conversion" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ": 9 : Meter conversion" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ":10 : Quadrant analyzer" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ":11 : Compute days between two dates" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ":12 : Compute mean, median, mode, and standard deviation" + Decorations.TEXT_RESET);
+                    System.out.println(Decorations.TEXT_GREEN + ":13 : Return to USER Selection" + Decorations.TEXT_RESET);
+                    System.out.print(Decorations.TEXT_YELLOW  + ">>>: " + Decorations.TEXT_RESET);
                     Main.temporaryString = Main.scanner.nextLine().trim();
                     switch (Main.temporaryString) {
                         case "1" -> {
                             Factorial factorial = new Factorial();
                             computeFactorial = true;
                             while (computeFactorial) {
-                                System.out.println("""
-                                    ┌─┐┌─┐┌─┐┌┬┐┌─┐┬─┐┬┌─┐┬    ┌─┐┌─┐┬  ┌─┐┬ ┬┬  ┌─┐┌┬┐┌─┐┬─┐
-                                    ├┤ ├─┤│   │ │ │├┬┘│├─┤│    │  ├─┤│  │  │ ││  ├─┤ │ │ │├┬┘
-                                    └  ┴ ┴└─┘ ┴ └─┘┴└─┴┴ ┴┴─┘  └─┘┴ ┴┴─┘└─┘└─┘┴─┘┴ ┴ ┴ └─┘┴└─
-                                """);
-                                System.out.println("Enter a number");
-                                System.out.print(">>>: ");
+                                System.out.println(
+                                        Decorations.TEXT_GREEN +
+                                        " ┌─┐┌─┐┌─┐┌┬┐┌─┐┬─┐┬┌─┐┬    ┌─┐┌─┐┬  ┌─┐┬ ┬┬  ┌─┐┌┬┐┌─┐┬─┐\n" +
+                                        " ├┤ ├─┤│   │ │ │├┬┘│├─┤│    │  ├─┤│  │  │ ││  ├─┤ │ │ │├┬┘\n" +
+                                        " └  ┴ ┴└─┘ ┴ └─┘┴└─┴┴ ┴┴─┘  └─┘┴ ┴┴─┘└─┘└─┘┴─┘┴ ┴ ┴ └─┘┴└─"   +
+                                        Decorations.TEXT_RESET);
+                                System.out.println(Decorations.TEXT_PURPLE + "Enter a number" + Decorations.TEXT_RESET);
+                                System.out.print(Decorations.TEXT_YELLOW  + ">>>: " + Decorations.TEXT_RESET);
                                 Main.temporaryString = Main.scanner.nextLine().trim();
                                 if (InputChecker.isByte(Main.temporaryString)) {
                                     byte number = Byte.parseByte(Main.temporaryString);
@@ -592,13 +557,8 @@ public class Process {
                                     tryAgain("computeFactorial", "computations");
                                 }
                                 else {
-                                    System.err.println("""
-                                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                    """);
-                                    System.out.print("\nLOADING");
-                                    loading("short");
+                                    Loading.loadingInvalidChoice();
+                                    Loading.dotLoading("short");
                                     Main.temporaryString = "";
                                 }
                             }
@@ -607,10 +567,10 @@ public class Process {
                             Fibonacci fibonacci = new Fibonacci();
                             computeFibonacci = true;
                             while (computeFibonacci) {
-                                System.out.println("HOW DO YOU WANT TO COMPUTE FIBONACCI?");
-                                System.out.println(": 1 : Get the fibonacci at nth position");
-                                System.out.println(": 2 : Get the fibonacci until nth position");
-                                System.out.print(">>>: ");
+                                System.out.println(Decorations.TEXT_GREEN + "HOW DO YOU WANT TO COMPUTE FIBONACCI?" + Decorations.TEXT_RESET);
+                                System.out.println(Decorations.TEXT_PURPLE + ": 1 : Get the fibonacci at nth position" + Decorations.TEXT_RESET);
+                                System.out.println(Decorations.TEXT_PURPLE + ": 2 : Get the fibonacci until nth position" + Decorations.TEXT_RESET);
+                                System.out.print(Decorations.TEXT_YELLOW  + ">>>: " + Decorations.TEXT_RESET);
                                 Main.temporaryString = Main.scanner.nextLine().trim();
                                 switch (Main.temporaryString) {
                                     case "1" -> {
@@ -644,13 +604,8 @@ public class Process {
                                         }
                                     }
                                     default -> {
-                                        System.err.println("""
-                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                        """);
-                                        System.out.print("\nLOADING");
-                                        loading("short");
+                                        Loading.loadingInvalidChoice();
+                                        Loading.dotLoading("short");
                                         Main.temporaryString = "";
                                     }
                                 }
@@ -669,13 +624,8 @@ public class Process {
                                     tryAgain("computeSumOfAllNumbers", "computations");
                                 }
                                 else {
-                                    System.err.println("""
-                                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                    """);
-                                    System.out.print("\nLOADING");
-                                    loading("short");
+                                    Loading.loadingInvalidChoice();
+                                    Loading.dotLoading("short");
                                     Main.temporaryString = "";
                                 }
                             }
@@ -719,13 +669,8 @@ public class Process {
                                             tryAgain("sort", "computations");
                                         }
                                         else {
-                                            System.err.println("""
-                                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                            """);
-                                            System.out.print("\nLOADING");
-                                            loading("short");
+                                            Loading.loadingInvalidChoice();
+                                            Loading.dotLoading("short");
                                             Main.temporaryString = "";
                                         }
                                     }
@@ -754,13 +699,8 @@ public class Process {
                                             tryAgain("sort", "computations");
                                         }
                                         else {
-                                            System.err.println("""
-                                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                                │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                            """);
-                                            System.out.print("\nLOADING");
-                                            loading("short");
+                                            Loading.loadingInvalidChoice();
+                                            Loading.dotLoading("short");
                                             Main.temporaryString = "";
                                         }
                                     }
@@ -828,14 +768,8 @@ public class Process {
                                         tryAgain("daysBetweenDates", "computations");
                                     }
                                     default -> {
-                                        System.out.println();
-                                        System.err.println("""
-                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                        """);
-                                        System.out.print("\nLOADING");
-                                        loading("short");
+                                        Loading.loadingInvalidChoice();
+                                        Loading.dotLoading("short");
                                         Main.temporaryString = "";
                                     }
                                 }
@@ -871,31 +805,21 @@ public class Process {
                                     tryAgain("meanMedianModeSd", "computations");
                                 }
                                 else {
-                                    System.err.println("""
-                                        ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                        │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                        ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                    """);
-                                    System.out.print("\nLOADING");
-                                    loading("short");
+                                    Loading.loadingInvalidChoice();
+                                    Loading.dotLoading("short");
                                     Main.temporaryString = "";
                                 }
                             }
                         }
                         case "13" -> {
                             System.out.print("RETURNING TO USER SELECTIONS");
-                            loading("short");
+                            Loading.dotLoading("short");
                             performComputation = false;
                             userSelections();
                         }
                         default -> {
-                            System.err.println("""
-                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                            """);
-                            System.out.print("\nLOADING");
-                            loading("short");
+                            Loading.loadingInvalidChoice();
+                            Loading.dotLoading("short");
                             Main.temporaryString = "";
                         }
                     }
@@ -935,13 +859,8 @@ public class Process {
                                         tryAgain("guessingGame", "games");
                                     }
                                     default -> {
-                                        System.err.println("""
-                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                        """);
-                                        System.out.print("\nLOADING");
-                                        loading("short");
+                                        Loading.loadingInvalidChoice();
+                                        Loading.dotLoading("short");
                                         Main.temporaryString = "";
                                     }
                                 }
@@ -981,13 +900,8 @@ public class Process {
                                         tryAgain("rockPaperScissors", "games");
                                     }
                                     default -> {
-                                        System.err.println("""
-                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                        """);
-                                        System.out.print("\nLOADING");
-                                        loading("short");
+                                        Loading.loadingInvalidChoice();
+                                        Loading.dotLoading("short");
                                         Main.temporaryString = "";
                                     }
                                 }
@@ -1012,13 +926,8 @@ public class Process {
                                         tryAgain("ticTacToe", "games");
                                     }
                                     default -> {
-                                        System.err.println("""
-                                            ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                            │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                            ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                                        """);
-                                        System.out.print("\nLOADING");
-                                        loading("short");
+                                        Loading.loadingInvalidChoice();
+                                        Loading.dotLoading("short");
                                         Main.temporaryString = "";
                                     }
                                 }
@@ -1026,18 +935,13 @@ public class Process {
                         }
                         case "6" -> {
                             System.out.print("RETURNING TO USER SELECTIONS");
-                            loading("short");
+                            Loading.dotLoading("short");
                             playGames = false;
                             userSelections();
                         }
                         default -> {
-                            System.err.println("""
-                                ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                                │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                                ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                            """);
-                            System.out.print("\nLOADING");
-                            loading("short");
+                            Loading.loadingInvalidChoice();
+                            Loading.dotLoading("short");
                             Main.temporaryString = "";
                         }
                     }
@@ -1056,26 +960,21 @@ public class Process {
                 Main.loginCondition = false;
                 Main.isAdmin = false;
                 System.out.print("LOGGING OUT");
-                loading("long");
+                Loading.dotLoading("long");
                 System.out.println("SUCCESSFULLY LOGGED OUT");
                 System.out.print("RETURNING TO USER MENU");
-                loading("short");
+                Loading.dotLoading("short");
             }
             case "5" -> {
                 resetReturningToLoginMenu();
                 System.out.print("LOGGING OUT");
-                loading("long");
-                System.out.print("RETURNING TO LOGIN MENU");
-                loading("short");
+                Loading.dotLoading("long");
+                System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
+                Loading.dotLoading("short");
             }
             default -> {
-                System.err.println("""
-                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                """);
-                System.out.print("\nLOADING");
-                loading("short");
+                Loading.loadingInvalidChoice();
+                Loading.dotLoading("short");
                 Main.temporaryString = "";
                 userSelections();
             }
@@ -1102,9 +1001,7 @@ public class Process {
         switch (Main.temporaryString) {
             case "1" -> {
                 listOfUsersAndPasswords();
-                System.out.println("\n=========================");
-                System.out.println("|PRESS ENTER TO CONTINUE|");
-                System.out.println("=========================");
+                Decorations.pressEnterToContinue();
                 Main.scanner.nextLine();
                 Main.temporaryString = "";
                 adminSelections();
@@ -1120,7 +1017,7 @@ public class Process {
                             try {
                                 FileUtils.deleteDirectory(new File(String.valueOf(user))); //deletes the whole user folder
                                 System.out.printf("REMOVING THE ACCOUNT: [%s]", name);
-                                loading("long");
+                                Loading.dotLoading("long");
                                 System.out.println("SUCCESSFULLY REMOVED (!)");
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -1143,17 +1040,16 @@ public class Process {
                     }
                 }
                 else {
-                    System.err.println("""
-                       ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
-                        │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
-                        ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
-                    """);
+                    System.out.println(
+                            Decorations.TEXT_RED +
+                            " ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐\n" +
+                            "  │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │ \n" +
+                            "  ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴ "   +
+                            Decorations.TEXT_RESET);
                 }
-                System.out.print("\nRETURNING TO ADMIN SELECTION");
-                loading("short");
-                System.out.println("\n=========================");
-                System.out.println("|PRESS ENTER TO CONTINUE|");
-                System.out.println("=========================");
+                System.out.print("RETURNING TO ADMIN SELECTION");
+                Loading.dotLoading("short");
+                Decorations.pressEnterToContinue();
                 Main.scanner.nextLine();
                 Main.temporaryString = "";
                 adminSelections();
@@ -1166,28 +1062,23 @@ public class Process {
                 Main.adminLoggedIn = false;
                 Main.loginCondition = false;
                 Main.isAdmin = true;
-                System.out.print("LOGGING OUT");
-                loading("long");
-                System.out.println("SUCCESSFULLY LOGGED OUT");
-                System.out.print("RETURNING TO ADMIN MENU");
-                loading("short");
+                System.out.print(Decorations.TEXT_YELLOW + "LOGGING OUT" + Decorations.TEXT_RESET);
+                Loading.dotLoading("long");
+                System.out.println(Decorations.TEXT_BLUE + "SUCCESSFULLY LOGGED OUT" + Decorations.TEXT_RESET);
+                System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                Loading.dotLoading("short");
             }
             case "5" -> {
                 resetReturningToLoginMenu();
-                System.out.print("LOGGING OUT");
-                loading("long");
-                System.out.print("RETURNING TO LOGIN MENU");
-                loading("short");
+                System.out.print(Decorations.TEXT_YELLOW + "LOGGING OUT" + Decorations.TEXT_RESET);
+                Loading.dotLoading("long");
+                System.out.println(Decorations.TEXT_BLUE + "SUCCESSFULLY LOGGED OUT" + Decorations.TEXT_RESET);
+                System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU" + Decorations.TEXT_RESET);
+                Loading.dotLoading("short");
             }
             default -> {
-                System.out.println();
-                System.err.println("""
-                    ┬ ┌┐┌ ┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬
-                    │ │││ └┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │
-                    ┴ ┘└┘  └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o
-                """);
-                System.out.print("\nLOADING");
-                loading("short");
+                Loading.loadingInvalidChoice();
+                Loading.dotLoading("short");
                 Main.temporaryString = "";
                 adminSelections();
             }
@@ -1205,8 +1096,14 @@ public class Process {
                     " ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘"   +
                     Decorations.TEXT_RESET);
             for (int i = 0; i < allUsers.size(); i++) {
-                USERNAME = SecurityUtil.AES.loadFromKeyStore("admin", "src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\username.keystore");
-                PIN = SecurityUtil.AES.loadFromKeyStore("admin", "src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\password.keystore");
+                File userUserNameKey = new File("src\\files\\accounts\\admin\\keys\\" + allUsers.get(i) + "\\userNameKey.txt");
+                File userPinKey = new File("src\\files\\accounts\\admin\\keys\\" + allUsers.get(i) + "\\pinKey.txt");
+                String keys = SecurityUtil.viewCredentials(userUserNameKey, userPinKey, Main.isAdmin);
+                String[] userKeys = keys.split(" +");
+                String userNameKey = userKeys[0];
+                String pinKey =  userKeys[1];
+                USERNAME = SecurityUtil.AES.loadFromKeyStore(userNameKey, "src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\username.keystore");
+                PIN = SecurityUtil.AES.loadFromKeyStore(pinKey, "src\\files\\accounts\\user\\" + allUsers.get(i) + "\\credentials\\password.keystore");
                 cipher = Cipher.getInstance("AES");
                 byte[] decryptedUsernameData = SecurityUtil.AES.encrypt(getUserName(), USERNAME, cipher);
                 byte[] decryptedPinData = SecurityUtil.AES.encrypt(getPin(), PIN, cipher);
@@ -1217,45 +1114,29 @@ public class Process {
             }
         }
         else {
-            System.err.println("""
-              ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐
-               │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │\s
-               ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴\s
-            """);
-            System.out.print("\nRETURNING TO ADMIN SELECTION");
-            loading("short");
+            System.out.println(Decorations.TEXT_RED +
+                    " ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐\n" +
+                    "  │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │ \n" +
+                    "  ┴ ┴ ┴└─┘┴└─└─┘  ┴ ┴┴└─└─┘  ┘└┘└─┘  └─┘└─┘└─┘┴└─  ┴ ┴└─┘└─┘└─┘└─┘┘└┘ ┴ └─┘  ┴ ┘└┘   ┴ ┴ ┴└─┘  ┴─┘┴└─┘ ┴ "   +
+                    Decorations.TEXT_RESET);
+            System.out.print("RETURNING TO ADMIN SELECTION");
+            Loading.dotLoading("short");
         }
     }
 
-    /*
-     * Method that prints a tailing dot like it was loading
+    /**
+     * <p>Method that gets the users folder and put them in a {@code List<String>} of {@code String}.
+     * </p>
+     * @return the list of users as a {@code List<String>} of {@code String}.
      */
-    public static void loading(String delay) throws InterruptedException {
-        switch (delay) {
-            case "long" -> {
-                for (int i = 1; i <= 3; i++) {
-                    TimeUnit.MILLISECONDS.sleep(700);
-                    System.out.print(Decorations.TEXT_YELLOW + '.' + Decorations.TEXT_RESET);
-                }
-            }
-            case "short" -> {
-                for (int i = 1; i <= 3; i++) {
-                    TimeUnit.MILLISECONDS.sleep(400);
-                    System.out.print(Decorations.TEXT_YELLOW + '.' + Decorations.TEXT_RESET);
-                }
-            }
-        }
-        System.out.println();
-    }
-
     protected List<String> viewUsers() {
-        File usersDirectory = new File("src\\files\\accounts\\user\\");
+        File usersDirectory = new File("src\\files\\accounts\\admin\\keys\\");
         FileFilter directoryFileFilter = File::isDirectory;
-        File[] directoryListAsFile = usersDirectory.listFiles(directoryFileFilter);
-        assert directoryListAsFile != null;
-        List<String> users = new ArrayList<>(directoryListAsFile.length);
-        for (File directoryAsFile : directoryListAsFile) {
-            users.add(directoryAsFile.getName());
+        File[] directoryList = usersDirectory.listFiles(directoryFileFilter);
+        assert directoryList != null;
+        List<String> users = new ArrayList<>(directoryList.length);
+        for (File directory : directoryList) {
+            users.add(directory.getName());
         }
         return users;
     }
@@ -1290,17 +1171,18 @@ public class Process {
         Main.temporaryString = Main.scanner.nextLine().trim();
         if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
             setUserName(Main.temporaryString);
+            File usersKeyFolder = new File("src\\files\\accounts\\admin\\key\\" + getUserName() + "\\");
             File userAccountFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\");
             File credentialsFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials");
             File attemptsFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts");
-            if (userAccountFolder.mkdirs() && credentialsFolder.mkdirs() && attemptsFolder.mkdirs()) {
+            if (userAccountFolder.mkdirs() && credentialsFolder.mkdirs() && attemptsFolder.mkdirs() && usersKeyFolder.mkdirs()) {
                 key = SecurityUtil.AES.generateKey();
                 cipher = Cipher.getInstance("AES");
-                SecurityUtil.AES.storeToKeyStore(key, "admin", "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.keystore");
+                SecurityUtil.AES.storeToKeyStore(key, getUserName(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.keystore");
                 SecurityUtil.AES.encrypt(getUserName(), key, cipher);
                 char[] oneTimePin = PinGenerator.generatePin();
                 setPin(String.valueOf(oneTimePin));
-                SecurityUtil.AES.storeToKeyStore(key, "admin", "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
+                SecurityUtil.AES.storeToKeyStore(key, getPin(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
                 SecurityUtil.AES.encrypt(getPin(), key, cipher);
                 File userLoginAttempt = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                 if (getPin().length() == 6) {
@@ -1309,8 +1191,14 @@ public class Process {
                 else {
                     FileUtil.writeToATextFile("6", userLoginAttempt); // 6 login attempts
                 }
+                File userUserNameKey = new File("src\\files\\accounts\\admin\\key\\" + getUserName() + "\\userNameKey.txt");
+                File userPinKey = new File("src\\files\\accounts\\admin\\key\\" + getUserName() + "\\pinKey.txt");
+                FileUtil.writeToATextFile(getUserName(), userUserNameKey);
+                FileUtil.writeToATextFile(getPin(), userPinKey);
+                SecurityUtil.encryptUserName(userUserNameKey, getUserName());
+                SecurityUtil.encryptPin(userPinKey, getPin());
                 System.out.print("CREATING YOUR ACCOUNT");
-                loading("long");
+                Loading.dotLoading("long");
                 System.out.println("SUCCESSFULLY CREATED (!)");
                 System.out.println("=========================");
                 System.out.print("YOUR PIN: ");
@@ -1319,10 +1207,8 @@ public class Process {
                 }
                 System.out.println("\n=========================");
                 System.out.print("RETURNING TO LOGIN MENU");
-                loading("short");
-                System.out.println("=========================");
-                System.out.println("|PRESS ENTER TO CONTINUE|");
-                System.out.println("=========================");
+                Loading.dotLoading("short");
+                Decorations.pressEnterToContinue();
                 Main.scanner.nextLine();
                 Main.userLoggedIn = false;
                 Main.loginCondition = true;
@@ -1337,7 +1223,7 @@ public class Process {
                     ┴  ┴─┘└─┘┴ ┴└─┘└─┘   ┴ ┴└─ ┴   ┴ ┴┘└┘└─┘ ┴ ┴ ┴└─┘┴└─  └─┘└─┘└─┘┴└─┘└┘┴ ┴┴ ┴└─┘
                 """);
                 System.out.print("\nRETURNING TO USER MENU");
-                loading("short");
+                Loading.dotLoading("short");
             }
         }
     }
@@ -1350,7 +1236,7 @@ public class Process {
         if (checkEligibility()) {
             boolean resettingPin = true;
             while (resettingPin) {
-                SecretKey pin = SecurityUtil.AES.loadFromKeyStore("admin", "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
+                SecretKey pin = SecurityUtil.AES.loadFromKeyStore(getPin(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
                 cipher = Cipher.getInstance("AES");
                 byte[] encryptedPinData = SecurityUtil.AES.encrypt(getPin(), pin, cipher);
                 String decryptedPinString = SecurityUtil.AES.decrypt(encryptedPinData, pin, cipher);
@@ -1361,7 +1247,7 @@ public class Process {
                     key = SecurityUtil.AES.generateKey();
                     char[] oneTimePin = PinGenerator.generatePin();
                     setPin(String.valueOf(oneTimePin));
-                    SecurityUtil.AES.storeToKeyStore(key, "admin", "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
+                    SecurityUtil.AES.storeToKeyStore(key, getPin(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
                     SecurityUtil.AES.encrypt(getPin(), key, cipher);
                     File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                     if (getPin().length() == 6) {
@@ -1371,7 +1257,7 @@ public class Process {
                         FileUtil.writeToATextFile("6", updateAttempt); // 6 login attempts
                     }
                     System.out.print("CHANGING YOUR PIN");
-                    loading("long");
+                    Loading.dotLoading("long");
                     System.out.println("SUCCESSFULLY CHANGED YOUR PIN (!)");
                     System.out.println("=========================");
                     System.out.print("YOUR PIN: ");
@@ -1380,7 +1266,7 @@ public class Process {
                     }
                     System.out.println("\n=========================");
                     System.out.print("RETURNING TO LOGIN MENU");
-                    loading("short");
+                    Loading.dotLoading("short");
                     System.out.println("=========================");
                     System.out.println("|PRESS ENTER TO CONTINUE|");
                     System.out.println("=========================");
@@ -1442,17 +1328,15 @@ public class Process {
         Main.loginCondition = true;
     }
     private static void tryAgain(String whichComputation, String whichSelection) throws InterruptedException {
-        Main.scanner.reset();
-        Scanner scanner = new Scanner(System.in);
         System.out.println("\nDO YOU WANT TO DO IT AGAIN? ");
         System.out.println(": 1 : Yes");
         System.out.println(": 2 : No");
         System.out.print(">>>: ");
-        Main.temporaryString = scanner.nextLine().trim();
-        switch (Main.temporaryString) {
+        String choice = new Scanner(System.in).nextLine().trim();
+        switch (choice) {
             case "1" -> {
                 System.out.print("PROCEEDING");
-                loading("short");
+                Loading.dotLoading("short");
             }
             case "2" -> {
                 switch (whichSelection) {
@@ -1460,7 +1344,7 @@ public class Process {
                     case "games" -> System.out.print("RETURNING TO GAMES SELECTION");
                     case "systems" -> System.out.print("RETURNING TO SYSTEMS SELECTION");
                 }
-                loading("short");
+                Loading.dotLoading("short");
                 switch (whichComputation) {
                     case "computeFactorial" -> computeFactorial = false;
                     case "computeFibonacci" -> computeFibonacci = false;

@@ -1,6 +1,7 @@
 package mainActivity;
 import framework.Process;
 import lib.utilities.misc.Decorations;
+import lib.utilities.misc.Loading;
 
 import java.util.Scanner;
 
@@ -57,7 +58,7 @@ public class Main {
                         loginCondition = false;
                         isAdmin = false;
                         System.out.print(Decorations.TEXT_YELLOW + "EXITING THE PROGRAM" + Decorations.TEXT_RESET);
-                        Process.loading("short");
+                        Loading.dotLoading("short");
                         System.out.println(
                                 Decorations.TEXT_RED +
                                 " ┌┬┐┬ ┬┌─┐┌┐┌┬┌─  ┬ ┬┌─┐┬ ┬  ┌─┐┌─┐┬─┐  ┬ ┬┌─┐┬┌┐┌┌─┐  ┌┬┐┬ ┬  ┌─┐┬─┐┌─┐┌─┐┬─┐┌─┐┌┬┐\n" + Decorations.TEXT_GREEN +
@@ -72,20 +73,13 @@ public class Main {
                                 " ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o" +
                                 Decorations.TEXT_RESET);
                         System.out.print("RETURNING TO LOGIN MENU");
-                        Process.loading("short");
+                        Loading.dotLoading("short");
                     }
                 }
             }
             if (!isExit) {
                 process.allAdminAndUserMenu(isAdmin);
                 while (adminLoggedIn || userLoggedIn) { // if signed is a user
-
-                    if (adminLoggedIn) {
-                        account = Decorations.TEXT_BLUE + "ADMIN" + Decorations.TEXT_RESET;
-                    }
-                    if (userLoggedIn) {
-                        account = Decorations.TEXT_GREEN + "USER" + Decorations.TEXT_RESET;
-                    }
                     System.out.println(": 1 : Show " + account + " selections");
                     System.out.println(": 2 : return to " +  account + " menu");
                     System.out.println(": 3 : return to LOGIN menu");
@@ -94,7 +88,7 @@ public class Main {
                     switch (temporaryString) {
                         case "1" -> {
                             System.out.print("LOADING");
-                            Process.loading("short");
+                            Loading.dotLoading("short");
                             if (adminLoggedIn) {
                                 process.adminSelections();
                             }
@@ -104,10 +98,10 @@ public class Main {
                         }
                         case "2" -> {
                             System.out.print("LOGGING OUT");
-                            Process.loading("long");
+                            Loading.dotLoading("long");
                             System.out.println(Decorations.TEXT_BLUE + "SUCCESSFULLY LOGGED OUT" + Decorations.TEXT_RESET);
                             System.out.print("RETURNING TO " + account + " MENU");
-                            Process.loading("short");
+                            Loading.dotLoading("short");
 
                             if (adminLoggedIn) {
                                 adminLoggedIn = false;
@@ -122,20 +116,15 @@ public class Main {
                         }
                         case "3" -> {
                             System.out.print("LOGGING OUT");
-                            Process.loading("long");
+                            Loading.dotLoading("long");
                             System.out.println("SUCCESSFULLY LOGGED OUT");
                             System.out.print("RETURNING TO LOGIN MENU");
-                            Process.loading("short");
+                            Loading.dotLoading("short");
                             process.resetReturningToLoginMenu();
                         }
                         default -> {
-                            System.out.println(Decorations.TEXT_RED +
-                                    " ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬\n" +
-                                    " │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │\n" +
-                                    " ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o" +
-                                    Decorations.TEXT_RESET);
-                            System.out.print("LOADING");
-                            Process.loading("short");
+                            Loading.loadingInvalidChoice();
+                            Loading.dotLoading("short");
                         }
                     }
                 }
