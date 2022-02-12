@@ -1,8 +1,8 @@
 package mainActivity;
-import framework.Process;
-import lib.utilities.misc.Decorations;
-import lib.utilities.misc.Loading;
 
+import lib.utilities.misc.Decorations;
+import lib.utilities.misc.Delay;
+import framework.Process;
 import java.util.Scanner;
 
 public class Main {
@@ -39,10 +39,10 @@ public class Main {
                         "  ╠═╝╠╦╝║ ║║ ╦╠╦╝╠═╣║║║ \n" +
                         "  ╩  ╩╚═╚═╝╚═╝╩╚═╩ ╩╩ ╩ "   +
                         Decorations.TEXT_RESET);
-                System.out.println(Decorations.TEXT_BLUE  + ": 1 : Administrator" + Decorations.TEXT_RESET);
-                System.out.println(Decorations.TEXT_GREEN + ": 2 : User" + Decorations.TEXT_RESET);
-                System.out.println(Decorations.TEXT_RED   + ": 3 : Exit" + Decorations.TEXT_RESET);
-                System.out.print(Decorations.TEXT_YELLOW  + ">>>: " + Decorations.TEXT_RESET);
+                System.out.println(Decorations.TEXT_BLUE  + ": 1 : Administrator");
+                System.out.println(Decorations.TEXT_GREEN + ": 2 : User");
+                System.out.println(Decorations.TEXT_RED   + ": 3 : Exit");
+                System.out.print(Decorations.TEXT_YELLOW  + ">>>: ");
                 temporaryString = scanner.nextLine().trim();
                 switch (temporaryString) {
                     case "1" -> {
@@ -57,38 +57,33 @@ public class Main {
                         isExit = true;
                         loginCondition = false;
                         isAdmin = false;
-                        System.out.print(Decorations.TEXT_YELLOW + "EXITING THE PROGRAM" + Decorations.TEXT_RESET);
-                        Loading.dotLoading("short");
+                        System.out.print(Decorations.TEXT_YELLOW + "EXITING THE PROGRAM");
+                        Delay.dotLoading("short");
                         System.out.println(
                                 Decorations.TEXT_RED +
                                 " ┌┬┐┬ ┬┌─┐┌┐┌┬┌─  ┬ ┬┌─┐┬ ┬  ┌─┐┌─┐┬─┐  ┬ ┬┌─┐┬┌┐┌┌─┐  ┌┬┐┬ ┬  ┌─┐┬─┐┌─┐┌─┐┬─┐┌─┐┌┬┐\n" + Decorations.TEXT_GREEN +
                                 "  │ ├─┤├─┤│││├┴┐  └┬┘│ ││ │  ├┤ │ │├┬┘  │ │└─┐│││││ ┬  │││└┬┘  ├─┘├┬┘│ ││ ┬├┬┘├─┤│││\n" + Decorations.TEXT_BLUE +
-                                "  ┴ ┴ ┴┴ ┴┘└┘┴ ┴   ┴ └─┘└─┘  └  └─┘┴└─  └─┘└─┘┴┘└┘└─┘  ┴ ┴ ┴   ┴  ┴└─└─┘└─┘┴└─┴ ┴┴ ┴"   +
-                                Decorations.TEXT_RESET);
+                                "  ┴ ┴ ┴┴ ┴┘└┘┴ ┴   ┴ └─┘└─┘  └  └─┘┴└─  └─┘└─┘┴┘└┘└─┘  ┴ ┴ ┴   ┴  ┴└─└─┘└─┘┴└─┴ ┴┴ ┴");
                     }
                     default -> {
-                        System.out.println(Decorations.TEXT_RED +
-                                " ┬ ┌┐┌┬  ┬┌─┐┬  ┬┌┬┐  ┌─┐┬ ┬┌─┐┬┌─┐┌─┐  ┬\n" +
-                                " │ │││└┐┌┘├─┤│  │ ││  │  ├─┤│ │││  ├┤   │\n" +
-                                " ┴ ┘└┘ └┘ ┴ ┴┴─┘┴─┴┘  └─┘┴ ┴└─┘┴└─┘└─┘  o" +
-                                Decorations.TEXT_RESET);
-                        System.out.print("RETURNING TO LOGIN MENU");
-                        Loading.dotLoading("short");
+                        Decorations.show.invalidChoice();
+                        System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU");
+                        Delay.dotLoading("short");
                     }
                 }
             }
             if (!isExit) {
                 process.allAdminAndUserMenu(isAdmin);
                 while (adminLoggedIn || userLoggedIn) { // if signed is a user
-                    System.out.println(": 1 : Show " + account + " selections");
-                    System.out.println(": 2 : return to " +  account + " menu");
-                    System.out.println(": 3 : return to LOGIN menu");
-                    System.out.print(">>>: ");
+                    System.out.println(Decorations.TEXT_YELLOW + ": 1 : Show " + account + Decorations.TEXT_YELLOW + " selections");
+                    System.out.println(Decorations.TEXT_YELLOW + ": 2 : return to " +  account + Decorations.TEXT_YELLOW + " menu");
+                    System.out.println(Decorations.TEXT_YELLOW  + ": 2 : return to " + Decorations.TEXT_PURPLE + " LOGIN " + Decorations.TEXT_YELLOW + " menu");
+                    System.out.print(Decorations.TEXT_YELLOW  + ">>>: ");
                     temporaryString = scanner.nextLine().trim();
                     switch (temporaryString) {
                         case "1" -> {
-                            System.out.print("LOADING");
-                            Loading.dotLoading("short");
+                            Decorations.printLoading();
+                            Delay.dotLoading("short");
                             if (adminLoggedIn) {
                                 process.adminSelections();
                             }
@@ -97,12 +92,11 @@ public class Main {
                             }
                         }
                         case "2" -> {
-                            System.out.print("LOGGING OUT");
-                            Loading.dotLoading("long");
-                            System.out.println(Decorations.TEXT_BLUE + "SUCCESSFULLY LOGGED OUT" + Decorations.TEXT_RESET);
-                            System.out.print("RETURNING TO " + account + " MENU");
-                            Loading.dotLoading("short");
-
+                            System.out.print(Decorations.TEXT_YELLOW + "LOGGING OUT");
+                            Delay.dotLoading("long");
+                            System.out.println(Decorations.TEXT_BLUE + "SUCCESSFULLY LOGGED OUT");
+                            System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + " MENU");
+                            Delay.dotLoading("short");
                             if (adminLoggedIn) {
                                 adminLoggedIn = false;
                                 loginCondition = false;
@@ -115,16 +109,16 @@ public class Main {
                             }
                         }
                         case "3" -> {
-                            System.out.print("LOGGING OUT");
-                            Loading.dotLoading("long");
-                            System.out.println("SUCCESSFULLY LOGGED OUT");
-                            System.out.print("RETURNING TO LOGIN MENU");
-                            Loading.dotLoading("short");
+                            System.out.print(Decorations.TEXT_YELLOW + "LOGGING OUT");
+                            Delay.dotLoading("long");
+                            System.out.println(Decorations.TEXT_BLUE + "SUCCESSFULLY LOGGED OUT");
+                            System.out.print(Decorations.TEXT_GREEN  + "RETURNING TO LOGIN MENU");
+                            Delay.dotLoading("short");
                             process.resetReturningToLoginMenu();
                         }
                         default -> {
-                            Loading.loadingInvalidChoice();
-                            Loading.dotLoading("short");
+                            Decorations.show.invalidChoice();
+                            Delay.dotLoading("short");
                         }
                     }
                 }
