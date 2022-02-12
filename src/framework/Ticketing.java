@@ -112,7 +112,7 @@ public class Ticketing extends Process {
                                         Delay.dotLoading("short");
                                     }
                                     case "2" -> {
-                                        System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                                        System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + " MENU" + Decorations.TEXT_RESET);
                                         Delay.dotLoading("short");
                                         givePermission = false;
                                         adminSelections();
@@ -125,7 +125,7 @@ public class Ticketing extends Process {
                                         System.out.print(Decorations.TEXT_YELLOW + "LOGGING OUT" + Decorations.TEXT_RESET);
                                         Delay.dotLoading("long");
                                         System.out.println(Decorations.TEXT_BLUE + "SUCCESSFULLY LOGGED OUT" + Decorations.TEXT_RESET);
-                                        System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                                        System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + " MENU" + Decorations.TEXT_RESET);
                                         Delay.dotLoading("short");
                                     }
                                     default -> {
@@ -196,7 +196,7 @@ public class Ticketing extends Process {
                     " ││││ │   │ ││  ├┴┐├┤  │ └─┐  ├─┤└┐┌┘├─┤││  ├─┤│  ├┴┐├┤s\n" +
                     " ┘└┘└─┘   ┴ ┴└─┘┴ ┴└─┘ ┴ └─┘  ┴ ┴ └┘ ┴ ┴┴┴─┘┴ ┴┴─┘└─┘└─┘"   +
                     Decorations.TEXT_RESET);
-                System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+                System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + " MENU" + Decorations.TEXT_RESET);
                 Delay.dotLoading("short");
                 Main.scanner.reset();
                 Main.temporaryString = "";
@@ -205,7 +205,7 @@ public class Ticketing extends Process {
         } catch (NullPointerException fNFe) {
             fNFe.printStackTrace();
             Decorations.show.error();
-            System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + "MENU" + Decorations.TEXT_RESET);
+            System.out.print(Decorations.TEXT_PURPLE  + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW + " MENU" + Decorations.TEXT_RESET);
             Delay.dotLoading("short");
             adminSelections();
         } catch (Exception e) {

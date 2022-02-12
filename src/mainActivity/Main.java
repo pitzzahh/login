@@ -37,8 +37,7 @@ public class Main {
                         "  ╩═╝╚═╝╚═╝ ╩ ╝╚╝       \n" + Decorations.TEXT_BLUE +
                         "  ╔═╗╦═╗╔═╗╔═╗╦═╗╔═╗╔╦╗ \n" +
                         "  ╠═╝╠╦╝║ ║║ ╦╠╦╝╠═╣║║║ \n" +
-                        "  ╩  ╩╚═╚═╝╚═╝╩╚═╩ ╩╩ ╩ "   +
-                        Decorations.TEXT_RESET);
+                        "  ╩  ╩╚═╚═╝╚═╝╩╚═╩ ╩╩ ╩ ");
                 System.out.println(Decorations.TEXT_BLUE  + ": 1 : Administrator");
                 System.out.println(Decorations.TEXT_GREEN + ": 2 : User");
                 System.out.println(Decorations.TEXT_RED   + ": 3 : Exit");
