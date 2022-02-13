@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="loginSystem-sources:jar">
+    <output-path>D:/JAVA_LIBRARIES/login system</output-path>
+    <root id="archive" name="loginSystem.jar">
+      <element id="module-source" name="loginSystem" />
+    </root>
+  </artifact>
+</component>

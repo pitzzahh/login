@@ -3,6 +3,8 @@ package mainActivity;
 import lib.utilities.misc.Decorations;
 import lib.utilities.misc.Delay;
 import framework.Process;
+
+import java.io.File;
 import java.util.Scanner;
 
 public class Main {
@@ -76,7 +78,7 @@ public class Main {
                 while (adminLoggedIn || userLoggedIn) { // if signed is a user
                     System.out.println(Decorations.TEXT_YELLOW + ": 1 : Show " + account + Decorations.TEXT_YELLOW + " selections");
                     System.out.println(Decorations.TEXT_YELLOW + ": 2 : return to " +  account + Decorations.TEXT_YELLOW + " menu");
-                    System.out.println(Decorations.TEXT_YELLOW  + ": 2 : return to " + Decorations.TEXT_PURPLE + " LOGIN " + Decorations.TEXT_YELLOW + " menu");
+                    System.out.println(Decorations.TEXT_YELLOW + ": 3 : return to " + Decorations.TEXT_PURPLE + " LOGIN " + Decorations.TEXT_YELLOW + " menu");
                     System.out.print(Decorations.TEXT_YELLOW  + ">>>: ");
                     temporaryString = scanner.nextLine().trim();
                     switch (temporaryString) {

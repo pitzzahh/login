@@ -144,6 +144,7 @@ public class Process {
                             loginAttempt = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                             loginCountUpdater = new Scanner(loginAttempt);
                             loginCount = loginCountUpdater.nextByte();
+                            loginCountUpdater.close();
                         }
                         catch (FileNotFoundException ignored) {}
                     }
@@ -214,8 +215,8 @@ public class Process {
                                     System.out.println(Decorations.TEXT_GREEN  + ": 4 : return to LOGIN menu");
                                 } else {
                                     System.out.println(Decorations.TEXT_YELLOW + ": 1 : Retry");
-                                    System.out.println(Decorations.TEXT_PURPLE + ": 3 : Return to " + Main.account + Decorations.TEXT_BLUE + " MENU");
-                                    System.out.println(Decorations.TEXT_GREEN  + ": 4 : return to LOGIN menu");
+                                    System.out.println(Decorations.TEXT_PURPLE + ": 2 : Return to " + Main.account + Decorations.TEXT_BLUE + " MENU");
+                                    System.out.println(Decorations.TEXT_GREEN  + ": 3 : return to LOGIN menu");
                                 }
                                 System.out.print(Decorations.TEXT_YELLOW  + ">>>: ");
                                 Main.temporaryString = Main.scanner.nextLine().trim();
@@ -327,6 +328,7 @@ public class Process {
                                                                                     case "1" -> {
                                                                                         if (!submitTicket()) {
                                                                                             System.out.println(Decorations.TEXT_RED + "YOU ALREADY SUBMITTED A TICKET (!)");
+                                                                                            Delay.pause();
                                                                                         }
                                                                                         insertCredentials = false;
                                                                                         Main.userLoggedIn = false;
@@ -1233,13 +1235,13 @@ public class Process {
             File attemptsFolder = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts");
             if (userAccountFolder.mkdirs() && credentialsFolder.mkdirs() && attemptsFolder.mkdirs() && usersKeyFolder.mkdirs()) {
                 key = SecurityUtil.AES.generateKey();
-                cipher = Cipher.getInstance("AES");
+                //cipher = Cipher.getInstance("AES");
                 SecurityUtil.AES.storeToKeyStore(key, getUserName(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.keystore");
-                SecurityUtil.AES.encrypt(getUserName(), key, cipher);
+                //SecurityUtil.AES.encrypt(getUserName(), key, cipher);
                 char[] oneTimePin = PinGenerator.generatePin();
                 setPin(String.valueOf(oneTimePin));
                 SecurityUtil.AES.storeToKeyStore(key, getPin(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
-                SecurityUtil.AES.encrypt(getPin(), key, cipher);
+                //SecurityUtil.AES.encrypt(getPin(), key, cipher);
                 File userLoginAttempt = new File("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                 if (getPin().length() == 6) {
                     FileUtil.writeToATextFile("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
@@ -1287,20 +1289,26 @@ public class Process {
         if (checkEligibility()) {
             boolean resettingPin = true;
             while (resettingPin) {
-                SecretKey pin = SecurityUtil.AES.loadFromKeyStore(getPin(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
-                cipher = Cipher.getInstance("AES");
-                byte[] encryptedPinData = SecurityUtil.AES.encrypt(getPin(), pin, cipher);
-                String decryptedPinString = SecurityUtil.AES.decrypt(encryptedPinData, pin, cipher);
-                if (decryptedPinString.equals(getPin())) {
-                    System.err.println(Decorations.TEXT_RED + "OLD PASSWORD CANNOT BE YOUR NEW PASSWORD (!)\n");
+                char[] oneTimePin = PinGenerator.generatePin();
+                setPin(String.valueOf(oneTimePin));
+                File userUserNameKey = new File("src\\files\\accounts\\admin\\keys\\" + getUserName() + "\\userNameKey.txt");
+                File userPinKey = new File("src\\files\\accounts\\admin\\keys\\" + getUserName() + "\\pinKey.txt");
+                String keys = SecurityUtil.viewCredentials(userUserNameKey, userPinKey, !Main.isAdmin);
+                String[] userKeys = keys.split(" +");
+                String pinKey =  userKeys[1];
+                if (pinKey.equals(getPin())) {
+                    System.out.println(Decorations.TEXT_RED + "OLD PASSWORD CANNOT BE YOUR NEW PASSWORD (!)\n");
+                    Arrays.fill(oneTimePin, ' ');
+                    Decorations.printLoading();
+                    Delay.dotLoading("short");
                 }
                 else {
                     key = SecurityUtil.AES.generateKey();
-                    char[] oneTimePin = PinGenerator.generatePin();
                     setPin(String.valueOf(oneTimePin));
                     SecurityUtil.AES.storeToKeyStore(key, getPin(), "src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
-                    SecurityUtil.AES.encrypt(getPin(), key, cipher);
                     File updateAttempt = new File ("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
+                    FileUtil.writeToATextFile(getPin(), userPinKey);
+                    SecurityUtil.encryptPin(userPinKey, getPin());
                     if (getPin().length() == 6) {
                         FileUtil.writeToATextFile("4", updateAttempt); // 4 login attempts, if the user did not follow instructions carefully
                     }
