@@ -24,7 +24,7 @@ public class Ticketing extends Process {
      */
     @Description(value =  "Does not work properly, if the user already submitted a ticket, it overrides the current file and rewrites it and takes more time.")
     public boolean submitResetTicket(String user) throws InterruptedException, IOException {
-        File ticketFile = new File("src\\files\\resetPinTickets\\" + user + ".txt");
+        File ticketFile = new File("C:\\Users\\Public\\files\\resetPinTickets\\" + user + ".txt");
         boolean newTicket = !ticketFile.exists(); // false
         if (newTicket) { // not here
             newTicket = ticketFile.createNewFile();
@@ -51,9 +51,9 @@ public class Ticketing extends Process {
                 System.out.print(Decorations.TEXT_YELLOW  + ">>>: ");
                 Main.temporaryString = Main.scanner.nextLine().trim();
                 setUserName(Main.temporaryString);
-                if (Files.exists(Path.of("src\\files\\accounts\\user\\" + getUserName() + "'s Folder\\"))) {
+                if (Files.exists(Path.of("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\"))) {
                     try {
-                        File ticket = new File("src\\files\\resetPinTickets\\"+ getUserName() + ".txt");
+                        File ticket = new File("C:\\Users\\Public\\files\\resetPinTickets\\"+ getUserName() + ".txt");
                         Scanner ticketScanner = new Scanner(ticket);
                         String checkIfFalse = ticketScanner.nextLine();
                         if (ticket.exists() && checkIfFalse.equals("false")) {
@@ -164,7 +164,7 @@ public class Ticketing extends Process {
             if (tickets.size() != 0) {
                 try {
                     for (int i = 0; i < tickets.size(); i++) {
-                        File ticket = new File("src\\files\\resetPinTickets\\" + tickets.get(i) + ".txt");
+                        File ticket = new File("C:\\Users\\Public\\files\\resetPinTickets\\" + tickets.get(i) + ".txt");
                         Scanner ticketScanner = new Scanner(ticket);
                         String checkIfFalse = ticketScanner.nextLine();
                         if (checkIfFalse.equals("false")) {
