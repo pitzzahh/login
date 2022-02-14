@@ -17,7 +17,7 @@
 ## running the jar file
 * open cmd in the directory where the jar file is downloaded
 #### JAR FILE
-* [jar file](https://github.com/pitzzahh/lib/tree/main/src/jar "jar file")
+* [jar file](https://github.com/pitzzahh/login/tree/new_files_directory/src/jar "jar file")
 #### COMMAND
 ```BASH
     java -jar loginSystem.jar
