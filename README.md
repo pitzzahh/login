@@ -5,7 +5,7 @@
 * @dateCreated January 26, 2022
 * This is a simple login program, this allows users to sign in
 * and create their accounts, their credentials are encrypted and stored in a specific 
-* directory in this project folder. 
+* directory in the local disk, C:\
 ```BASH
     C:\Users\Public\files\
 ```
