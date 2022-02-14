@@ -20,7 +20,6 @@ import lib.computing.quadrantAnalyzer.QuadrantAnalyzer;
 import lib.computing.conversion.meter.MeterConversion;
 import lib.computing.calculator.neat.Calculator;
 import lib.computing.collatzConjecture.Collatz;
-import lib.utilities.ArrayUtil;
 import org.apache.commons.io.FilenameUtils;
 import lib.games.headAndTails.HeadAndTails;
 import lib.utilities.misc.PinGenerator;
@@ -29,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import lib.utilities.misc.Decorations;
 import lib.utilities.SecurityUtil;
 import lib.utilities.misc.Delay;
+import lib.utilities.ArrayUtil;
 import javax.crypto.SecretKey;
 import lib.utilities.FileUtil;
 import javax.crypto.Cipher;
@@ -1174,7 +1174,7 @@ public class Process {
                 System.out.print(Decorations.TEXT_YELLOW + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW +" SELECTION");
                 Delay.dotLoading("short");
             }
-        } catch (Exception fileNotFoundException) {
+        } catch (Exception exception) {
             System.out.println(Decorations.TEXT_RED +
                     " ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐\n" +
                     "  │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │ \n" +
