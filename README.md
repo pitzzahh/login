@@ -10,9 +10,9 @@
     C:\Users\Public\files\
 ```
 
-# additional library used:
-[Apache commons](https://commons.apache.org/proper/commons-io/ "Apache commons")
-[my personal library](https://github.com/pitzzahh/lib/tree/main/src/jar "My personal library")
+# additional library used
+* [Apache commons](https://commons.apache.org/proper/commons-io/ "Apache commons")
+* [my personal library](https://github.com/pitzzahh/lib/tree/main/src/jar "My personal library")
 ---
 ## Running the jar file
 * open cmd in the directory where the jar file is downloaded
