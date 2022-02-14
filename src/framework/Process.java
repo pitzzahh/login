@@ -20,6 +20,7 @@ import lib.computing.quadrantAnalyzer.QuadrantAnalyzer;
 import lib.computing.conversion.meter.MeterConversion;
 import lib.computing.calculator.neat.Calculator;
 import lib.computing.collatzConjecture.Collatz;
+import lib.utilities.ArrayUtil;
 import org.apache.commons.io.FilenameUtils;
 import lib.games.headAndTails.HeadAndTails;
 import lib.utilities.misc.PinGenerator;
@@ -131,17 +132,17 @@ public class Process {
                         }
                     } else {
                         try {
-                            checkUserName = SecurityUtil.AES.loadFromKeyStore(getUserName(), "C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.keystore");
+                            checkUserName = SecurityUtil.AES.loadFromKeyStore(getUserName(), "C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\credentials\\username.keystore");
                         } catch (Exception e) {
                             isWrongUserName = true;
                         }
                         try {
-                            checkPassword = SecurityUtil.AES.loadFromKeyStore(getPin(), "C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
+                            checkPassword = SecurityUtil.AES.loadFromKeyStore(getPin(), "C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
                         } catch (Exception e) {
                             isWrongPassword = true;
                         }
                         try {
-                            loginAttempt = new File("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
+                            loginAttempt = new File("C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                             loginCountUpdater = new Scanner(loginAttempt);
                             loginCount = loginCountUpdater.nextByte();
                             loginCountUpdater.close();
@@ -186,7 +187,7 @@ public class Process {
                                     Main.adminLoggedIn = true;
                                 } else {
                                     Main.userLoggedIn = true;
-                                    File updateAttempt = new File("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
+                                    File updateAttempt = new File("C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                                     FileUtil.writeToATextFile("6", updateAttempt); // reset to 6 login attempts if the user finally logged in
                                 }
                                 insertCredentials = false;
@@ -308,7 +309,7 @@ public class Process {
                                                                         }
                                                                     } while (!Main.temporaryString.equals("1") && !Main.temporaryString.equals("2") && !Main.temporaryString.equals("3"));
                                                                 } else {
-                                                                    File checkUser = new File("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder");
+                                                                    File checkUser = new File("C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder");
                                                                     if (checkUser.isDirectory()) {
                                                                         do {
                                                                             System.out.println(Decorations.TEXT_RED +
@@ -621,8 +622,8 @@ public class Process {
 
                                 System.out.println(Decorations.TEXT_GREEN +
                                         " ┌─┐ ┬ ┬┬┌─┐┬┌─┌─┐┌─┐┬─┐┌┬┐\n" +
-                                        " │─┼┐│ │││  ├┴┐└─┐│ │├┬┘ │s\n" +
-                                        " └─┘└└─┘┴└─┘┴ ┴└─┘└─┘┴└─ ┴s");
+                                        " │─┼┐│ │││  ├┴┐└─┐│ │├┬┘ │ \n" +
+                                        " └─┘└└─┘┴└─┘┴ ┴└─┘└─┘┴└─ ┴ ");
                                 System.out.println(Decorations.TEXT_GREEN + "WHAT TYPE OF NUMBERS DO YOU WANT TO SORT?");
                                 System.out.println(Decorations.TEXT_PURPLE + ": 1 : Whole numbers");
                                 System.out.println(Decorations.TEXT_YELLOW + ": 2 : Numbers with decimal");
@@ -1064,7 +1065,7 @@ public class Process {
                     System.out.print(Decorations.TEXT_PURPLE + "ENTER USER ACCOUNT YOU WANT TO REMOVE: ");
                     String name = Main.scanner.nextLine().trim();
                     if (!name.isEmpty()) {
-                        File user = new File("C:\\Users\\Public\\files\\accounts\\user\\" + name + "'s Folder"); // users folder
+                        File user = new File("C:\\Users\\Public\\files\\accounts\\users\\" + name + "'s Folder"); // users folder
                         File keys = new File("C:\\Users\\Public\\files\\accounts\\admin\\keys\\" + name +"\\");
                         if (user.exists() && keys.exists()) {
                             try {
@@ -1137,33 +1138,35 @@ public class Process {
     }
     protected void listOfUsersAndPasswords() throws Exception {
         List<String> allUsers = viewUsers();
-        if (allUsers.size() != 0) {
-            try {
-                SecretKey USERNAME;
-                SecretKey PIN;
-                System.out.println(
-                        Decorations.TEXT_RED +
-                                " ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐\n" + Decorations.TEXT_GREEN +
-                                " │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐\n" + Decorations.TEXT_BLUE  +
-                                " ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘");
-                for (int i = 0; i < allUsers.size(); i++) {
-                    File userUserNameKey = new File("C:\\Users\\Public\\files\\accounts\\admin\\keys\\" + allUsers.get(i) + "\\userNameKey.txt");
-                    File userPinKey = new File("C:\\Users\\Public\\files\\accounts\\admin\\keys\\" + allUsers.get(i) + "\\pinKey.txt");
-                    String keys = SecurityUtil.viewCredentials(userUserNameKey, userPinKey, Main.isAdmin);
-                    String[] userKeys = keys.split(" +");
-                    String userNameKey = userKeys[0];
-                    String pinKey =  userKeys[1];
-                    USERNAME = SecurityUtil.AES.loadFromKeyStore(userNameKey, "C:\\Users\\Public\\files\\accounts\\user\\" + allUsers.get(i) + "'s Folder\\credentials\\username.keystore");
-                    PIN = SecurityUtil.AES.loadFromKeyStore(pinKey, "C:\\Users\\Public\\files\\accounts\\user\\" + allUsers.get(i) + "'s Folder\\credentials\\password.keystore");
-                    cipher = Cipher.getInstance("AES");
-                    byte[] decryptedUsernameData = SecurityUtil.AES.encrypt(userNameKey, USERNAME, cipher);
-                    byte[] decryptedPinData = SecurityUtil.AES.encrypt(pinKey, PIN, cipher);
-                    String decryptedUsername = SecurityUtil.AES.decrypt(decryptedUsernameData, USERNAME, cipher);
-                    String decryptedPassword = SecurityUtil.AES.decrypt(decryptedPinData, PIN, cipher);
-                    System.out.printf("USER     [%d]: %s\n", ( i + 1 ), decryptedUsername);
-                    System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), decryptedPassword);
-                }
-            } catch (FileNotFoundException fileNotFoundException) {
+        try {
+            if (allUsers.size() != 0) {
+                    SecretKey USERNAME;
+                    SecretKey PIN;
+                    System.out.println(
+                            Decorations.TEXT_RED +
+                                    " ┬  ┬┌─┐┌┬┐  ┌─┐┌─┐  ┬ ┬┌─┐┌─┐┬─┐┌─┐\n" + Decorations.TEXT_GREEN +
+                                    " │  │└─┐ │   │ │├┤   │ │└─┐├┤ ├┬┘└─┐\n" + Decorations.TEXT_BLUE  +
+                                    " ┴─┘┴└─┘ ┴   └─┘└    └─┘└─┘└─┘┴└─└─┘");
+                    for (int i = 0; i < allUsers.size(); i++) {
+                        File userUserNameKey = new File("C:\\Users\\Public\\files\\accounts\\admin\\keys\\" + allUsers.get(i) + "\\userNameKey.txt");
+                        File userPinKey = new File("C:\\Users\\Public\\files\\accounts\\admin\\keys\\" + allUsers.get(i) + "\\pinKey.txt");
+                        String keys = SecurityUtil.viewCredentials(userUserNameKey, userPinKey, Main.isAdmin);
+                        String[] userKeys = keys.split(" +");
+                        String userNameKey = userKeys[0];
+                        String pinKey =  userKeys[1];
+                        USERNAME = SecurityUtil.AES.loadFromKeyStore(userNameKey, "C:\\Users\\Public\\files\\accounts\\users\\" + allUsers.get(i) + "'s Folder\\credentials\\username.keystore");
+                        PIN = SecurityUtil.AES.loadFromKeyStore(pinKey, "C:\\Users\\Public\\files\\accounts\\users\\" + allUsers.get(i) + "'s Folder\\credentials\\password.keystore");
+                        cipher = Cipher.getInstance("AES");
+                        byte[] decryptedUsernameData = SecurityUtil.AES.encrypt(userNameKey, USERNAME, cipher);
+                        byte[] decryptedPinData = SecurityUtil.AES.encrypt(pinKey, PIN, cipher);
+                        String decryptedUsername = SecurityUtil.AES.decrypt(decryptedUsernameData, USERNAME, cipher);
+                        String decryptedPassword = SecurityUtil.AES.decrypt(decryptedPinData, PIN, cipher);
+                        System.out.printf("USER     [%d]: %s\n", ( i + 1 ), decryptedUsername);
+                        System.out.printf("PASSWORD [%d]: %s\n", ( i + 1 ), decryptedPassword);
+                    }
+
+            }
+            else {
                 System.out.println(Decorations.TEXT_RED +
                         " ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐\n" +
                         "  │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │ \n" +
@@ -1171,8 +1174,7 @@ public class Process {
                 System.out.print(Decorations.TEXT_YELLOW + "RETURNING TO " + Main.account + Decorations.TEXT_YELLOW +" SELECTION");
                 Delay.dotLoading("short");
             }
-        }
-        else {
+        } catch (Exception fileNotFoundException) {
             System.out.println(Decorations.TEXT_RED +
                     " ┌┬┐┬ ┬┌─┐┬─┐┌─┐  ┌─┐┬─┐┌─┐  ┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┬─┐  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌┐┌┌┬┐┌─┐  ┬ ┌┐┌  ┌┬┐┬ ┬┌─┐  ┬  ┬┌─┐┌┬┐\n" +
                     "  │ ├─┤├┤ ├┬┘├┤   ├─┤├┬┘├┤   ││││ │  │ │└─┐├┤ ├┬┘  ├─┤│  │  │ ││ ││││ │ └─┐  │ │││   │ ├─┤├┤   │  │└─┐ │ \n" +
@@ -1181,21 +1183,26 @@ public class Process {
             Delay.dotLoading("short");
         }
     }
-
     /**
      * <p>Method that gets the users folder and put them in a {@code List<String>} of {@code String}.
      * </p>
      * @return the list of users as a {@code List<String>} of {@code String}.
      */
     protected List<String> viewUsers() {
-        File usersDirectory = new File("C:\\Users\\Public\\files\\accounts\\admin\\keys\\");
-        FileFilter directoryFileFilter = File::isDirectory;
-        File[] directoryList = usersDirectory.listFiles(directoryFileFilter);
-        assert directoryList != null;
-        List<String> users = new ArrayList<>(directoryList.length);
-        for (File directory : directoryList) {
-            users.add(directory.getName());
+        List<String> users = null;
+        try {
+            File usersDirectory = new File("C:\\Users\\Public\\files\\accounts\\admin\\keys\\");
+            FileFilter directoryFileFilter = File::isDirectory;
+            File[] directoryList = usersDirectory.listFiles(directoryFileFilter);
+            assert directoryList != null;
+            users = new ArrayList<>(directoryList.length);
+            for (File directory : directoryList) {
+                users.add(directory.getName());
+            }
+            return users;
+        } catch (Exception ignored) {
         }
+        assert users != null;
         return users;
     }
     protected List<String> viewUserTickets() {
@@ -1230,19 +1237,19 @@ public class Process {
         if (Main.temporaryString.matches("[a-zA-Z]+") || Main.temporaryString.matches("[a-zA-z0-9]+")) {
             setUserName(Main.temporaryString);
             File usersKeyFolder = new File("C:\\Users\\Public\\files\\accounts\\admin\\keys\\" + getUserName() + "\\");
-            File userAccountFolder = new File ("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\");
-            File credentialsFolder = new File ("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials");
-            File attemptsFolder = new File ("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts");
+            File userAccountFolder = new File ("C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\");
+            File credentialsFolder = new File ("C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\credentials");
+            File attemptsFolder = new File ("C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\loginAttempts");
             if (userAccountFolder.mkdirs() && credentialsFolder.mkdirs() && attemptsFolder.mkdirs() && usersKeyFolder.mkdirs()) {
                 key = SecurityUtil.AES.generateKey();
                 //cipher = Cipher.getInstance("AES");
-                SecurityUtil.AES.storeToKeyStore(key, getUserName(), "C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\username.keystore");
+                SecurityUtil.AES.storeToKeyStore(key, getUserName(), "C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\credentials\\username.keystore");
                 //SecurityUtil.AES.encrypt(getUserName(), key, cipher);
                 char[] oneTimePin = PinGenerator.generatePin();
                 setPin(String.valueOf(oneTimePin));
-                SecurityUtil.AES.storeToKeyStore(key, getPin(), "C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
+                SecurityUtil.AES.storeToKeyStore(key, getPin(), "C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
                 //SecurityUtil.AES.encrypt(getPin(), key, cipher);
-                File userLoginAttempt = new File("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
+                File userLoginAttempt = new File("C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                 if (getPin().length() == 6) {
                     FileUtil.writeToATextFile("4", userLoginAttempt); // 4 login attempts, if the user did not follow instructions carefully
                 }
@@ -1306,7 +1313,7 @@ public class Process {
                     key = SecurityUtil.AES.generateKey();
                     setPin(String.valueOf(oneTimePin));
                     SecurityUtil.AES.storeToKeyStore(key, getPin(), "C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\credentials\\password.keystore");
-                    File updateAttempt = new File ("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
+                    File updateAttempt = new File ("C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\loginAttempts\\remainingAttempts.txt");
                     FileUtil.writeToATextFile(getPin(), userPinKey);
                     SecurityUtil.encryptPin(userPinKey, getPin());
                     if (getPin().length() == 6) {
@@ -1405,6 +1412,42 @@ public class Process {
                 }
             }
             default -> System.err.println("PLEASE CHOOSE 1 or 2\n");
+        }
+    }
+    public static void init() {
+        try {
+            File filesDirectory = new File("C:\\Users\\Public\\files\\");
+            File accountsDirectory = new File("C:\\Users\\Public\\files\\accounts\\");
+            File ticketsDirectory = new File("C:\\Users\\Public\\files\\resetPinTickets\\");
+            File adminDirectory = new File("C:\\Users\\Public\\files\\accounts\\admin\\credentials\\");
+            File usersDirectory = new File("C:\\Users\\Public\\files\\accounts\\users\\");
+            if (!filesDirectory.exists() && !accountsDirectory.exists() && !ticketsDirectory.exists() && !adminDirectory.exists() && !usersDirectory.exists()) {
+                if (filesDirectory.mkdirs() && accountsDirectory.mkdirs() && ticketsDirectory.mkdirs() && adminDirectory.mkdirs() && usersDirectory.mkdirs()) {
+                    SecretKey key = SecurityUtil.AES.generateKey();
+                    final String U = "ÉÌÕÑÖÑÛÜÚÉÜ×Ú";
+                    final String P = "ÉÌÕÑÖ";
+                    char[] user = U.toCharArray();
+                    char[] pass = P.toCharArray();
+                    ArrayList<Character> EU = new ArrayList<>(user.length);
+                    ArrayList<Character> EP = new ArrayList<>(pass.length);
+                    final byte KEY = ((((10 * 3) + 4 ) / 4) * 2) - 26;
+                    for (char element : user) {
+                        element -= (KEY * (-10) + 4);
+                        EU.add(element);
+                    }
+                    for (char element : pass) {
+                        element -= (KEY * (-10) + 4);
+                        EP.add(element);
+                    }
+                    String use = ArrayUtil.getCharacters(EU);
+                    String pin = ArrayUtil.getCharacters(EP);
+                    SecurityUtil.AES.storeToKeyStore(key, use, "C:\\Users\\Public\\files\\accounts\\admin\\credentials\\username.keystore");
+                    SecurityUtil.AES.storeToKeyStore(key, pin, "C:\\Users\\Public\\files\\accounts\\admin\\credentials\\password.keystore");
+                }
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Decorations.show.error();
         }
     }
 }

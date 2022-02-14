@@ -51,7 +51,7 @@ public class Ticketing extends Process {
                 System.out.print(Decorations.TEXT_YELLOW  + ">>>: ");
                 Main.temporaryString = Main.scanner.nextLine().trim();
                 setUserName(Main.temporaryString);
-                if (Files.exists(Path.of("C:\\Users\\Public\\files\\accounts\\user\\" + getUserName() + "'s Folder\\"))) {
+                if (Files.exists(Path.of("C:\\Users\\Public\\files\\accounts\\users\\" + getUserName() + "'s Folder\\"))) {
                     try {
                         File ticket = new File("C:\\Users\\Public\\files\\resetPinTickets\\"+ getUserName() + ".txt");
                         Scanner ticketScanner = new Scanner(ticket);

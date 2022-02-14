@@ -1,14 +1,9 @@
 package mainActivity;
 
 import lib.utilities.misc.Decorations;
-import lib.utilities.SecurityUtil;
 import lib.utilities.misc.Delay;
-import lib.utilities.ArrayUtil;
-import javax.crypto.SecretKey;
-import java.util.ArrayList;
 import framework.Process;
 import java.util.Scanner;
-import java.io.File;
 
 public class Main {
     public static String account = "";
@@ -76,42 +71,8 @@ public class Main {
                     }
                 }
             }
-            try {
-                File filesDirectory = new File("C:\\Users\\Public\\files\\");
-                File accountsDirectory = new File("C:\\Users\\Public\\files\\accounts\\");
-                File ticketsDirectory = new File("C:\\Users\\Public\\files\\resetPinTickets\\");
-                File adminDirectory = new File("C:\\Users\\Public\\files\\accounts\\admin\\credentials\\");
-                File usersDirectory = new File("C:\\Users\\Public\\files\\accounts\\users\\");
-                if (!filesDirectory.exists() && !accountsDirectory.exists() && !ticketsDirectory.exists() && !adminDirectory.exists() && !usersDirectory.exists()) {
-                    if (filesDirectory.mkdirs() && accountsDirectory.mkdirs() && ticketsDirectory.mkdirs() && adminDirectory.mkdirs() && usersDirectory.mkdirs()) {
-                        SecretKey key = SecurityUtil.AES.generateKey();
-                        final String U = "ÉÌÕÑÖÑÛÜÚÉÜ×Ú";
-                        final String P = "ÉÌÕÑÖ";
-                        char[] user = U.toCharArray();
-                        char[] pass = P.toCharArray();
-                        ArrayList<Character> EU = new ArrayList<>(user.length);
-                        ArrayList<Character> EP = new ArrayList<>(pass.length);
-                        final byte KEY = ((((10 * 3) + 4 ) / 4) * 2) - 26;
-                        for (char element : user) {
-                            element -= (KEY * (-10) + 4);
-                            EU.add(element);
-                        }
-                        for (char element : pass) {
-                            element -= (KEY * (-10) + 4);
-                            EP.add(element);
-                        }
-                        String use = ArrayUtil.getCharacters(EU);
-                        String pin = ArrayUtil.getCharacters(EP);
-                        SecurityUtil.AES.storeToKeyStore(key, use, "C:\\Users\\Public\\files\\accounts\\admin\\credentials\\username.keystore");
-                        SecurityUtil.AES.storeToKeyStore(key, pin, "C:\\Users\\Public\\files\\accounts\\admin\\credentials\\password.keystore");
-                    }
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                Decorations.show.error();
-            }
+            Process.init();
             if (!isExit) {
-
                 process.allAdminAndUserMenu(isAdmin);
                 while (adminLoggedIn || userLoggedIn) {
                     System.out.println(Decorations.TEXT_YELLOW + ": 1 : Show " + account + Decorations.TEXT_YELLOW + " selections");
